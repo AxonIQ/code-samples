@@ -18,24 +18,20 @@ class MyEntityProjection {
 
     private final QueryUpdateEmitter emitter;
 
-    private final MyEntityRepository repository;
-
-    public MyEntityProjection(QueryUpdateEmitter emitter,
-                              MyEntityRepository repository) {
+    public MyEntityProjection(QueryUpdateEmitter emitter) {
         this.emitter = emitter;
-        this.repository = repository;
     }
 
     @QueryHandler
     //TODO document
-    public Optional<MyEntity> on(GetMyEntityByCorrelationIdQuery query) {
+    public Optional<Void> on(GetMyEntityByCorrelationIdQuery query) {
         return Optional.empty();
     }
 
     @EventHandler
     public void on(MyEntityCreatedEvent event, @MetaDataValue("correlationId") String correlationId) {
         MyEntity entity = new MyEntity(event.getEntityId());
-        repository.save(entity);
+        // save your entity in your repository...
         // TODO add documentation
         emitter.emit(GetMyEntityByCorrelationIdQuery.class,
                      query -> query.getCorrelationId().equals(correlationId),

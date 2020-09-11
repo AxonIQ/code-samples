@@ -41,13 +41,14 @@ public class CommandController {
 
     @PostMapping("/entities")
     public Mono<MyEntity> myApi() {
-        // TODO
         String entityId = UUID.randomUUID().toString();
         CommandMessage<Object> command = GenericCommandMessage.asCommandMessage(new CreateMyEntityCommand(entityId));
+        //TODO dcumentation
         GetMyEntityByCorrelationIdQuery query = new GetMyEntityByCorrelationIdQuery(command.getIdentifier());
-        SubscriptionQueryResult<MyEntity, MyEntity> response = queryGateway.subscriptionQuery(query,
-                                                                                              MyEntity.class,
-                                                                                              MyEntity.class);
+        SubscriptionQueryResult<Void, MyEntity> response = queryGateway.subscriptionQuery(query,
+                                                                                          Void.class,
+                                                                                          //TODO documentation
+                                                                                          MyEntity.class);
         System.out.println(command.getIdentifier());
         return sendAndReturnUpdate(command, response);
     }
