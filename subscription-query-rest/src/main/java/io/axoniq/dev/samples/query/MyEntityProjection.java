@@ -1,8 +1,9 @@
 package io.axoniq.dev.samples.query;
 
-import io.axoniq.dev.samples.api.GetMyEntityByIdQuery;
+import io.axoniq.dev.samples.api.GetMyEntityByCorrelationIdQuery;
 import io.axoniq.dev.samples.api.MyEntityCreatedEvent;
 import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.messaging.annotation.MetaDataValue;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.springframework.stereotype.Component;
@@ -26,16 +27,18 @@ class MyEntityProjection {
     }
 
     @QueryHandler
-    public Optional<MyEntity> on(GetMyEntityByIdQuery query) {
-        return repository.findById(query.getEntityId());
+    //TODO document
+    public Optional<MyEntity> on(GetMyEntityByCorrelationIdQuery query) {
+        return Optional.empty();
     }
 
     @EventHandler
-    public void on(MyEntityCreatedEvent event) {
+    public void on(MyEntityCreatedEvent event, @MetaDataValue("correlationId") String correlationId) {
         MyEntity entity = new MyEntity(event.getEntityId());
         repository.save(entity);
-        emitter.emit(GetMyEntityByIdQuery.class,
-                     getMyEntityByIdQuery -> event.getEntityId().equals(getMyEntityByIdQuery.getEntityId()),
+        // TODO add documentation
+        emitter.emit(GetMyEntityByCorrelationIdQuery.class,
+                     query -> query.getCorrelationId().equals(correlationId),
                      entity);
     }
 }

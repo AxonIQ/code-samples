@@ -1,8 +1,10 @@
 package io.axoniq.dev.samples;
 
 import io.axoniq.dev.samples.api.CreateMyEntityCommand;
-import io.axoniq.dev.samples.api.GetMyEntityByIdQuery;
+import io.axoniq.dev.samples.api.GetMyEntityByCorrelationIdQuery;
 import io.axoniq.dev.samples.query.MyEntity;
+import org.axonframework.commandhandling.CommandMessage;
+import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.SubscriptionQueryResult;
@@ -39,12 +41,14 @@ public class CommandController {
 
     @PostMapping("/entities")
     public Mono<MyEntity> myApi() {
+        // TODO
         String entityId = UUID.randomUUID().toString();
-        GetMyEntityByIdQuery query = new GetMyEntityByIdQuery(entityId);
+        CommandMessage<Object> command = GenericCommandMessage.asCommandMessage(new CreateMyEntityCommand(entityId));
+        GetMyEntityByCorrelationIdQuery query = new GetMyEntityByCorrelationIdQuery(command.getIdentifier());
         SubscriptionQueryResult<MyEntity, MyEntity> response = queryGateway.subscriptionQuery(query,
                                                                                               MyEntity.class,
                                                                                               MyEntity.class);
-        CreateMyEntityCommand command = new CreateMyEntityCommand(entityId);
+        System.out.println(command.getIdentifier());
         return sendAndReturnUpdate(command, response);
     }
 }
