@@ -8,12 +8,12 @@ import org.axonframework.commandhandling.GenericCommandMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.SubscriptionQueryResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.UUID;
 
 /**
  * @author Sara Pellegrini
@@ -32,25 +32,24 @@ public class CommandController {
     public <U> Mono<U> sendAndReturnUpdate(Object command, SubscriptionQueryResult<?, U> result) {
         // TODO add comments to understand why we need initial result
         return result.initialResult()
-                     .then(Mono.fromCompletionStage(commandGateway.send(command)))
+                     .then(Mono.fromCompletionStage(() -> commandGateway.send(command)))
                      .flatMapMany(unused -> result.updates())
                      .timeout(Duration.ofSeconds(5))
                      .next()
                      .doFinally(unused -> result.cancel());
     }
 
-    @PostMapping("/entities")
-    public Mono<MyEntity> myApi() {
-        String entityId = UUID.randomUUID().toString();
+    @PostMapping("/entities/{id}")
+    public Mono<String> myApi(@PathVariable("id") String entityId) {
         CommandMessage<Object> command = GenericCommandMessage.asCommandMessage(new CreateMyEntityCommand(entityId));
-        //TODO dcumentation
+        //TODO documentation
         GetMyEntityByCorrelationIdQuery query = new GetMyEntityByCorrelationIdQuery(command.getIdentifier());
         SubscriptionQueryResult<Void, MyEntity> response = queryGateway.subscriptionQuery(query,
                                                                                           Void.class,
                                                                                           //TODO documentation
                                                                                           MyEntity.class);
-        System.out.println(command.getIdentifier());
-        return sendAndReturnUpdate(command, response);
+        return sendAndReturnUpdate(command, response)
+                .map(MyEntity::getId);
     }
 }
 
