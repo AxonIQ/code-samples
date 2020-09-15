@@ -1,6 +1,5 @@
 package io.axoniq.dev.samples;
 
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +24,6 @@ public class CommandControllerTest {
     private ConfigurableApplicationContext context;
 
 
-    @Test
     @ParameterizedTest
     @ValueSource(strings = {"latest", "4.4.1", "4.3.7"})
     void test(String axonServerVersion) {
