@@ -33,7 +33,7 @@ public class CommandController {
         // TODO add comments to understand why we need initial result
         return Mono.when(result.initialResult())
                      .then(Mono.fromCompletionStage(() -> commandGateway.send(command)))
-                     .flatMapMany(unused -> result.updates())
+                     .thenMany(result.updates())
                      .timeout(Duration.ofSeconds(5))
                      .next()
                      .doFinally(unused -> result.cancel());
