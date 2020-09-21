@@ -31,7 +31,7 @@ public class CommandController {
 
     public <U> Mono<U> sendAndReturnUpdate(Object command, SubscriptionQueryResult<?, U> result) {
         // TODO add comments to understand why we need initial result
-        return result.initialResult()
+        return Mono.when(result.initialResult())
                      .then(Mono.fromCompletionStage(() -> commandGateway.send(command)))
                      .flatMapMany(unused -> result.updates())
                      .timeout(Duration.ofSeconds(5))
