@@ -1,0 +1,24 @@
+POST http://localhost:8080/giftcard
+Content-Type: application/json
+
+{
+  "amount": 50
+}
+
+###
+
+POST http://localhost:8080/giftcard
+Content-Type: application/json
+
+{
+  "amount": -5
+}
+
+### Change UUID to one returned by working POST call
+
+PUT http://localhost:8080/giftcard/d8961637-2825-4b1b-ab14-f2a63d9ab1b5
+Content-Type: application/json
+
+{
+  "amount": 1
+}
