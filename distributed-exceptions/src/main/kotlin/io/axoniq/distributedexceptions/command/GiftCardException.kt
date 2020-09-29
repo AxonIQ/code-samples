@@ -1,11 +1,7 @@
 package io.axoniq.distributedexceptions.command
 
 /**
- * @author Stefan Andjelkovic
- */
-open class GiftCardCommandException : RuntimeException()
-
-/**
+ * Domain specific exception
  * @author Stefan Andjelkovic
  */
 open class GiftCardException(
@@ -35,6 +31,7 @@ class InsufficientFunds(
 )
 
 /**
+ * Domain specific error codes
  * @author Stefan Andjelkovic
  */
 enum class GiftCardErrorCode {
