@@ -2,6 +2,7 @@ package io.axoniq.dev.samples.api;
 
 /**
  * @author Sara Pellegrini
+ * @author Stefan Dragisic
  */
 public class GetMyEntityByCorrelationIdQuery {
 

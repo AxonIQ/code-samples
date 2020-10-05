@@ -11,6 +11,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 /**
  * @author Sara Pellegrini
+ * @author Stefan Dragisic
  */
 @Aggregate
 public class MyEntityAggregate {
