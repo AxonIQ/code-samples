@@ -10,8 +10,16 @@ data class RedeemedEvt(val id: String, val amount: Int)
 data class CancelCmd(@TargetAggregateIdentifier val id: String)
 data class CancelEvt(val id: String)
 
-data class BusinessError(
+data class GiftCardBusinessError(
     val name: String,
-    val code: String? = null,
+    val code: GiftCardBusinessErrorCode? = null,
     val message: String? = null
 )
+
+/**
+ * Public domain specific error codes
+ * @author Stefan Andjelkovic
+ */
+enum class GiftCardBusinessErrorCode {
+    NEGATIVE_AMOUNT, INSUFFICIENT_FUNDS, UNKNOWN
+}
