@@ -1,7 +1,5 @@
 package io.axoniq.distributedexceptions.command;
 
-import io.axoniq.distributedexceptions.api.CancelCmd;
-import io.axoniq.distributedexceptions.api.CancelEvt;
 import io.axoniq.distributedexceptions.api.IssueCmd;
 import io.axoniq.distributedexceptions.api.IssuedEvt;
 import io.axoniq.distributedexceptions.api.RedeemCmd;
@@ -49,12 +47,6 @@ public class GiftCard {
         apply(new RedeemedEvt(giftCardId, cmd.getAmount()));
     }
 
-    @CommandHandler
-    public void handle(CancelCmd cmd) {
-        logger.debug("handling {}", cmd);
-        apply(new CancelEvt(giftCardId));
-    }
-
     @EventSourcingHandler
     public void on(IssuedEvt evt) {
         logger.debug("applying {}", evt);
@@ -67,13 +59,6 @@ public class GiftCard {
     public void on(RedeemedEvt evt) {
         logger.debug("applying {}", evt);
         remainingValue -= evt.getAmount();
-        logger.debug("new remaining value: {}", remainingValue);
-    }
-
-    @EventSourcingHandler
-    public void on(CancelEvt evt) {
-        logger.debug("applying {}", evt);
-        remainingValue = 0;
         logger.debug("new remaining value: {}", remainingValue);
     }
 

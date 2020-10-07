@@ -1,6 +1,7 @@
 package io.axoniq.distributedexceptions.command;
 
 import io.axoniq.distributedexceptions.api.GiftCardBusinessError;
+import io.axoniq.distributedexceptions.api.GiftCardBusinessErrorCode;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.InterceptorChain;
@@ -39,7 +40,9 @@ public class ExceptionWrappingHandlerInterceptor implements MessageHandlerInterc
             logger.info("Converted GiftCardException to " + businessError.toString());
             return businessError;
         } else {
-            GiftCardBusinessError businessError = new GiftCardBusinessError(throwable.getClass().getName(), null, throwable.getMessage());
+            GiftCardBusinessError businessError = new GiftCardBusinessError(throwable.getClass().getName(),
+                                                                            GiftCardBusinessErrorCode.UNKNOWN,
+                                                                            throwable.getMessage());
             logger.info("Converted CommandExecutionException to " + businessError);
             return businessError;
         }
