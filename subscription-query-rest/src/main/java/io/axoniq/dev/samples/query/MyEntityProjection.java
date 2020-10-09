@@ -24,7 +24,7 @@ class MyEntityProjection {
     }
 
     @QueryHandler
-    /**We are creating virtual initial result, doesn't need to return anything, but also do not return null*/
+    /* We are creating virtual initial result, doesn't need to return anything, but also do not return null */
     public Optional<Void> on(GetMyEntityByCorrelationIdQuery query) {
         return Optional.empty();
     }
@@ -33,9 +33,9 @@ class MyEntityProjection {
     public void on(MyEntityCreatedEvent event, @MetaDataValue("correlationId") String correlationId) {
         MyEntity entity = new MyEntity(event.getEntityId());
 
-        // { save your entity in your repository here }
+        /* save your entity in your repository here */
 
-        /** Inject correlationId from Event Metadata, which is basically command id that produced this event.
+        /* Inject correlationId from Event Metadata, which is basically command id that produced this event.
          Emit and update to all observers that are interested in this correlationId */
         emitter.emit(GetMyEntityByCorrelationIdQuery.class,
                      query -> query.getCorrelationId().equals(correlationId),

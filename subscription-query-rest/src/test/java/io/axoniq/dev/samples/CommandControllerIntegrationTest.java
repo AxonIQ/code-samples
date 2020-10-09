@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Sara Pellegrini
  */
 
-public class CommandControllerIntegrationTest {
+class CommandControllerIntegrationTest {
 
     private ConfigurableApplicationContext context;
 

@@ -1,0 +1,15 @@
+# Maven build artifacts can be ignored
+target/
+
+# IntelliJ project files
+*.iml
+.idea/
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+.factorypath
+
+# MacOS makes this one
+.DS_Store
