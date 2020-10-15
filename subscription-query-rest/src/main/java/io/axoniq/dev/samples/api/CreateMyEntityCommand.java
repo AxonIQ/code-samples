@@ -4,6 +4,7 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 /**
  * @author Sara Pellegrini
+ * @author Stefan Dragisic
  */
 public class CreateMyEntityCommand {
 

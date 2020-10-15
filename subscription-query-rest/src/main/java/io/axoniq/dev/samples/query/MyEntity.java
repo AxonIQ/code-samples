@@ -2,6 +2,7 @@ package io.axoniq.dev.samples.query;
 
 /**
  * @author Sara Pellegrini
+ * @author Stefan Dragisic
  */
 public class MyEntity {
 

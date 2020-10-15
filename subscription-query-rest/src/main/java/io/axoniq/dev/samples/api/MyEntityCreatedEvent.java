@@ -2,7 +2,7 @@ package io.axoniq.dev.samples.api;
 
 /**
  * @author Sara Pellegrini
- * @since
+ * @author Stefan Dragisic
  */
 public class MyEntityCreatedEvent {
 
