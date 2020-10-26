@@ -9,6 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>subscription-query-rest</module>
+        <module>snapshots</module>
     </modules>
     <packaging>pom</packaging>
 
