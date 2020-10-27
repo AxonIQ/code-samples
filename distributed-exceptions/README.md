@@ -32,7 +32,6 @@ This is a Spring boot application, as such it can be ran as any other standard S
   order to
   keep everything simple, Axon Server is used as both the Command bus, and an Event store.
   
-1. Ensure that Axon Server is running
+1. Ensure that Axon Server is running. A simple `docker-compose` is provided for this purpose.
 2. Start two instances of the application, one with `rest` profile and the other with `command` Spring boot profile
 3. Make rest calls from a client of your choice, or use provided examples in `requests.http` file. These can be invoked with IntelliJ IDEA.
-s
