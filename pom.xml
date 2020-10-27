@@ -16,7 +16,7 @@
         <encoding>UTF-8</encoding>
         <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
         <axon.version>4.4.3</axon.version>
-        <reactor.core.version>3.3.10.RELEASE</reactor.core.version>
+        <reactor.core.version>3.4.0</reactor.core.version>
         <junit.version>5.7.0</junit.version>
         <testcontainers.version>1.14.3</testcontainers.version>
     </properties>
