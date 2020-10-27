@@ -2,6 +2,9 @@ package io.axoniq.distributedexceptions.api;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Stefan Andjelkovic
+ */
 public class GiftCardBusinessError {
 
     private final String name;

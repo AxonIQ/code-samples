@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * @author Stefan Andjelkovic
+ */
 @SpringBootApplication
 public class DistributedExceptionsApplication {
 

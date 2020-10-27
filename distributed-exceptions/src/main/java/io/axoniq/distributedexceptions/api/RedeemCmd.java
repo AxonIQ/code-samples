@@ -3,6 +3,9 @@ package io.axoniq.distributedexceptions.api;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Stefan Andjelkovic
+ */
 public class RedeemCmd {
 
     @TargetAggregateIdentifier
