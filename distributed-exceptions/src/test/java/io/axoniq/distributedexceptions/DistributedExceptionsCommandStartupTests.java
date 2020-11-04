@@ -5,11 +5,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles("command,rest")
-public class DistributedExceptionsApplicationTests {
+@ActiveProfiles("command")
+public class DistributedExceptionsCommandStartupTests {
 
     @Test
-    void contextLoads() {
+    void contextShouldStart() {
 
     }
 

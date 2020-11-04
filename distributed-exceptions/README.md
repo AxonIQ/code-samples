@@ -15,10 +15,9 @@ These are some points to pay attention to:
 1. Instead of using generic `IllegalArgumentException` or `IllegalStateException`, different failures can be expressed as exception
  types. In addition to making the code more understandable on both throwing and catching sides, these exceptions can carry more
   information than just a generic message. For example, `NegativeOrZeroAmount` can keep track of the invalid amount.
-2. By using an interceptor we can catch the exceptions we are interested in and transform them to transport and API friendly
- representation. In this example, the `ExceptionWrappingHandlerInterceptor` will wrap every domain specific exception to a `GiftCardBusinessError
- `, which is part of the API. Since it's just a simple class carrying the Error code, there's no need to extend any of the exception
-  classes. It's also completely fine to map directly to `GiftCardBusinessErrorCode` without any additional information like messages.
+2. By using an interceptor we can catch the exceptions we are interested in and transform them to API and transport friendly representation.
+ In this example, the `ExceptionWrappingHandlerInterceptor` will wrap every domain specific exception to a `GiftCardBusinessError`, which
+  is part of the API. Since it's just a simple class carrying the Error code, there's no need to extend any of the exception classes. It's also completely fine to map directly to `GiftCardBusinessErrorCode` without any additional information like messages.
 3. The `GiftCardBusinessError` is stored as additional details on the `CommandExecutionException` which will be serialized and returned to the
  command invoking side.
 4. On the client side, or the application that sends the command, we need to check which kind of exception occurred. Infrastructural
@@ -29,8 +28,7 @@ These are some points to pay attention to:
 ### Running the application
 This is a Spring boot application, as such it can be ran as any other standard Spring Boot application. In order to fully demonstrate the
  propagation in a distributed environment, separate profiles have been provided for the client (`rest`) and Command (`command`) sides. In
-  order to
-  keep everything simple, Axon Server is used as both the Command bus, and an Event store.
+  order to keep everything simple, Axon Server is used as both the Command bus, and an Event store.
   
 1. Ensure that Axon Server is running. A simple `docker-compose` is provided for this purpose.
 2. Start two instances of the application, one with `rest` profile and the other with `command` Spring boot profile.

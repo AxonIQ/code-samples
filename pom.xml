@@ -51,6 +51,11 @@
                 <version>5.7.0</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>16.0.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

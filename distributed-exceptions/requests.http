@@ -1,3 +1,6 @@
+### Create a new GiftCard with initial amount of 50. Response will contain the GiftCard (aggregate)\
+### which will be used for later requests
+
 POST http://localhost:8080/giftcard
 Content-Type: application/json
 
@@ -5,7 +8,7 @@ Content-Type: application/json
   "amount": 50
 }
 
-###
+### Try to create a GiftCard with invalid (negative) amount. Will not work and will cause a domain exception.
 
 POST http://localhost:8080/giftcard
 Content-Type: application/json
@@ -14,7 +17,10 @@ Content-Type: application/json
   "amount": -5
 }
 
-### Change UUID to one returned by working POST call
+### Redeem amount of a given GiftCard. Domain exceptions can be caused by either redeeming more than the GiftCard
+### currently has, or by sending negative amount.
+### Infrastructure type error can be caused by referencing non existing GiftCard (by ID)
+### Change UUID to one returned by working POST (create GiftCard) call
 
 PUT http://localhost:8080/giftcard/d8961637-2825-4b1b-ab14-f2a63d9ab1b5
 Content-Type: application/json
