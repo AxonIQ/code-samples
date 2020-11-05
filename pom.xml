@@ -9,6 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>subscription-query-rest</module>
+        <module>distributed-exceptions</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -58,6 +59,11 @@
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>16.0.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
