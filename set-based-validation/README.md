@@ -12,7 +12,7 @@ You’ll need to make this processing group subscribing to update the repository
 
 axon.eventhandling.processors.emailEntity.mode=subscribing
 
-Subscribing processors will create and maintain a projection immediately after an event has been applied and are immediately consistent. These lookup tables are always owned by the command side only and should not be exposed by using a Query API on top of it.
+Subscribing processors will create and maintain a projection immediately after an event has been applied and thus are immediately consistent. Moreover lookup tables like this should always be owned by the command side _only_ and as such should not be exposed through a Query API on top of it.
 
 This implementation is based on https://danielwhittaker.me/2017/10/09/handle-set-based-consistency-validation-cqrs/ 
 Now that you have a lookup table you can check if the email address exists before applying the event. I implemented this in three different ways:
