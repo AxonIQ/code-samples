@@ -1,15 +1,37 @@
-# Maven build artifacts can be ignored
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### Maven ###
 target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# IntelliJ project files
-*.iml
-.idea/
-
-# Eclipse project files
+### STS ###
+.apt_generated
 .classpath
-.project
-.settings/
 .factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# MacOS makes this one
-.DS_Store
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
