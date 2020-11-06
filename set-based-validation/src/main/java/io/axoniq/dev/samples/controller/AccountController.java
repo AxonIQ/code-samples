@@ -17,7 +17,7 @@ import io.axoniq.dev.samples.api.RequestEmailChangeCommand;
 
 @RestController
 public class AccountController {
-    private CommandGateway commandGateway;
+    private final CommandGateway commandGateway;
 
     public AccountController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;

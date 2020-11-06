@@ -6,7 +6,7 @@ import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.axoniq.dev.samples.interceptor.AccountCreationDispatchInterceptor;
+import io.axoniq.dev.samples.command.interceptor.AccountCreationDispatchInterceptor;
 
 @Configuration
 public class AxonConfig {

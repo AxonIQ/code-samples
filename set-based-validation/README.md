@@ -14,7 +14,7 @@ axon.eventhandling.processors.emailEntity.mode=subscribing
 
 Subscribing processors will create and maintain a projection immediately after an event has been applied and thus are immediately consistent. Moreover lookup tables like this should always be owned by the command side _only_ and as such should not be exposed through a Query API on top of it.
 
-This implementation is based on https://danielwhittaker.me/2017/10/09/handle-set-based-consistency-validation-cqrs/ 
+
 Now that you have a lookup table you can check if the email address exists before applying the event. We implemented this in three different ways:
 
 1. By using a command message dispatcher which does a check on the CreateAccountCommand: https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/java/com/example/command/interceptor/AccountCreationDispatchInterceptor.java
@@ -24,3 +24,6 @@ https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/jav
 https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/java/com/example/command/resolver/EmailAlreadyExistsResolverFactory.java
 This way you can add the boolean emailAlreadyExists to the ChangeEmailAddressCommand commandhandler:
 https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/java/com/example/command/aggregate/Account.java
+
+# References
+This implementation is based on https://danielwhittaker.me/2017/10/09/handle-set-based-consistency-validation-cqrs/ 

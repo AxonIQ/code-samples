@@ -9,14 +9,14 @@ import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.axoniq.dev.samples.aggregate.Account;
+import io.axoniq.dev.samples.command.aggregate.Account;
 import io.axoniq.dev.samples.api.AccountCreatedEvent;
 import io.axoniq.dev.samples.api.AlterEmailAddressCommand;
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.api.CreateAccountCommand;
 import io.axoniq.dev.samples.api.EmailAddressChangedEvent;
-import io.axoniq.dev.samples.persistence.EmailJpaEntity;
-import io.axoniq.dev.samples.persistence.EmailRepository;
+import io.axoniq.dev.samples.command.persistence.EmailJpaEntity;
+import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import io.axoniq.dev.samples.resolver.EmailAlreadyExistsResolverFactory;
 
 public class AccountTest {

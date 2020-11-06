@@ -1,4 +1,4 @@
-package io.axoniq.dev.samples.handler;
+package io.axoniq.dev.samples.command.handler;
 
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -6,8 +6,14 @@ import org.springframework.stereotype.Component;
 
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.api.RequestEmailChangeCommand;
-import io.axoniq.dev.samples.persistence.EmailRepository;
+import io.axoniq.dev.samples.command.persistence.EmailRepository;
 
+/**
+ * Command handling component that validates if the email address already exists
+ * Links to Validation in a command handling component in the blog
+ *
+ * @author Yvonne Ceelie
+ */
 @Component
 public class AccountCommandHandler {
     @CommandHandler

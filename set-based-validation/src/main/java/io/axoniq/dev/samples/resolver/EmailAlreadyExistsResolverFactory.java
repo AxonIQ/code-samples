@@ -10,11 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
-import io.axoniq.dev.samples.persistence.EmailRepository;
+import io.axoniq.dev.samples.command.persistence.EmailRepository;
 
+/**
+ * This parameter resolver resolves to true if an account aggregate with
+ * email address already exists
+ * Links to "Validation using a parameter resolver" in the blog
+ *
+ * @author Yvonne Ceelie
+ */
 @Component
 public class EmailAlreadyExistsResolverFactory implements ParameterResolver<Boolean>, ParameterResolverFactory {
-    private EmailRepository emailRepository;
+    private final EmailRepository emailRepository;
 
     @Autowired
     public EmailAlreadyExistsResolverFactory(EmailRepository emailRepository) {
@@ -37,7 +44,7 @@ public class EmailAlreadyExistsResolverFactory implements ParameterResolver<Bool
         }
         throw new IllegalArgumentException("Message payload not of type ChangeEmailAddressCommand");
     }
-    
+
     @Override
     public boolean matches(Message<?> message) {
         return ChangeEmailAddressCommand.class.isAssignableFrom(message.getPayloadType());

@@ -1,4 +1,4 @@
-package io.axoniq.dev.samples.aggregate;
+package io.axoniq.dev.samples.command.aggregate;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
@@ -14,7 +14,7 @@ import io.axoniq.dev.samples.api.AlterEmailAddressCommand;
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.api.CreateAccountCommand;
 import io.axoniq.dev.samples.api.EmailAddressChangedEvent;
-import io.axoniq.dev.samples.persistence.EmailRepository;
+import io.axoniq.dev.samples.command.persistence.EmailRepository;
 
 @Aggregate
 public class Account {
@@ -28,13 +28,17 @@ public class Account {
         apply(new AccountCreatedEvent(command.getAccountId(), command.getEmailAddress()));
     }
 
+    /**
+     * Uses the parameter resolver for email address exists. Links to "Validation using a parameter resolver" in the
+     * blog
+     */
     @CommandHandler
-    public void handle(ChangeEmailAddressCommand command, Boolean emailAddressExists){
-        if (emailAddressExists){
+    public void handle(ChangeEmailAddressCommand command, Boolean emailAddressExists) {
+        if (emailAddressExists) {
             throw new IllegalStateException(String.format("Account with email address %s already exists",
                                                           command.getUpdatedEmailAddress()));
         }
-        if (emailAddress.equals(command.getUpdatedEmailAddress())){
+        if (emailAddress.equals(command.getUpdatedEmailAddress())) {
             throw new IllegalStateException(String.format("Email address %s is already used for account with id %s ",
                                                           command.getUpdatedEmailAddress(), accountId));
         }
@@ -42,12 +46,12 @@ public class Account {
     }
 
     @CommandHandler
-    public void handle(AlterEmailAddressCommand command, EmailRepository emailRepository){
-        if (emailRepository.existsById(command.getUpdatedEmailAddress())){
+    public void handle(AlterEmailAddressCommand command, EmailRepository emailRepository) {
+        if (emailRepository.existsById(command.getUpdatedEmailAddress())) {
             throw new IllegalStateException(String.format("Account with email address %s already exists",
                                                           command.getUpdatedEmailAddress()));
         }
-        if (emailAddress.equals(command.getUpdatedEmailAddress())){
+        if (emailAddress.equals(command.getUpdatedEmailAddress())) {
             throw new IllegalStateException(String.format("Email address %s is already used for account with id %s ",
                                                           command.getUpdatedEmailAddress(), accountId));
         }
@@ -56,12 +60,13 @@ public class Account {
     }
 
     @EventSourcingHandler
-    public void on(AccountCreatedEvent event){
+    public void on(AccountCreatedEvent event) {
         this.accountId = event.getAccountId();
         this.emailAddress = event.getEmailAddress();
     }
+
     @EventSourcingHandler
-    public void on(EmailAddressChangedEvent event){
+    public void on(EmailAddressChangedEvent event) {
         this.emailAddress = event.getEmailAddress();
     }
 

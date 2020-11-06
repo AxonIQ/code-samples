@@ -1,4 +1,4 @@
-package io.axoniq.dev.samples.persistence;
+package io.axoniq.dev.samples.command.persistence;
 
 import java.util.UUID;
 
