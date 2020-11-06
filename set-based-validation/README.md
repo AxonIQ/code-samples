@@ -1,8 +1,8 @@
-# set-based-validation-axon
-A question that pops up a lot is How can I check if an account with a particular email address already exists? 
-This command side validation could be done with a small look-up table which can be queried during validation.
+# Set Based Consistency Validation
+A type of question that occurs a lot is "How can I check if an account with a particular email address already exists?". 
+In essence this signals the requirement to be able to validate a set, which is a more intricate process when it comes to applications which follow the CQRS paradigm. Without going in full detail here why this is a problem, a straightforward solution is to enhance the command model by adding a small look-up table which can be queried during such a validation step.
 
-You can use several ways to validate the set and in this repository you can find a few of them
+There are several ways to invoke this set validation when using Axon, several of which are shared in this repository.
 
 Prior to checking if the email address already exists you need to save all the email addresses that are used. You can do this by using an event handling component:
 
@@ -24,4 +24,3 @@ https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/jav
 https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/java/com/example/command/resolver/EmailAlreadyExistsResolverFactory.java
 This way you can add the boolean emailAlreadyExists to the ChangeEmailAddressCommand commandhandler:
 https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/java/com/example/command/aggregate/Account.java
-
