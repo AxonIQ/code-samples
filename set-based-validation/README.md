@@ -8,7 +8,7 @@ Prior to checking if the email address already exists you need to save all the e
 
 https://github.com/YvonneCeelie/set-based-validation-axon/blob/main/src/main/java/com/example/command/handler/AccountEventHandler.java
 
-You’ll need to make this processing group subscribing to update the repository in the same thread as the event has been applied. You can do that by adding this property to your application.properties file:
+You’ll need to make the `AccountEventHandler`'s processing group subscribing to be able to update the repository in the same thread that has applied the event; thus ensuring consistent updates of the set. You can achieve that by adding the following property to your `application.properties` file:
 
 axon.eventhandling.processors.emailEntity.mode=subscribing
 
