@@ -2,7 +2,6 @@ package io.axoniq.dev.samples.api;
 
 /**
  * @author Sara Pellegrini
- * @since
  */
 public class MyEntityRenamedEvent {
 
