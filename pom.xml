@@ -19,7 +19,7 @@
         <axon.version>4.4.3</axon.version>
         <reactor.core.version>3.4.0</reactor.core.version>
         <junit.version>5.7.0</junit.version>
-        <testcontainers.version>1.14.3</testcontainers.version>
+        <testcontainers.version>1.15.0</testcontainers.version>
     </properties>
 
     <name>Axon Code Samples</name>
