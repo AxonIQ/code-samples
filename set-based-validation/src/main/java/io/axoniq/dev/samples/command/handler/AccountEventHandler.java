@@ -28,7 +28,7 @@ public class AccountEventHandler {
     @EventHandler
     public void on(EmailAddressChangedEvent event, EmailRepository emailRepository) {
         Optional<EmailJpaEntity> emailEntityOptional = emailRepository.findEmailJpaEntityByAccountId(event.getAccountId());
-        emailEntityOptional.ifPresent(emailEntity -> emailRepository.delete(emailEntity));
+        emailEntityOptional.ifPresent(emailRepository::delete);
         emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
     }
 }
