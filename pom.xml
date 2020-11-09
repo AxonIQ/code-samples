@@ -9,6 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>subscription-query-rest</module>
+        <module>set-based-validation</module>
         <module>distributed-exceptions</module>
     </modules>
     <packaging>pom</packaging>
@@ -19,7 +20,10 @@
         <axon.version>4.4.3</axon.version>
         <reactor.core.version>3.4.0</reactor.core.version>
         <junit.version>5.7.0</junit.version>
-        <testcontainers.version>1.14.3</testcontainers.version>
+        <testcontainers.version>1.15.0</testcontainers.version>
+        <swagger.version>2.9.2</swagger.version>
+        <jackson.core.version>2.11.3</jackson.core.version>
+        <mockito-version>1.10.19</mockito-version>
     </properties>
 
     <name>Axon Code Samples</name>
