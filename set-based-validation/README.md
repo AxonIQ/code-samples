@@ -10,7 +10,7 @@ https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/
 
 You’ll need to make the `AccountEventHandler`'s processing group subscribing to be able to update the repository in the same thread that has applied the event; thus ensuring consistent updates of the set. You can achieve that by adding the following property to your `application.properties` file:
 
-axon.eventhandling.processors.emailEntity.mode=subscribing
+`axon.eventhandling.processors.emailEntity.mode=subscribing`
 
 Subscribing processors will create and maintain a projection immediately after an event has been applied and thus are immediately consistent. Moreover lookup tables like this should always be owned by the command side _only_ and as such should not be exposed through a Query API on top of it.
 
