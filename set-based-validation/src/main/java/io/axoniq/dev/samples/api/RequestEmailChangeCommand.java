@@ -6,6 +6,10 @@ import java.util.UUID;
 import org.axonframework.commandhandling.RoutingKey;
 
 public class RequestEmailChangeCommand {
+    /**
+     * Since this command is routed to a command handling component, the RoutingKey annotation is used.
+     * The TargetAggregateIdentifier could also be used because that has the RoutingKey meta annotated
+     */
     @RoutingKey
     private UUID accountId;
     private String updatedEmailAddress;

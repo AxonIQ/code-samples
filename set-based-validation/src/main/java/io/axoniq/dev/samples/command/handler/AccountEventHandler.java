@@ -1,5 +1,7 @@
 package io.axoniq.dev.samples.command.handler;
 
+import java.util.Optional;
+
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
@@ -25,12 +27,8 @@ public class AccountEventHandler {
 
     @EventHandler
     public void on(EmailAddressChangedEvent event, EmailRepository emailRepository) {
-        EmailJpaEntity emailJpaEntity = emailRepository.findEmailJpaEntityByAccountId(event.getAccountId());
-        if (emailJpaEntity != null) {
-            // Delete the former registered email address
-            emailRepository.delete(emailRepository.findEmailJpaEntityByAccountId(event.getAccountId()));
-        }
+        Optional<EmailJpaEntity> emailEntityOptional = emailRepository.findEmailJpaEntityByAccountId(event.getAccountId());
+        emailEntityOptional.ifPresent(emailEntity -> emailRepository.delete(emailEntity));
         emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
     }
-
 }

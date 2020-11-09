@@ -17,12 +17,12 @@ Subscribing processors will create and maintain a projection immediately after a
 
 Now that you have a lookup table you can check if the email address exists before applying the event. We implemented this in three different ways:
 
-1. By using a command message dispatcher which does a check on the CreateAccountCommand: https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/command/interceptor/AccountCreationDispatchInterceptor.java
+1. By using a command message dispatcher which does a check on the CreateAccountCommand: [AccountCreationDispatchInterceptor](https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/command/interceptor/AccountCreationDispatchInterceptor.java)
 2. By using an external commandHandler that does this check for the RequestEmailChangeCommand: 
-https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/command/handler/AccountCommandHandler.java
+[AccountCommandHandler](https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/command/handler/AccountCommandHandler.java)
 3. By using a ParameterResolver that returns a Boolean value that returns true if the email already exists:
-https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/resolver/EmailAlreadyExistsResolverFactory.java
-This way you can add the boolean emailAlreadyExists to the ChangeEmailAddressCommand commandhandler:
-https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/command/aggregate/Account.java
+{EmailAlreadyExistsResolverFactory](https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/resolver/EmailAlreadyExistsResolverFactory.java)
+This way you can add the boolean emailAlreadyExists to the ChangeEmailAddressCommand command handler:
+[Account](https://github.com/AxonIQ/code-samples/blob/set-validation/set-based-validation/src/main/java/io/axoniq/dev/samples/command/aggregate/Account.java)
 # References
 This implementation is based on https://danielwhittaker.me/2017/10/09/handle-set-based-consistency-validation-cqrs/ 

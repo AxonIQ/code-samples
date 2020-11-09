@@ -26,9 +26,6 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <swagger.version>2.9.2</swagger.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.axonframework</groupId>
@@ -39,7 +36,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.11.3</version>
+            <version>${jackson.core.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -68,7 +65,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>2.3.5.RELEASE</version>
+            <version>${spring.boot.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -82,6 +79,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
 </project>
