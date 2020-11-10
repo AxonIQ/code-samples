@@ -1,14 +1,15 @@
 package io.axoniq.dev.samples.api;
 
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
+
 import java.util.Objects;
 import java.util.UUID;
 
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
-
 public class ChangeEmailAddressCommand {
+
     @TargetAggregateIdentifier
-    private UUID accountId;
-    private String updatedEmailAddress;
+    private final UUID accountId;
+    private final String updatedEmailAddress;
 
     public ChangeEmailAddressCommand(UUID accountId, String updatedEmailAddress) {
         this.accountId = accountId;
@@ -19,22 +20,18 @@ public class ChangeEmailAddressCommand {
         return accountId;
     }
 
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-    }
-
     public String getUpdatedEmailAddress() {
         return updatedEmailAddress;
     }
 
-    public void setUpdatedEmailAddress(String updatedEmailAddress) {
-        this.updatedEmailAddress = updatedEmailAddress;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChangeEmailAddressCommand that = (ChangeEmailAddressCommand) o;
         return Objects.equals(accountId, that.accountId) &&
                 Objects.equals(updatedEmailAddress, that.updatedEmailAddress);
@@ -43,5 +40,13 @@ public class ChangeEmailAddressCommand {
     @Override
     public int hashCode() {
         return Objects.hash(accountId, updatedEmailAddress);
+    }
+
+    @Override
+    public String toString() {
+        return "ChangeEmailAddressCommand{" +
+                "accountId=" + accountId +
+                ", updatedEmailAddress='" + updatedEmailAddress + '\'' +
+                '}';
     }
 }

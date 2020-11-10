@@ -3,6 +3,7 @@ package io.axoniq.dev.samples.api;
 import java.util.Objects;
 
 public class AccountRequestData {
+
     private String emailAddress;
 
     public AccountRequestData(String emailAddress) {
@@ -22,8 +23,12 @@ public class AccountRequestData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AccountRequestData that = (AccountRequestData) o;
         return Objects.equals(emailAddress, that.emailAddress);
     }
@@ -31,5 +36,12 @@ public class AccountRequestData {
     @Override
     public int hashCode() {
         return Objects.hash(emailAddress);
+    }
+
+    @Override
+    public String toString() {
+        return "AccountRequestData{" +
+                "emailAddress='" + emailAddress + '\'' +
+                '}';
     }
 }

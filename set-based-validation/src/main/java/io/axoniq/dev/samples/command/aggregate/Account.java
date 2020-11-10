@@ -1,26 +1,25 @@
 package io.axoniq.dev.samples.command.aggregate;
 
-import static org.axonframework.modelling.command.AggregateLifecycle.apply;
-
-import java.util.UUID;
-
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.spring.stereotype.Aggregate;
-
 import io.axoniq.dev.samples.api.AccountCreatedEvent;
 import io.axoniq.dev.samples.api.AlterEmailAddressCommand;
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.api.CreateAccountCommand;
 import io.axoniq.dev.samples.api.EmailAddressChangedEvent;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.modelling.command.AggregateIdentifier;
+import org.axonframework.spring.stereotype.Aggregate;
+
+import java.util.UUID;
+
+import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Aggregate
 public class Account {
+
     @AggregateIdentifier
     private UUID accountId;
-
     private String emailAddress;
 
     @CommandHandler
@@ -71,5 +70,6 @@ public class Account {
     }
 
     public Account() {
+        // Required by Axon
     }
 }

@@ -1,28 +1,26 @@
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-import java.util.UUID;
-
-import org.axonframework.test.aggregate.AggregateTestFixture;
-import org.axonframework.test.aggregate.FixtureConfiguration;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import io.axoniq.dev.samples.command.aggregate.Account;
 import io.axoniq.dev.samples.api.AccountCreatedEvent;
 import io.axoniq.dev.samples.api.AlterEmailAddressCommand;
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.api.CreateAccountCommand;
 import io.axoniq.dev.samples.api.EmailAddressChangedEvent;
+import io.axoniq.dev.samples.command.aggregate.Account;
 import io.axoniq.dev.samples.command.persistence.EmailJpaEntity;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import io.axoniq.dev.samples.resolver.EmailAlreadyExistsResolverFactory;
+import org.axonframework.test.aggregate.AggregateTestFixture;
+import org.axonframework.test.aggregate.FixtureConfiguration;
+import org.junit.jupiter.api.*;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.Mockito.*;
 
 public class AccountTest {
-    public static final UUID UUID = java.util.UUID.randomUUID();
-    public static final String EMAIL_ADDRESS = "bob@gmail.com";
-    public static final String EMAIL_ADDRESS_CHANGED = "bob2@gmail.com";
+
+    private static final UUID UUID = java.util.UUID.randomUUID();
+    private static final String EMAIL_ADDRESS = "bob@gmail.com";
+    private static final String EMAIL_ADDRESS_CHANGED = "bob2@gmail.com";
 
     private FixtureConfiguration<Account> fixture;
     private final EmailRepository emailRepository = mock(EmailRepository.class);

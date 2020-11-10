@@ -1,15 +1,17 @@
 package io.axoniq.dev.samples.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class AccountCreatedEvent {
-    private UUID accountId;
-    private String emailAddress;
 
-    public AccountCreatedEvent(@JsonProperty("accountId")UUID accountId, @JsonProperty("emailAddress") String emailAddress){
+    private final UUID accountId;
+    private final String emailAddress;
+
+    public AccountCreatedEvent(@JsonProperty("accountId") UUID accountId,
+                               @JsonProperty("emailAddress") String emailAddress) {
         this.accountId = accountId;
         this.emailAddress = emailAddress;
     }
@@ -22,18 +24,14 @@ public class AccountCreatedEvent {
         return emailAddress;
     }
 
-    public void setAccountId(UUID accountId) {
-        this.accountId = accountId;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AccountCreatedEvent that = (AccountCreatedEvent) o;
         return Objects.equals(accountId, that.accountId) &&
                 Objects.equals(emailAddress, that.emailAddress);
@@ -42,5 +40,13 @@ public class AccountCreatedEvent {
     @Override
     public int hashCode() {
         return Objects.hash(accountId, emailAddress);
+    }
+
+    @Override
+    public String toString() {
+        return "AccountCreatedEvent{" +
+                "accountId=" + accountId +
+                ", emailAddress='" + emailAddress + '\'' +
+                '}';
     }
 }

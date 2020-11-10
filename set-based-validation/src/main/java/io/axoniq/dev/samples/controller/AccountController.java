@@ -1,8 +1,9 @@
 package io.axoniq.dev.samples.controller;
 
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-
+import io.axoniq.dev.samples.api.AccountRequestData;
+import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
+import io.axoniq.dev.samples.api.CreateAccountCommand;
+import io.axoniq.dev.samples.api.RequestEmailChangeCommand;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,13 +11,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.axoniq.dev.samples.api.AccountRequestData;
-import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
-import io.axoniq.dev.samples.api.CreateAccountCommand;
-import io.axoniq.dev.samples.api.RequestEmailChangeCommand;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class AccountController {
+
     private final CommandGateway commandGateway;
 
     public AccountController(CommandGateway commandGateway) {
@@ -40,5 +40,4 @@ public class AccountController {
                                                       @PathVariable("accountId") UUID accountId) {
         return commandGateway.send(new ChangeEmailAddressCommand(accountId, accountRequestData.getEmailAddress()));
     }
-
 }

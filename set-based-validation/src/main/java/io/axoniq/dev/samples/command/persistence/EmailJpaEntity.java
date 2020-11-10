@@ -2,12 +2,12 @@ package io.axoniq.dev.samples.command.persistence;
 
 import java.util.Objects;
 import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
 public class EmailJpaEntity {
+
     @Id
     public String emailAddress;
 
@@ -39,8 +39,12 @@ public class EmailJpaEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         EmailJpaEntity that = (EmailJpaEntity) o;
         return Objects.equals(emailAddress, that.emailAddress) &&
                 Objects.equals(accountId, that.accountId);

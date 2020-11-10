@@ -1,23 +1,23 @@
 package io.axoniq.dev.samples.command.interceptor;
 
-import java.util.List;
-import java.util.function.BiFunction;
-
+import io.axoniq.dev.samples.api.CreateAccountCommand;
+import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.springframework.stereotype.Component;
 
-import io.axoniq.dev.samples.api.CreateAccountCommand;
-import io.axoniq.dev.samples.command.persistence.EmailRepository;
+import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * Intercepts the create account command message and throws IllegalStateException when already account aggregate with
- * email address already exists. Links to "Validation with a dispatch interceptor' in the blog
+ * email address already exists. Links to the "Validation through a Dispatch Interceptor' section in the blog.
  *
  * @author Yvonne Ceelie
  */
 @Component
 public class AccountCreationDispatchInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
+
     private final EmailRepository emailRepository;
 
     public AccountCreationDispatchInterceptor(EmailRepository emailRepository) {
