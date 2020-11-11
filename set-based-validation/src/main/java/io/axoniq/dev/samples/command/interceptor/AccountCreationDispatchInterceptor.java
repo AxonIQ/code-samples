@@ -12,8 +12,8 @@ import io.axoniq.dev.samples.command.persistence.EmailRepository;
 
 /**
  * Intercepts the create account command message and throws IllegalStateException when already account aggregate with
- * email address already exists. Links to the "Validation through a Dispatch Interceptor' section in the in <a
- * href="https://axoniq.io/blog-overview/set-based-validation">Set based consistency validation with Axon</a>
+ * email address already exists. Links to "Validation through a Dispatch Interceptor' section in
+ * https://axoniq.io/blog-overview/set-based-validation"
  *
  * @author Yvonne Ceelie
  */

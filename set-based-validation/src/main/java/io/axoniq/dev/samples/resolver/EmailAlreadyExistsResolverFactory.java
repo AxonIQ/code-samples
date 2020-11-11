@@ -13,9 +13,8 @@ import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
 
 /**
- * This parameter resolver resolves to true if an account aggregate with email address already exists. Links to the
- * "Validation using a Parameter Resolver" section in the in <a href="https://axoniq.io/blog-overview/set-based-validation">Set
- * based * consistency validation with Axon</a>
+ * This parameter resolver resolves to true if an account aggregate with email address already exists. Links to
+ * "Validation using a Parameter Resolver" section in https://axoniq.io/blog-overview/set-based-validation
  *
  * @author Yvonne Ceelie
  */

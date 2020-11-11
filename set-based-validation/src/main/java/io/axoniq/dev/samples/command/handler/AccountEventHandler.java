@@ -12,9 +12,8 @@ import io.axoniq.dev.samples.command.persistence.EmailJpaEntity;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
 
 /**
- * Subscribing processor that updates lookup table with email addresses used in the Account. Links to the "Update the
- * look-up table" section in <a href="https://axoniq.io/blog-overview/set-based-validation">Set based consistency
- * validation with Axon</a>
+ * Subscribing processor that updates lookup table with email addresses used in the Account. Links to the `Update the
+ * look-up table` section in https://axoniq.io/blog-overview/set-based-validation
  *
  * @author Yvonne Ceelie
  */
