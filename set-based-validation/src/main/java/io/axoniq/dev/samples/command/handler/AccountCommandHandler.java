@@ -1,15 +1,17 @@
 package io.axoniq.dev.samples.command.handler;
 
-import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
-import io.axoniq.dev.samples.api.RequestEmailChangeCommand;
-import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Component;
 
+import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
+import io.axoniq.dev.samples.api.RequestEmailChangeCommand;
+import io.axoniq.dev.samples.command.persistence.EmailRepository;
+
 /**
  * Command handling component that validates if the email address already exists. Links to the "Validation in an
- * External Command Handler" section in the blog.
+ * External Command Handler" section in <a href="https://axoniq.io/blog-overview/set-based-validation">Set based
+ * consistency validation with Axon</a>.
  *
  * @author Yvonne Ceelie
  */

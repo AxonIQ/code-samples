@@ -1,19 +1,21 @@
 package io.axoniq.dev.samples.resolver;
 
-import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
-import io.axoniq.dev.samples.command.persistence.EmailRepository;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Parameter;
+
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.ParameterResolver;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Executable;
-import java.lang.reflect.Parameter;
+import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
+import io.axoniq.dev.samples.command.persistence.EmailRepository;
 
 /**
  * This parameter resolver resolves to true if an account aggregate with email address already exists. Links to the
- * "Validation using a Parameter Resolver" section in the blog.
+ * "Validation using a Parameter Resolver" section in the in <a href="https://axoniq.io/blog-overview/set-based-validation">Set
+ * based * consistency validation with Axon</a>
  *
  * @author Yvonne Ceelie
  */
