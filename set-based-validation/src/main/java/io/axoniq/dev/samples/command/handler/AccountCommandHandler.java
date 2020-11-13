@@ -8,8 +8,8 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Component;
 
 /**
- * Command handling component that validates if the email address already exists. Links to the "Validation in an
- * External Command Handler" section in the blog.
+ * Command handling component that validates if the email address already exists. Links to the `Validation in an
+ * External Command Handler` section in this [set based validation blog](https://axoniq.io/blog-overview/set-based-validation)
  *
  * @author Yvonne Ceelie
  */
