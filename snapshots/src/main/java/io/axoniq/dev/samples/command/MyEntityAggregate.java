@@ -34,18 +34,21 @@ public class MyEntityAggregate {
 
     @CommandHandler
     public MyEntityAggregate(CreateMyEntityCommand command) {
-        apply(new MyEntityCreatedEvent(command.getEntityId(), command.getName()));
         logger.info("[CreateMyEntityCommand] Entity with id [{}] and name [{}] created.",
                     command.getEntityId(),
                     command.getName());
+        apply(new MyEntityCreatedEvent(command.getEntityId(), command.getName()));
     }
 
     @CommandHandler
     public void on(RenameMyEntityCommand command) {
-        apply(new MyEntityRenamedEvent(command.getEntityId(), command.getName()));
         logger.info("[RenameMyEntityCommand] Entity with id [{}] and name [{}] updated.",
                     command.getEntityId(),
                     command.getName());
+        if (name.equals(command.getName())) {
+            throw new IllegalArgumentException("New name can not be the same as current name.");
+        }
+        apply(new MyEntityRenamedEvent(command.getEntityId(), command.getName()));
     }
 
     @EventSourcingHandler

@@ -24,7 +24,7 @@ class CommandControllerIntegrationTest {
     private ConfigurableApplicationContext context;
 
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Testing against axonserver:{0}.")
     @ValueSource(strings = {"latest", "4.4.1", "4.3.7"})
     void test(String axonServerVersion) {
         GenericContainer<?> axonServer =
