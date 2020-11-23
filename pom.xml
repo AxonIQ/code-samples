@@ -11,7 +11,7 @@
         <module>subscription-query-rest</module>
         <module>set-based-validation</module>
         <module>distributed-exceptions</module>
-        <module>spring-kotlin-template</module>
+        <module>axon-spring-template</module>
     </modules>
     <packaging>pom</packaging>
 
