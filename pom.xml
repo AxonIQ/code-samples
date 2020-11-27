@@ -11,6 +11,7 @@
         <module>subscription-query-rest</module>
         <module>set-based-validation</module>
         <module>distributed-exceptions</module>
+        <module>axon-spring-template</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -87,7 +88,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.4.0</version>
+                <version>${spring.boot.version}</version>
             </plugin>
         </plugins>
     </build>
