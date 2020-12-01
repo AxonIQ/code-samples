@@ -1,3 +1,5 @@
+package io.axoniq.dev.samples.aggregate;
+
 import io.axoniq.dev.samples.api.AccountCreatedEvent;
 import io.axoniq.dev.samples.api.AlterEmailAddressCommand;
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
