@@ -21,7 +21,7 @@
         <axon.version>4.4.5</axon.version>
         <reactor.core.version>3.4.0</reactor.core.version>
         <junit.version>5.7.0</junit.version>
-        <testcontainers.version>1.15.0</testcontainers.version>
+        <testcontainers.version>1.15.1</testcontainers.version>
         <swagger.version>2.9.2</swagger.version>
         <jackson.core.version>2.12.0</jackson.core.version>
         <mockito-version>1.10.19</mockito-version>
