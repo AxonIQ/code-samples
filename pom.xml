@@ -23,7 +23,7 @@
         <junit.version>5.7.0</junit.version>
         <testcontainers.version>1.15.0</testcontainers.version>
         <swagger.version>2.9.2</swagger.version>
-        <jackson.core.version>2.12.0</jackson.core.version>
+        <jackson.core.version>2.12.1</jackson.core.version>
         <mockito-version>1.10.19</mockito-version>
     </properties>
 
