@@ -61,7 +61,7 @@ class CommandControllerIntegrationTest {
             assertEquals(id, eventMessage.getAggregateIdentifier());
             assertEquals(indexAndEvent.get(index.incrementAndGet()), eventMessage.getPayloadType().getName());
         });
-        assertEquals(2, index.get(), "We should not have more than 2 events");
+        assertEquals(2, index.get(), "We should have 2 events");
 
         axonServer.stop();
         context.close();
