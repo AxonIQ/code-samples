@@ -11,7 +11,8 @@ import java.util.function.BiFunction;
 
 /**
  * Intercepts the create account command message and throws IllegalStateException when already account aggregate with
- * email address already exists. Links to the "Validation through a Dispatch Interceptor' section in the blog.
+ * email address already exists. Links to "Validation through a Dispatch Interceptor' section in in this [set based
+ * validation blog](https://axoniq.io/blog-overview/set-based-validation)
  *
  * @author Yvonne Ceelie
  */

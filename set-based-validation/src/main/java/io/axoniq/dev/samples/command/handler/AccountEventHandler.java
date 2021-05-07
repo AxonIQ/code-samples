@@ -12,7 +12,7 @@ import java.util.Optional;
 
 /**
  * Tracking event processor that updates lookup table with email addresses used in the Account. Links to the "Update the
- * look-up table" section in the blog.
+ * look-up table" section, in this [set based validation blog](https://axoniq.io/blog-overview/set-based-validation)
  *
  * @author Yvonne Ceelie
  */

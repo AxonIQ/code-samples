@@ -11,18 +11,19 @@
         <module>subscription-query-rest</module>
         <module>set-based-validation</module>
         <module>distributed-exceptions</module>
+        <module>axon-spring-template</module>
     </modules>
     <packaging>pom</packaging>
 
     <properties>
         <encoding>UTF-8</encoding>
-        <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
-        <axon.version>4.4.3</axon.version>
-        <reactor.core.version>3.4.0</reactor.core.version>
-        <junit.version>5.7.0</junit.version>
-        <testcontainers.version>1.15.0</testcontainers.version>
-        <swagger.version>2.9.2</swagger.version>
-        <jackson.core.version>2.11.3</jackson.core.version>
+        <spring.boot.version>2.4.5</spring.boot.version>
+        <axon.version>4.5</axon.version>
+        <reactor.core.version>3.4.5</reactor.core.version>
+        <junit.version>5.7.1</junit.version>
+        <testcontainers.version>1.15.3</testcontainers.version>
+        <swagger.version>3.0.0</swagger.version>
+        <jackson.core.version>2.12.3</jackson.core.version>
         <mockito-version>1.10.19</mockito-version>
     </properties>
 
@@ -87,7 +88,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.5.RELEASE</version>
+                <version>${spring.boot.version}</version>
             </plugin>
         </plugins>
     </build>
