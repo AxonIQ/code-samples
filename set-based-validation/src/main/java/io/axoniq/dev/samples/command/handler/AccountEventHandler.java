@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * Subscribing processor that updates lookup table with email addresses used in the Account. Links to the `Update the
- * look-up table` section in in this [set based validation blog](https://axoniq.io/blog-overview/set-based-validation)
+ * Tracking event processor that updates lookup table with email addresses used in the Account. Links to the "Update the
+ * look-up table" section in the blog.
  *
  * @author Yvonne Ceelie
  */
@@ -22,14 +22,22 @@ public class AccountEventHandler {
 
     @EventHandler
     public void on(AccountCreatedEvent event, EmailRepository emailRepository) {
-        emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
+        if (!emailRepository.findEmailJpaEntityByAccountId(event.getAccountId()).isPresent()) {
+            emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
+        }
     }
 
     @EventHandler
     public void on(EmailAddressChangedEvent event, EmailRepository emailRepository) {
         Optional<EmailJpaEntity> emailEntityOptional = emailRepository
                 .findEmailJpaEntityByAccountId(event.getAccountId());
-        emailEntityOptional.ifPresent(emailRepository::delete);
-        emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
+        emailEntityOptional.ifPresent(emailJpaEntity -> updateEmailAddress(emailJpaEntity, event, emailRepository));
+    }
+
+    private void updateEmailAddress(EmailJpaEntity emailJpaEntity, EmailAddressChangedEvent event,
+                                    EmailRepository emailRepository) {
+        if (!event.getEmailAddress().equals(emailJpaEntity.emailAddress)) {
+            emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
+        }
     }
 }

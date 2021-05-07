@@ -42,6 +42,8 @@ public class AccountTest {
         fixture.givenNoPriorActivity()
                .when(new CreateAccountCommand(UUID, EMAIL_ADDRESS))
                .expectEvents(new AccountCreatedEvent(UUID, EMAIL_ADDRESS));
+        //Check if the email address is saved in the after commit of the Unit Of Work
+        verify(emailRepository).save(new EmailJpaEntity(EMAIL_ADDRESS, UUID));
     }
 
     @Test
@@ -63,9 +65,18 @@ public class AccountTest {
 
     @Test
     void shouldAlterEmailAddress() {
+        when(emailRepository.findEmailJpaEntityByAccountId(UUID)).thenReturn(Optional.of(new EmailJpaEntity(
+                EMAIL_ADDRESS,
+                UUID)));
+
         fixture.given(new AccountCreatedEvent(UUID, EMAIL_ADDRESS))
                .when(new AlterEmailAddressCommand(UUID, EMAIL_ADDRESS_CHANGED))
                .expectEvents(new EmailAddressChangedEvent(UUID, EMAIL_ADDRESS_CHANGED));
+
+        //Check if the email address is updated in the after commit of the Unit Of Work
+        verify(emailRepository).findEmailJpaEntityByAccountId(UUID);
+        verify(emailRepository).delete(new EmailJpaEntity(EMAIL_ADDRESS, UUID));
+        verify(emailRepository).save(new EmailJpaEntity(EMAIL_ADDRESS_CHANGED, UUID));
     }
 
     @Test
