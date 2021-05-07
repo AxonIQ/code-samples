@@ -5,9 +5,11 @@ import io.axoniq.dev.samples.api.AlterEmailAddressCommand;
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.api.CreateAccountCommand;
 import io.axoniq.dev.samples.api.EmailAddressChangedEvent;
+import io.axoniq.dev.samples.command.persistence.EmailJpaEntity;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
+import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
 
@@ -23,8 +25,11 @@ public class Account {
     private String emailAddress;
 
     @CommandHandler
-    public Account(CreateAccountCommand command) {
+    public Account(CreateAccountCommand command, EmailRepository emailRepository) {
         apply(new AccountCreatedEvent(command.getAccountId(), command.getEmailAddress()));
+        // This hooks into the unit of work to save the name of the account after the event is saved
+        CurrentUnitOfWork.get().afterCommit(uow -> emailRepository
+                .save(new EmailJpaEntity(command.getEmailAddress(), command.getAccountId())));
     }
 
     /**
@@ -56,6 +61,12 @@ public class Account {
         }
 
         apply(new EmailAddressChangedEvent(command.getAccountId(), command.getUpdatedEmailAddress()));
+        CurrentUnitOfWork.get().afterCommit(unitOfWork -> updateEmailAddress(emailRepository, command));
+    }
+
+    private void updateEmailAddress(EmailRepository emailRepository, AlterEmailAddressCommand command) {
+        emailRepository.findEmailJpaEntityByAccountId(command.getAccountId()).ifPresent(emailRepository::delete);
+        emailRepository.save(new EmailJpaEntity(command.getUpdatedEmailAddress(), command.getAccountId()));
     }
 
     @EventSourcingHandler
