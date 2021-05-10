@@ -8,8 +8,6 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 /**
  * Tracking event processor that updates lookup table with email addresses used in the Account. Links to the "Update the
  * look-up table" section in the blog.
@@ -29,9 +27,8 @@ public class AccountEventHandler {
 
     @EventHandler
     public void on(EmailAddressChangedEvent event, EmailRepository emailRepository) {
-        Optional<EmailJpaEntity> emailEntityOptional = emailRepository
-                .findEmailJpaEntityByAccountId(event.getAccountId());
-        emailEntityOptional.ifPresent(emailJpaEntity -> updateEmailAddress(emailJpaEntity, event, emailRepository));
+        emailRepository.findEmailJpaEntityByAccountId(event.getAccountId())
+                       .ifPresent(emailJpaEntity -> updateEmailAddress(emailJpaEntity, event, emailRepository));
     }
 
     private void updateEmailAddress(EmailJpaEntity emailJpaEntity, EmailAddressChangedEvent event,

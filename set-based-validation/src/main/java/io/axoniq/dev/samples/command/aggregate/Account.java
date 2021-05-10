@@ -61,10 +61,10 @@ public class Account {
         }
 
         apply(new EmailAddressChangedEvent(command.getAccountId(), command.getUpdatedEmailAddress()));
-        CurrentUnitOfWork.get().afterCommit(unitOfWork -> updateEmailAddress(emailRepository, command));
+        CurrentUnitOfWork.get().afterCommit(unitOfWork -> replaceEmailAddress(emailRepository, command));
     }
 
-    private void updateEmailAddress(EmailRepository emailRepository, AlterEmailAddressCommand command) {
+    private void replaceEmailAddress(EmailRepository emailRepository, AlterEmailAddressCommand command) {
         emailRepository.findEmailJpaEntityByAccountId(command.getAccountId()).ifPresent(emailRepository::delete);
         emailRepository.save(new EmailJpaEntity(command.getUpdatedEmailAddress(), command.getAccountId()));
     }
