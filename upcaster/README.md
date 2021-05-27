@@ -34,3 +34,7 @@ You can find the implementation of the upcaster in
 the [FlightDelayedEventUpcaster](src/main/java/io/axoniq/dev/samples/upcaster/FlightDelayedEventUpcaster.java). The
 implementation of the test can be
 found [here](src/test/java/io/axoniq/dev/samples/upcaster/FlightDelayedEventUpcasterTest.java)
+
+To get this upcaster invoked on the event handler it should be added to
+the [EventUpcasterChainFactory](src/main/java/io/axoniq/dev/samples/upcaster/EventUpcasterChainFactory.java) or
+annotated it as a Spring component together with an Order annotation.
