@@ -15,8 +15,8 @@ The FlightDelayedEvent is used as example. The original (null) revision looks li
 
 ```
 
-The decision is made to put the origin and destination into a separate object called `leg`. Please note, that this is
-just an example, and we do recommend keeping your event structure as flat as possible. The upcasted event looks like
+Then a new requirement popped up to put the origin and destination into a separate object called `leg`. Please note, that this is
+just an example, and we do recommend keeping your event structure as flat as possible. The upcasted event should look like
 this:
 
 ```json
