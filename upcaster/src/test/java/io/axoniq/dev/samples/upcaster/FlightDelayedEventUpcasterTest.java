@@ -28,8 +28,8 @@ public class FlightDelayedEventUpcasterTest {
     public static final String UPCASTED_REVISION = "1.0";
     public static final String FLIGHT_CREATED_EVENT_REVISION = "3.0";
 
-    public static final String FLIGHT_DELAYED_EVENT_REV_NULL_JSON_FILE_NAME = "/flightDelayedEventRev_null.json";
-    public static final String FLIGHT_DELAYED_EVENT_REV_1_JSON_FILE_NAME = "/flightDelayedEventRev_1.json";
+    public static final String FLIGHT_DELAYED_EVENT_REV_NULL_JSON_FILE_NAME = "/FlightDelayedEventRev_null.json";
+    public static final String FLIGHT_DELAYED_EVENT_REV_1_JSON_FILE_NAME = "/FlightDelayedEventRev_1.json";
     public static final String PAYLOAD_OF_FLIGHT_CREATED_EVENT = "Payload of FlightCreatedEvent";
 
     public String flightDelayedEventVersionNullPayload;
