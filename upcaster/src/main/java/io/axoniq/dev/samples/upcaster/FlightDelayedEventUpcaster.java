@@ -18,9 +18,9 @@ public class FlightDelayedEventUpcaster extends SingleEventUpcaster {
     private static final String DESTINATION = "destination";
     private static final String LEG = "leg";
 
-    private SimpleSerializedType sourceType =
+    private final SimpleSerializedType sourceType =
             new SimpleSerializedType(FlightDelayedEvent.class.getTypeName(), null);
-    private SimpleSerializedType targetType =
+    private final SimpleSerializedType targetType =
             new SimpleSerializedType(FlightDelayedEvent.class.getTypeName(), "1.0");
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
