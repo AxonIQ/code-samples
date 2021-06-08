@@ -13,6 +13,7 @@
         <module>distributed-exceptions</module>
         <module>axon-spring-template</module>
         <module>upcaster</module>
+        <module>saga</module>
     </modules>
     <packaging>pom</packaging>
 
