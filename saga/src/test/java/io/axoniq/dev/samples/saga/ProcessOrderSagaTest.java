@@ -29,12 +29,13 @@ import static org.mockito.Mockito.*;
 
 public class ProcessOrderSagaTest {
 
-    private SagaTestFixture<ProcessOrderSaga> testFixture;
     private final UUIDProvider uuidProviderMock = mock(UUIDProvider.class);
     private final OrderId orderId = new OrderId();
     private final PaymentId paymentId = new PaymentId();
     private final ShipmentId shipmentId = new ShipmentId();
 
+
+    private SagaTestFixture<ProcessOrderSaga> testFixture;
 
     @BeforeEach
     void setUp() {
@@ -126,7 +127,7 @@ public class ProcessOrderSagaTest {
 
         @Override
         protected boolean matchesSafely(List<DeadlineMessage> deadlineMessages) {
-            return deadlineMessages.stream().anyMatch(deadlineMessage -> deadlineMessage.getDeadlineName()
+            return deadlineMessages.stream().allMatch(deadlineMessage -> deadlineMessage.getDeadlineName()
                                                                                         .equals(ORDER_COMPLETE_DEADLINE)
                     && deadlineMessage.getPayload() == null);
         }
