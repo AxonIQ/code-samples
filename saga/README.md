@@ -1,6 +1,6 @@
 # Saga implementation example
 
-This is an example on how to implement a Saga. This use case is implemented in the [ProcessOrderSaga]( io/axoniq/dev/samples/saga/ProcessOrderSaga.java io/axoniq/dev/samples/saga/ProcessOrderSaga.java)
+This is an example on how to implement a Saga. This use case is implemented in the [ProcessOrderSaga](io/axoniq/dev/samples/saga/ProcessOrderSaga.java io/axoniq/dev/samples/saga/ProcessOrderSaga.java)
 
 A webshop has different bounded contexts, for instance, a checkout (where the customer can add items to the card), an order, a shipment, a payment context. The checkout context will produce events based on actions that the customer does in the checkout. Some of these events are the so-called domain events. These events could trigger actions within other contexts. An example could be the [OrderConfirmedEvent](io/axoniq/dev/samples/order/api/OrderConfirmedEvent.java). When an order is confirmed, the order processing starts: the customer should pay, and the ordered articles need shipping. This process needs to be managed. When the order is not paid you need to take some compensating actions like cancelling the shipment.
 
