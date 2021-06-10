@@ -17,7 +17,12 @@ The event-handling methods are annotated with `@SagaEventHandler`. The `@StartSa
 For testing a fixture test ([ProcessOrderSagaTest](io/axoniq/dev/samples/saga/ProcessOrderSagaTest.java)) can be used. This is a convenient method to implement the tests. 
 Just define the test subject:  
 `private SagaTestFixture<ProcessOrderSaga> testFixture = new SagaTestFixture<>(ProcessOrderSaga.class);`
+
 Inject the resources needed for your Saga (Don't inject Axon resources since they are already injected) : 
 `testFixture.registerResource(uuidProviderMock);`
 
 And implement any given-when-then style test.
+
+## Saga configuration example
+
+Saga’s are event processors. A Saga event processor will (by default) start its token at the head of the stream. It is possible to change this behavior and let the processor take all historical events into account. The configuration example can be found [here](io/axoniq/dev/samples/saga/ProcessOrderSagaConfig.java)
