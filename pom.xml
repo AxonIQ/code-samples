@@ -18,7 +18,7 @@
 
     <properties>
         <encoding>UTF-8</encoding>
-        <spring.boot.version>2.5.0</spring.boot.version>
+        <spring.boot.version>2.5.1</spring.boot.version>
         <axon.version>4.5.1</axon.version>
         <reactor.core.version>3.4.6</reactor.core.version>
         <junit.version>5.7.2</junit.version>
