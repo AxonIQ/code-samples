@@ -14,7 +14,7 @@ The event-handling methods are annotated with `@SagaEventHandler`. The `@StartSa
 
 ## Saga test example
 
-For testing a fixture test ([ProcessOrderSagaTest](io/axoniq/dev/samples/saga/ProcessOrderSagaTest.java)) can be used. This is a convenient method to implement the tests. 
+For testing a test fixture ([ProcessOrderSagaTest](io/axoniq/dev/samples/saga/ProcessOrderSagaTest.java)) can be used. This is a convenient method to implement the tests. 
 Just define the test subject:  
 `private SagaTestFixture<ProcessOrderSaga> testFixture = new SagaTestFixture<>(ProcessOrderSaga.class);`
 

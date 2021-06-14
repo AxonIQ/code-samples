@@ -30,8 +30,10 @@ import java.time.temporal.ChronoUnit;
 public class ProcessOrderSaga {
 
     public static final String PAYMENT_ID_ASSOCIATION = "paymentId";
+
     public static final String SHIPMENT_ID_ASSOCIATION = "shipmentId";
     public static final String ORDER_ID_ASSOCIATION = "orderId";
+
     public static final String ORDER_COMPLETE_DEADLINE = "OrderCompleteDeadline";
 
     @Autowired
@@ -50,9 +52,9 @@ public class ProcessOrderSaga {
     @StartSaga
     @SagaEventHandler(associationProperty = ORDER_ID_ASSOCIATION)
     public void on(OrderConfirmedEvent event, DeadlineManager deadlineManager, UUIDProvider uuidProvider) {
-        // Send a command to the payment provider to pay the order. Associate this Saga with the payment ID used.
         this.orderId = event.getOrderId();
 
+        //Send a command to paid to get the order paid. Associate this Saga with the payment Id used.
         PaymentId paymentId = uuidProvider.generatePaymentId();
         SagaLifecycle.associateWith(PAYMENT_ID_ASSOCIATION, paymentId.toString());
         commandGateway.send(new PayOrderCommand(paymentId));
