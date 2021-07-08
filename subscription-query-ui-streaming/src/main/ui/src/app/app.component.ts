@@ -8,10 +8,11 @@ import { SseService } from "./app.sse.service";
 })
 export class AppComponent implements OnInit {
   constructor(private _sseService: SseService) {  }
+  messages: String[] = []
 
   ngOnInit(): void {
     this._sseService
       .getServerSentEvents()
-      .subscribe(data => console.log(data));
+      .subscribe(data => this.messages.push(data));
   }
 }
