@@ -2,6 +2,10 @@
 
   <div>
     <span>App is running! Check the console for the server-sent-events</span>
+
+    <div *ngFor="let message of messages">
+      <div>{{message}}</div>
+    </div>
   </div>
 
 </div>
