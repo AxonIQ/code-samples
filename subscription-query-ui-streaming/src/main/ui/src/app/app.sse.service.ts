@@ -1,6 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from "rxjs";
 
+// Simple service providing an Observable of Strings. This Observable is filled with the events from the EventSource
+// retrieved from 'http://localhost:8080/app/updates'.
 @Injectable({
   providedIn: 'root'
 })
