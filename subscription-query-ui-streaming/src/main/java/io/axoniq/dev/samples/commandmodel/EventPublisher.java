@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 /**
+ * Scheduled event publisher. Uses the {@link EventGateway} to publish the {@link StreamUpdatedEvent} on set intervals.
+ * The events are filled with a {@link UUID}.
+ *
  * @author Steven van Beelen
  */
 @Component

@@ -3,6 +3,8 @@ package io.axoniq.dev.samples.api;
 import java.util.Objects;
 
 /**
+ * Event containing an update to the stream.
+ *
  * @author Steven van Beelen
  */
 public class StreamUpdatedEvent {

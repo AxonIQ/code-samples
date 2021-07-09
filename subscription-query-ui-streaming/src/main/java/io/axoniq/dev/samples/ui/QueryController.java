@@ -19,6 +19,9 @@ import java.time.Duration;
 import java.util.List;
 
 /**
+ * Simple controller providing a {@link Flux} of {@link ServerSentEvent}s. These {@code ServerSentEvents} contain simple
+ * updates messages from th e {@link ModelQuery}.
+ *
  * @author Steven van Beelen
  */
 @RestController
