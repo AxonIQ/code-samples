@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Basic projector classof a {@link List} of strings model. Adds the contents of the {@link StreamUpdatedEvent} to a
+ * Basic projector class of a {@link List} of strings model. Adds the contents of the {@link StreamUpdatedEvent} to a
  * list and emits updates of these same events to the {@link ModelQuery}.
  *
  * @author Steven van Beelen
