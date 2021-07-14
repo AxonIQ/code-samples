@@ -22,7 +22,7 @@
         <encoding>UTF-8</encoding>
         <spring.boot.version>2.5.1</spring.boot.version>
         <axon.version>4.5.2</axon.version>
-        <reactor.core.version>3.4.6</reactor.core.version>
+        <reactor.core.version>3.4.8</reactor.core.version>
         <junit.version>5.7.2</junit.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <swagger.version>3.0.0</swagger.version>
