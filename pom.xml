@@ -28,7 +28,7 @@
         <swagger.version>3.0.0</swagger.version>
         <jackson.core.version>2.12.3</jackson.core.version>
         <mockito-version>1.10.19</mockito-version>
-        <kotlin-maven-version>1.5.10</kotlin-maven-version>
+        <kotlin-maven-version>1.5.21</kotlin-maven-version>
     </properties>
 
     <name>Axon Code Samples</name>
