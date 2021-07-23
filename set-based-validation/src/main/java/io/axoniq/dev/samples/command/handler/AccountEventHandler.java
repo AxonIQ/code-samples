@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * Subscribing processor that updates lookup table with email addresses used in the Account. Links to the `Update the
+ * Tracking event processor that updates lookup table with email addresses used in the Account. Links to the `Update the
  * look-up table` section in in this [set based validation blog](https://axoniq.io/blog-overview/set-based-validation)
  *
  * @author Yvonne Ceelie
  */
 @Component
-@ProcessingGroup("emailEntity")
+@ProcessingGroup("emailEntityProcessor")
 public class AccountEventHandler {
 
     @EventHandler

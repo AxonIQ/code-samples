@@ -1,7 +1,7 @@
 package io.axoniq.dev.samples.command.interceptor;
 
 import io.axoniq.dev.samples.api.CreateAccountCommand;
-import io.axoniq.dev.samples.command.persistence.EmailRepository;
+import io.axoniq.dev.samples.validator.EmailUniquenessValidator;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.springframework.stereotype.Component;
@@ -19,10 +19,10 @@ import java.util.function.BiFunction;
 @Component
 public class AccountCreationDispatchInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
 
-    private final EmailRepository emailRepository;
+    private final EmailUniquenessValidator emailUniquenessValidator;
 
-    public AccountCreationDispatchInterceptor(EmailRepository emailRepository) {
-        this.emailRepository = emailRepository;
+    public AccountCreationDispatchInterceptor(EmailUniquenessValidator emailUniquenessValidator) {
+        this.emailUniquenessValidator = emailUniquenessValidator;
     }
 
     @Override
@@ -30,10 +30,7 @@ public class AccountCreationDispatchInterceptor implements MessageDispatchInterc
         return (i, m) -> {
             if (CreateAccountCommand.class.equals(m.getPayloadType())) {
                 final CreateAccountCommand createAccountCommand = (CreateAccountCommand) m.getPayload();
-                if (emailRepository.existsById(createAccountCommand.getEmailAddress())) {
-                    throw new IllegalStateException(String.format("Account with email address %s already exists",
-                                                                  createAccountCommand.getEmailAddress()));
-                }
+                emailUniquenessValidator.validateEmailAddress(createAccountCommand.getEmailAddress());
             }
             return m;
         };

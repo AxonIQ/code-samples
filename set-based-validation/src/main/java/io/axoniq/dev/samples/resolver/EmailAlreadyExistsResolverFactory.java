@@ -2,6 +2,7 @@ package io.axoniq.dev.samples.resolver;
 
 import io.axoniq.dev.samples.api.ChangeEmailAddressCommand;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
+import io.axoniq.dev.samples.validator.EmailUniquenessValidator;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.ParameterResolver;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
@@ -20,11 +21,11 @@ import java.lang.reflect.Parameter;
 @Component
 public class EmailAlreadyExistsResolverFactory implements ParameterResolver<Boolean>, ParameterResolverFactory {
 
-    private final EmailRepository emailRepository;
+    private final EmailUniquenessValidator emailUniquenessValidator;
 
     @Autowired
-    public EmailAlreadyExistsResolverFactory(EmailRepository emailRepository) {
-        this.emailRepository = emailRepository;
+    public EmailAlreadyExistsResolverFactory(EmailUniquenessValidator emailUniquenessValidator) {
+        this.emailUniquenessValidator = emailUniquenessValidator;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class EmailAlreadyExistsResolverFactory implements ParameterResolver<Bool
     public Boolean resolveParameterValue(Message<?> message) {
         if (matches(message)) {
             String emailAddress = ((ChangeEmailAddressCommand) message.getPayload()).getUpdatedEmailAddress();
-            return emailRepository.findById(emailAddress).isPresent();
+            return emailUniquenessValidator.emailAddressExists(emailAddress);
         }
         throw new IllegalArgumentException("Message payload not of type ChangeEmailAddressCommand");
     }

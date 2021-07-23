@@ -9,6 +9,7 @@ import io.axoniq.dev.samples.command.aggregate.Account;
 import io.axoniq.dev.samples.command.persistence.EmailJpaEntity;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import io.axoniq.dev.samples.resolver.EmailAlreadyExistsResolverFactory;
+import io.axoniq.dev.samples.validator.EmailUniquenessValidator;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.jupiter.api.*;
@@ -25,9 +26,10 @@ public class AccountTest {
     private static final String EMAIL_ADDRESS_CHANGED = "bob2@gmail.com";
 
     private FixtureConfiguration<Account> fixture;
+    private final EmailUniquenessValidator emailUniquenessValidator = mock((EmailUniquenessValidator.class));
     private final EmailRepository emailRepository = mock(EmailRepository.class);
     private final EmailAlreadyExistsResolverFactory emailAlreadyExistsResolverFactory =
-            new EmailAlreadyExistsResolverFactory(emailRepository);
+            new EmailAlreadyExistsResolverFactory(emailUniquenessValidator);
 
     @BeforeEach
     void setup() {

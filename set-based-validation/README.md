@@ -7,10 +7,8 @@ There are several ways to invoke this set validation when using Axon, several of
 
 Prior to checking if the email address already exists you need to save all the email addresses that are used. You can do this by using an event handling component in this case an [AccountEventHandler](https://github.com/AxonIQ/code-samples/blob/master/set-based-validation/src/main/java/io/axoniq/dev/samples/command/handler/AccountEventHandler.java)
 
-You’ll need to make the `AccountEventHandler`'s processing group subscribing to be able to update the repository in the same thread that has applied the event; thus ensuring consistent updates of the set. You can achieve that by adding the following property to your `application.properties` file:
-`axon.eventhandling.processors.emailEntity.mode=subscribing`
-
-Subscribing processors will create and maintain a projection immediately after an event has been applied and thus are immediately consistent. Moreover lookup tables like this should always be owned by the command side _only_ and as such should not be exposed through a Query API on top of it.
+Streaming processors will create and maintain a projection after an event has been published and thus are not immediately but eventually consistent. Moreover, lookup tables like this should always be owned by the command side _only_ and as such should not be exposed through a Query API on top of it. The usage of a streaming event processor is justified when the data gets lost. In that case the events can be replayed to recreate the table.
+We need to deal with the eventual consistency and in this example a check is added to see if the event processor is up-to-date with the latest event in the event store. If that is not the case and a command is send this command will be rejected until the event processor is caught up again.
 
 Now that you have a lookup table you can check if the email address exists before applying the event. We implemented this in three different ways:
 
