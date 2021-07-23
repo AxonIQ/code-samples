@@ -15,14 +15,13 @@ import org.springframework.stereotype.Component;
  * @author Yvonne Ceelie
  */
 @Component
-@ProcessingGroup("emailEntity")
+@ProcessingGroup("emailEntityProcessor")
 public class AccountEventHandler {
 
     @EventHandler
-    public void on(AccountCreatedEvent event, EmailRepository emailRepository) {
-        if (!emailRepository.findEmailJpaEntityByAccountId(event.getAccountId()).isPresent()) {
-            emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
-        }
+    public void on(AccountCreatedEvent event, EmailRepository emailRepository) throws InterruptedException {
+        emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
+        Thread.sleep(60000);
     }
 
     @EventHandler

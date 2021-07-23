@@ -3,10 +3,14 @@ package io.axoniq.dev.samples.command.interceptor;
 import io.axoniq.dev.samples.api.CreateAccountCommand;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import org.axonframework.commandhandling.CommandMessage;
+import org.axonframework.config.Configuration;
+import org.axonframework.eventhandling.EventTrackerStatus;
+import org.axonframework.eventhandling.StreamingEventProcessor;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
@@ -21,13 +25,20 @@ public class AccountCreationDispatchInterceptor implements MessageDispatchInterc
 
     private final EmailRepository emailRepository;
 
-    public AccountCreationDispatchInterceptor(EmailRepository emailRepository) {
+    private final Configuration configuration;
+
+    public AccountCreationDispatchInterceptor(EmailRepository emailRepository, Configuration configuration) {
         this.emailRepository = emailRepository;
+        this.configuration = configuration;
     }
 
     @Override
     public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(List<? extends CommandMessage<?>> list) {
         return (i, m) -> {
+            Optional<StreamingEventProcessor> emailEntityProcessor = configuration
+                    .eventProcessingConfiguration().eventProcessorByProcessingGroup("emailEntityProcessor");
+            emailEntityProcessor.ifPresentOrElse(this::throwExceptionWhenReplaying,
+                                                 this::throwExceptionWhenProcessorIsNotConfigured);
             if (CreateAccountCommand.class.equals(m.getPayloadType())) {
                 final CreateAccountCommand createAccountCommand = (CreateAccountCommand) m.getPayload();
                 if (emailRepository.existsById(createAccountCommand.getEmailAddress())) {
@@ -37,5 +48,19 @@ public class AccountCreationDispatchInterceptor implements MessageDispatchInterc
             }
             return m;
         };
+    }
+
+    private void throwExceptionWhenReplaying(StreamingEventProcessor eventProcessor) {
+        if (eventProcessor.isReplaying() || !isCaughtUp(eventProcessor)) {
+            throw new IllegalStateException("Email event processor is not up to date");
+        }
+    }
+
+    private void throwExceptionWhenProcessorIsNotConfigured() {
+        throw new IllegalStateException("Email event processor is not configured");
+    }
+
+    private boolean isCaughtUp(StreamingEventProcessor eventProcessor) {
+        return eventProcessor.processingStatus().values().stream().allMatch(EventTrackerStatus::isCaughtUp);
     }
 }

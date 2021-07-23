@@ -27,9 +27,6 @@ public class Account {
     @CommandHandler
     public Account(CreateAccountCommand command, EmailRepository emailRepository) {
         apply(new AccountCreatedEvent(command.getAccountId(), command.getEmailAddress()));
-        // This hooks into the unit of work to save the name of the account after the event is saved
-        CurrentUnitOfWork.get().afterCommit(uow -> emailRepository
-                .save(new EmailJpaEntity(command.getEmailAddress(), command.getAccountId())));
     }
 
     /**

@@ -4,20 +4,17 @@ A type of question that occurs a lot is `How can I check if an account with a pa
 In essence this signals the requirement to be able to validate a set, which is a more intricate process when it comes to
 applications which follow the CQRS paradigm. Without going in full detail here why this is a problem, a straightforward
 solution is to enhance the command model by adding a small look-up table which can be queried during such a validation
-step.
+step. In a distributed environment this lookup table must be shared.
 
 There are several ways to invoke this set validation when using Axon, several of which are shared in this repository.
 
-Prior to checking if the email address already exists you need to save all the email addresses that are used. You can do
-this by using the after commit phase of the command handler. An example can be found in the constructor of
-the [Account aggregate](https://github.com/AxonIQ/code-samples/blob/master/set-based-validation/src/main/java/io/axoniq/dev/samples/command/aggregate/Account.java)
+Prior to checking if the email address already exists you need to save all the email addresses that are used. You can do this with a Streaming event processor. But when using a streaming event processor the data in the validation table might be running behind (Eventual Consistency). To be sure that the validation is done against the latest events new commands can be blocked when the event processor is not up-to-date. This is implemented in the [AccountCreationDispatchInterceptor](io/axoniq/dev/samples/command/interceptor/AccountCreationDispatchInterceptor.java) 
 
-Besides that, an event handling component in this case
-an [AccountEventHandler](https://github.com/AxonIQ/code-samples/blob/master/set-based-validation/src/main/java/io/axoniq/dev/samples/command/handler/AccountEventHandler.java)
+Besides that, an event handling component, in this case an [AccountEventHandler](https://github.com/AxonIQ/code-samples/blob/master/set-based-validation/src/main/java/io/axoniq/dev/samples/command/handler/AccountEventHandler.java)
 is necessary to update the table with all the events that were processed before this logic was added. This event
 handling component can also help when the data is lost somehow.
 
-Moreover lookup tables like this should always be owned by the command side _only_ and as such should not be exposed
+Moreover, lookup tables like this should always be owned by the command side _only_ and as such should not be exposed
 through a Query API on top of it.
 
 Now that you have a lookup table you can check if the email address exists before applying the event. We implemented

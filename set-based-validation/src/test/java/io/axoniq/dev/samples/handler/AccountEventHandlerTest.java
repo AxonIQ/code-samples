@@ -27,7 +27,7 @@ public class AccountEventHandlerTest {
     }
 
     @Test
-    void accountCreatedTest() {
+    void accountCreatedTest() throws InterruptedException {
         when(emailRepository.findEmailJpaEntityByAccountId(ACCOUNT_ID)).thenReturn(Optional.empty());
         testSubject.on(new AccountCreatedEvent(ACCOUNT_ID, EMAIL_ADDRESS), emailRepository);
         EmailJpaEntity emailJpaEntity = new EmailJpaEntity(EMAIL_ADDRESS, ACCOUNT_ID);
