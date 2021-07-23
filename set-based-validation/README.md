@@ -11,8 +11,7 @@ There are several ways to invoke this set validation when using Axon, several of
 Prior to checking if the email address already exists you need to save all the email addresses that are used. You can do this with a Streaming event processor. But when using a streaming event processor the data in the validation table might be running behind (Eventual Consistency). To be sure that the validation is done against the latest events new commands can be blocked when the event processor is not up-to-date. This is implemented in the [AccountCreationDispatchInterceptor](io/axoniq/dev/samples/command/interceptor/AccountCreationDispatchInterceptor.java) 
 
 Besides that, an event handling component, in this case an [AccountEventHandler](https://github.com/AxonIQ/code-samples/blob/master/set-based-validation/src/main/java/io/axoniq/dev/samples/command/handler/AccountEventHandler.java)
-is necessary to update the table with all the events that were processed before this logic was added. This event
-handling component can also help when the data is lost somehow.
+updates the table with all the events that were applied. This event handling component can also help to recreate the table when the data is lost somehow.
 
 Moreover, lookup tables like this should always be owned by the command side _only_ and as such should not be exposed
 through a Query API on top of it.
@@ -26,5 +25,6 @@ this in three different ways:
 This way you can add the boolean emailAlreadyExists to the ChangeEmailAddressCommand command handler done in [Account](https://github.com/AxonIQ/code-samples/blob/master/set-based-validation/src/main/java/io/axoniq/dev/samples/command/aggregate/Account.java)
 
 You can test the endpoints using [Swagger](http://localhost:8080/swagger-ui/#)
+# References
 
 This implementation is based on https://danielwhittaker.me/2017/10/09/handle-set-based-consistency-validation-cqrs/ 

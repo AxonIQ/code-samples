@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Tracking event processor that updates lookup table with email addresses used in the Account. Links to the "Update the
- * look-up table" section in the blog.
+ * look-up table" section, in this [set based validation blog](https://axoniq.io/blog-overview/set-based-validation)
  *
  * @author Yvonne Ceelie
  */
@@ -19,9 +19,8 @@ import org.springframework.stereotype.Component;
 public class AccountEventHandler {
 
     @EventHandler
-    public void on(AccountCreatedEvent event, EmailRepository emailRepository) throws InterruptedException {
+    public void on(AccountCreatedEvent event, EmailRepository emailRepository) {
         emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
-        Thread.sleep(60000);
     }
 
     @EventHandler
