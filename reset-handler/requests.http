@@ -1,0 +1,19 @@
+### Send a simple Event to the Application
+
+GET http://localhost:8080/event
+Content-Type: application/json
+
+### Pause the processor name called "io.axoniq".
+
+GET http://localhost:8080/pause/io.axoniq
+Content-Type: application/json
+
+### Start the processor name called "io.axoniq".
+
+GET http://localhost:8080/start/io.axoniq
+Content-Type: application/json
+
+### Reset the processor name called "io.axoniq". Reset means pause, reset token and start.
+
+GET http://localhost:8080/reset/io.axoniq
+Content-Type: application/json
