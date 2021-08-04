@@ -38,7 +38,7 @@ public class EventProcessorRestController {
                                                               .eventProcessorByProcessingGroup(
                                                                       processorName,
                                                                       StreamingEventProcessor.class)
-                                                              .orElseThrow();
+                                                              .orElseThrow(IllegalArgumentException::new);
 
         return eventProcessorService.pause(processorName)
                                     .then(eventProcessorService.awaitTermination(processorName))
