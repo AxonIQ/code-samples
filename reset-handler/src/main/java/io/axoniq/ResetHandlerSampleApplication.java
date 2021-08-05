@@ -13,6 +13,12 @@ public class ResetHandlerSampleApplication {
         SpringApplication.run(ResetHandlerSampleApplication.class);
     }
 
+    /**
+     * By default, the InMemoryTokenStore is not autowired since it's not 'production ready'. So, we need to explicitly
+     * declare it ourselves.
+     *
+     * @return One InMemoryTokenStore.ó
+     */
     @Bean
     TokenStore tokenStore() {
         return new InMemoryTokenStore();
