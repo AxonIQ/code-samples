@@ -1,4 +1,4 @@
-package io.axoniq;
+package io.axoniq.server;
 
 import org.axonframework.eventhandling.tokenstore.TokenStore;
 import org.springframework.beans.factory.annotation.Value;

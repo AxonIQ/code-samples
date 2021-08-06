@@ -1,22 +1,24 @@
-package io.axoniq;
+package io.axoniq.server;
 
 import org.axonframework.config.Configuration;
 import org.axonframework.eventhandling.StreamingEventProcessor;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-public class EventProcessorRestController {
+@RequestMapping("server")
+public class ServerEventProcessorRestController {
 
     private final EventProcessorService eventProcessorService;
     private final Configuration configuration;
 
 
-    public EventProcessorRestController(EventProcessorService eventProcessorService,
-                                        Configuration configuration) {
+    public ServerEventProcessorRestController(EventProcessorService eventProcessorService,
+                                              Configuration configuration) {
         this.eventProcessorService = eventProcessorService;
         this.configuration = configuration;
     }
