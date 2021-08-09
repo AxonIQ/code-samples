@@ -1,7 +1,7 @@
 # Snapshot
 In this demo we will show how to define and configure a Snapshot Trigger for a given Aggregate.
 
-Eventually you will need to speed up the Event Sourcing part of your Aggregate because you already have too many events. That is when a Snapshot is desirable. Axon Framework helps you on that by simply configuring a `SnapshotTriggerDefinition` and instructing your `Aggregate` to use that.
+Eventually you will need to speed up the Event Sourcing part of your Aggregate because the number of events exceeds your defined aggregate loading time. That is when a Snapshot is desirable. Axon Framework helps you on that by simply configuring a `SnapshotTriggerDefinition` and instructing your `Aggregate` to use that.
 
 To do it, as said before, you have to configure one or more `SnapshotTriggerDefinition` instances. Axon Framework already provides some implementations, but you are free to implement your own:
 1. [NoSnapshotTriggerDefinition](https://github.com/AxonFramework/AxonFramework/blob/master/eventsourcing/src/main/java/org/axonframework/eventsourcing/NoSnapshotTriggerDefinition.java): Implementation that doesn't trigger snapshots at all.
