@@ -15,6 +15,7 @@
         <module>upcaster</module>
         <module>saga</module>
         <module>subscription-query-ui-streaming</module>
+        <module>reset-handler</module>
     </modules>
     <packaging>pom</packaging>
 
