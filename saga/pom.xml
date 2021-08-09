@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-test</artifactId>
-            <version>4.5.2</version>
+            <version>4.5.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
