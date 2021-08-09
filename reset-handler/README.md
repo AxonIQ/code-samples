@@ -29,4 +29,4 @@ Also, if you are on Intellij, a `requests.http` file is provided to make it easy
 
 Most of the logic for the Axon Server reset is on the [EventProcessorService.java](https://github.com/AxonIQ/code-samples/blob/master/reset-handler/src/main/java/io.axoniq/server/EventProcessorService.java) class and the added javadoc should be enough to explain what it does.
 
-For the Axon Framework version, checking the official [StreamingEventProcessor.java](https://github.com/AxonFramework/AxonFramework/blob/master/messaging/src/main/java/org/axonframework/eventhandling/StreamingEventProcessor.java) is my best advice.
+For the Axon Framework version, we recommend checking the official [StreamingEventProcessor.java](https://github.com/AxonFramework/AxonFramework/blob/master/messaging/src/main/java/org/axonframework/eventhandling/StreamingEventProcessor.java) documentation.
