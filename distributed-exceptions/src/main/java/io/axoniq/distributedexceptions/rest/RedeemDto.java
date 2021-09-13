@@ -1,12 +1,16 @@
 package io.axoniq.distributedexceptions.rest;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author Stefan Andjelkovic
  */
 public class RedeemDto {
     private final int amount;
 
-    public RedeemDto(int amount) {
+    @JsonCreator()
+    public RedeemDto(@JsonProperty("amount") int amount) {
         this.amount = amount;
     }
 
