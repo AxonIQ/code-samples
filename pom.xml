@@ -24,7 +24,7 @@
         <spring.boot.version>2.5.4</spring.boot.version>
         <axon.version>4.5.3</axon.version>
         <reactor.core.version>3.4.9</reactor.core.version>
-        <junit.version>5.7.2</junit.version>
+        <junit.version>5.8.0</junit.version>
         <testcontainers.version>1.16.0</testcontainers.version>
         <swagger.version>3.0.0</swagger.version>
         <jackson.core.version>2.12.5</jackson.core.version>
