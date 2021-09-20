@@ -1,6 +1,5 @@
 package io.axoniq.distributedexceptions.rest;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class IssueNewGiftCardDto {
     private final int amount;
 
-    @JsonCreator
     public IssueNewGiftCardDto(@JsonProperty("amount")  int amount) {
         this.amount = amount;
     }
