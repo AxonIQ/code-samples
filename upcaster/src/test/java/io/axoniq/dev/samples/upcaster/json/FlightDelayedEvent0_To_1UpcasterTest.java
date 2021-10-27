@@ -1,4 +1,4 @@
-package io.axoniq.dev.samples.upcaster;
+package io.axoniq.dev.samples.upcaster.json;
 
 import org.axonframework.eventhandling.AbstractEventEntry;
 import org.axonframework.eventhandling.EventData;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FlightDelayedEventUpcasterTest {
+public class FlightDelayedEvent0_To_1UpcasterTest {
 
     public static final String PAYLOAD_TYPE = "io.axoniq.dev.samples.api.FlightDelayedEvent";
     public static final String INCORRECT_PAYLOAD_TYPE = "io.axoniq.dev.samples.api.FlightCreatedEvent";
@@ -35,7 +35,7 @@ public class FlightDelayedEventUpcasterTest {
     public String flightDelayedEventVersionNullPayload;
     public String flightDelayedEventVersion1Payload;
 
-    private final FlightDelayedEventUpcaster testSubject = new FlightDelayedEventUpcaster();
+    private final FlightDelayedEvent0_to_1Upcaster testSubject = new FlightDelayedEvent0_to_1Upcaster();
 
     public static final String FLIGHT_ID = "KL123";
 
