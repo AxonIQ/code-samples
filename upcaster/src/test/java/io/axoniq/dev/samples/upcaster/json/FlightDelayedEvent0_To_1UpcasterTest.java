@@ -11,33 +11,28 @@ import org.json.JSONException;
 import org.junit.jupiter.api.*;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
+import java.time.Instant;
+import java.util.UUID;
 
+import static io.axoniq.dev.samples.upcaster.json.UpcasterTestingUtils.extractFileContentsToString;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FlightDelayedEvent0_To_1UpcasterTest {
+class FlightDelayedEvent0_To_1UpcasterTest {
 
-    public static final String PAYLOAD_TYPE = "io.axoniq.dev.samples.api.FlightDelayedEvent";
-    public static final String INCORRECT_PAYLOAD_TYPE = "io.axoniq.dev.samples.api.FlightCreatedEvent";
+    private static final String PAYLOAD_TYPE = "io.axoniq.dev.samples.api.FlightDelayedEvent";
+    private static final String INCORRECT_PAYLOAD_TYPE = "io.axoniq.dev.samples.api.FlightCreatedEvent";
 
-    public static final String PRE_UPCASTER_REVISION = null;
-    public static final String UPCASTED_REVISION = "1.0";
-    public static final String FLIGHT_CREATED_EVENT_REVISION = "3.0";
+    private static final String PRE_UPCASTER_REVISION = null;
+    private static final String UPCASTED_REVISION = "1.0";
+    private static final String FLIGHT_CREATED_EVENT_REVISION = "3.0";
 
-    public static final String FLIGHT_DELAYED_EVENT_REV_NULL_JSON_FILE_NAME = "/FlightDelayedEventRev_null.json";
-    public static final String FLIGHT_DELAYED_EVENT_REV_1_JSON_FILE_NAME = "/FlightDelayedEventRev_1.json";
-    public static final String PAYLOAD_OF_FLIGHT_CREATED_EVENT = "Payload of FlightCreatedEvent";
+    private static final String FLIGHT_DELAYED_EVENT_REV_NULL_JSON_FILE_NAME = "/FlightDelayedEventRev_null.json";
+    private static final String FLIGHT_DELAYED_EVENT_REV_1_JSON_FILE_NAME = "/FlightDelayedEventRev_1.json";
+    private static final String PAYLOAD_OF_FLIGHT_CREATED_EVENT = "Payload of FlightCreatedEvent";
 
-    public String flightDelayedEventVersionNullPayload;
-    public String flightDelayedEventVersion1Payload;
+    private String flightDelayedEventVersion1Payload;
 
     private final FlightDelayedEvent0_to_1Upcaster testSubject = new FlightDelayedEvent0_to_1Upcaster();
-
-    public static final String FLIGHT_ID = "KL123";
 
     private EventData<?> flightDelayedEventWithRevisionNull;
     private EventData<?> flightDelayedEventWithRevision1;
@@ -45,81 +40,61 @@ public class FlightDelayedEvent0_To_1UpcasterTest {
 
     private final Serializer serializer = JacksonSerializer.defaultSerializer();
 
-
     @BeforeEach
     void setUp() {
-        final InputStream flightDelayedEventVersionNullPayloadStream = this.getClass().getResourceAsStream(
-                FLIGHT_DELAYED_EVENT_REV_NULL_JSON_FILE_NAME);
-        flightDelayedEventVersionNullPayload = inputStreamToString(flightDelayedEventVersionNullPayloadStream);
+        String flightDelayedEventVersionNullPayload =
+                extractFileContentsToString(FLIGHT_DELAYED_EVENT_REV_NULL_JSON_FILE_NAME);
+        flightDelayedEventVersion1Payload = extractFileContentsToString(FLIGHT_DELAYED_EVENT_REV_1_JSON_FILE_NAME);
 
-        final InputStream flightDelayedEventVersion1PayloadStream = this.getClass().getResourceAsStream(
-                FLIGHT_DELAYED_EVENT_REV_1_JSON_FILE_NAME);
-        flightDelayedEventVersion1Payload = inputStreamToString(flightDelayedEventVersion1PayloadStream);
-
-        flightDelayedEventWithRevisionNull = new TestEventEntry(PAYLOAD_TYPE,
-                                                                PRE_UPCASTER_REVISION,
-                                                                flightDelayedEventVersionNullPayload);
-        flightDelayedEventWithRevision1 = new TestEventEntry(PAYLOAD_TYPE,
-                                                             UPCASTED_REVISION,
-                                                             flightDelayedEventVersion1Payload);
-        flightDelayedEventWithIncorrectPayloadType = new TestEventEntry(INCORRECT_PAYLOAD_TYPE,
-                                                                        FLIGHT_CREATED_EVENT_REVISION,
-                                                                        PAYLOAD_OF_FLIGHT_CREATED_EVENT);
+        flightDelayedEventWithRevisionNull =
+                new TestEventEntry(PAYLOAD_TYPE, PRE_UPCASTER_REVISION, flightDelayedEventVersionNullPayload);
+        flightDelayedEventWithRevision1 =
+                new TestEventEntry(PAYLOAD_TYPE, UPCASTED_REVISION, flightDelayedEventVersion1Payload);
+        flightDelayedEventWithIncorrectPayloadType = new TestEventEntry(
+                INCORRECT_PAYLOAD_TYPE, FLIGHT_CREATED_EVENT_REVISION, PAYLOAD_OF_FLIGHT_CREATED_EVENT
+        );
     }
 
     @Test
     void testCanUpcastReturnsTrueForMatchingPayloadTypeAndRevision() {
-        IntermediateEventRepresentation testRepresentation = new InitialEventRepresentation(
-                flightDelayedEventWithRevisionNull,
-                serializer);
+        IntermediateEventRepresentation testRepresentation =
+                new InitialEventRepresentation(flightDelayedEventWithRevisionNull, serializer);
 
         assertTrue(testSubject.canUpcast(testRepresentation));
     }
 
     @Test
     void testCanUpcastReturnsFalseForIncorrectPayloadType() {
-        IntermediateEventRepresentation testRepresentation = new InitialEventRepresentation(
-                flightDelayedEventWithIncorrectPayloadType,
-                serializer);
+        IntermediateEventRepresentation testRepresentation =
+                new InitialEventRepresentation(flightDelayedEventWithIncorrectPayloadType, serializer);
 
         assertFalse(testSubject.canUpcast(testRepresentation));
     }
 
     @Test
     void testCanUpcastReturnsFalseForIncorrectRevision() {
-        IntermediateEventRepresentation testRepresentation = new InitialEventRepresentation(
-                flightDelayedEventWithRevision1,
-                serializer);
+        IntermediateEventRepresentation testRepresentation =
+                new InitialEventRepresentation(flightDelayedEventWithRevision1, serializer);
 
         assertFalse(testSubject.canUpcast(testRepresentation));
     }
 
     @Test
     void testDoUpcast() throws JSONException {
-        InitialEventRepresentation testRepresentation = new InitialEventRepresentation(
-                flightDelayedEventWithRevisionNull,
-                serializer);
+        InitialEventRepresentation testRepresentation =
+                new InitialEventRepresentation(flightDelayedEventWithRevisionNull, serializer);
 
         IntermediateEventRepresentation result = testSubject.doUpcast(testRepresentation);
         SerializedType resultType = result.getType();
         assertEquals(PAYLOAD_TYPE, resultType.getName());
         assertEquals(UPCASTED_REVISION, resultType.getRevision());
-        JSONAssert.assertEquals(flightDelayedEventVersion1Payload,
-                                result.getData().getData().toString(),
-                                true);
-    }
-
-    private String inputStreamToString(InputStream inputStream) {
-        return new BufferedReader(
-                new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                .lines()
-                .collect(Collectors.joining("\n"));
+        JSONAssert.assertEquals(flightDelayedEventVersion1Payload, result.getData().getData().toString(), true);
     }
 
     private static class TestEventEntry extends AbstractEventEntry<String> {
 
         public TestEventEntry(String payloadType, String payloadRevision, String payload) {
-            super(FLIGHT_ID, "timestamp", payloadType, payloadRevision, payload, "metaData");
+            super(UUID.randomUUID().toString(), Instant.now(), payloadType, payloadRevision, payload, "metaData");
         }
     }
 }
