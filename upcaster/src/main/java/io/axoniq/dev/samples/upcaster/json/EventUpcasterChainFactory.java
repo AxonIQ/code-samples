@@ -29,7 +29,8 @@ public abstract class EventUpcasterChainFactory {
      */
     public static EventUpcasterChain buildEventUpcasterChain() {
         return new EventUpcasterChain(
-                new FlightDelayedEvent0_to_1Upcaster()
+                new FlightDelayedEvent0_to_1Upcaster(),
+                new PassengerSeatsToPassengerSeatAdjustedEventUpcaster()
         );
     }
 
@@ -41,7 +42,8 @@ public abstract class EventUpcasterChainFactory {
      * @param configurer the {@link Configurer} to register all upcasters with
      */
     public static void configureUpcasters(Configurer configurer) {
-        configurer.registerEventUpcaster(config -> new FlightDelayedEvent0_to_1Upcaster());
+        configurer.registerEventUpcaster(config -> new FlightDelayedEvent0_to_1Upcaster())
+                  .registerEventUpcaster(config -> new PassengerSeatsToPassengerSeatAdjustedEventUpcaster());
     }
 
     private EventUpcasterChainFactory() {
