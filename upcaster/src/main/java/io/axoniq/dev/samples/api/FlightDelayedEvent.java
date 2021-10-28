@@ -39,13 +39,21 @@ public class FlightDelayedEvent {
             return false;
         }
         FlightDelayedEvent that = (FlightDelayedEvent) o;
-        return Objects.equals(getFlightId(), that.getFlightId()) && Objects.equals(getLeg(),
-                                                                                   that.getLeg())
-                && Objects.equals(getArrivalTime(), that.getArrivalTime());
+        return Objects.equals(flightId, that.flightId) && Objects.equals(leg, that.leg)
+                && Objects.equals(arrivalTime, that.arrivalTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFlightId(), getLeg(), getArrivalTime());
+        return Objects.hash(flightId, leg, arrivalTime);
+    }
+
+    @Override
+    public String toString() {
+        return "FlightDelayedEvent{" +
+                "flightId='" + flightId + '\'' +
+                ", leg=" + leg +
+                ", arrivalTime=" + arrivalTime +
+                '}';
     }
 }
