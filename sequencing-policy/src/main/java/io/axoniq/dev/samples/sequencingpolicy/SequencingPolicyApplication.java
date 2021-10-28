@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SequencingPolicyApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SequencingPolicyApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(SequencingPolicyApplication.class, args);
+    }
 }
