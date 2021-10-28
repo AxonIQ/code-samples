@@ -12,8 +12,7 @@ Without this base event, the `FlightIdSequencingPolicy` would include an if/else
 
 As a bonus, this sample shows how we can achieve the same result with the `PropertySequencingPolicy`.
 
-For more information, read up on sequencing
-policies [here](https://docs.axoniq.io/reference-guide/axon-framework/events/event-processors/streaming#sequential-processing).
+For more information on sequencing policies (like other implementations) check [this](https://docs.axoniq.io/reference-guide/axon-framework/events/event-processors/streaming#sequential-processing) page.
 
 ## Running the application
 

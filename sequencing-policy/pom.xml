@@ -13,8 +13,7 @@
 	<description>Code sample showing a custom SequencingPolicy implementation</description>
 
 	<properties>
-		<java.version>11</java.version>
-		<axon.version>4.5.5</axon.version>
+		<java.version>8</java.version>
 	</properties>
 
 	<dependencies>
@@ -50,8 +49,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>11</source>
-					<target>11</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 		</plugins>
