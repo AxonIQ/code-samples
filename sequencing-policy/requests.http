@@ -1,0 +1,4 @@
+### Send a bulk of events to the application
+
+POST http://localhost:8080/test/bulk/50
+Content-Type: application/json
