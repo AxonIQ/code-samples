@@ -16,13 +16,14 @@
         <module>saga</module>
         <module>subscription-query-ui-streaming</module>
         <module>reset-handler</module>
+        <module>sequencing-policy</module>
     </modules>
     <packaging>pom</packaging>
 
     <properties>
         <encoding>UTF-8</encoding>
         <spring.boot.version>2.5.5</spring.boot.version>
-        <axon.version>4.5.4</axon.version>
+        <axon.version>4.5.5</axon.version>
         <reactor.core.version>3.4.10</reactor.core.version>
         <junit.version>5.8.1</junit.version>
         <testcontainers.version>1.16.1</testcontainers.version>
@@ -38,8 +39,10 @@
         <dependencies>
             <dependency>
                 <groupId>org.axonframework</groupId>
-                <artifactId>axon-spring-boot-starter</artifactId>
+                <artifactId>axon-bom</artifactId>
                 <version>${axon.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>io.projectreactor</groupId>
