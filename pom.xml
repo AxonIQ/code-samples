@@ -28,7 +28,7 @@
         <junit.version>5.8.1</junit.version>
         <testcontainers.version>1.16.2</testcontainers.version>
         <swagger.version>3.0.0</swagger.version>
-        <jackson.core.version>2.13.0</jackson.core.version>
+        <jackson.core.version>2.13.1</jackson.core.version>
         <mockito-version>1.10.19</mockito-version>
         <kotlin-maven-version>1.5.31</kotlin-maven-version>
     </properties>
@@ -76,7 +76,7 @@
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>22.0.0</version>
+                <version>23.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.skyscreamer</groupId>
