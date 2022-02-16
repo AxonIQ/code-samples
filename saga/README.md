@@ -26,3 +26,8 @@ And implement any given-when-then style test.
 ## Saga configuration example
 
 Saga’s are event processors. A Saga event processor will (by default) start its token at the head of the stream. It is possible to change this behavior and let the processor take all historical events into account. The configuration example can be found [here](io/axoniq/dev/samples/saga/ProcessOrderSagaConfig.java)
+
+## Serialized saga in PostgreSQL without TOAST
+
+If you are using PostgreSQL the `serialized_saga` column in the saga_entry table will be compressed to OID. If you don't want that, you can overwrite the dialect like [this](io/axoniq/dev/samples/dialect/AxonPostgreSQLDialect.java). 
+And add a Hibernate mapping with an [orm file](orm.xml). If needed you can migrate the existing Saga entries with a [sql script](migrateToBytea.sql)
