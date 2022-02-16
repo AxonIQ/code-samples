@@ -89,6 +89,11 @@
                 <artifactId>json</artifactId>
                 <version>20211205</version>
             </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>5.6.4.Final</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

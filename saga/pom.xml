@@ -41,6 +41,10 @@
             <artifactId>junit-jupiter</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-test</artifactId>
             <scope>test</scope>
