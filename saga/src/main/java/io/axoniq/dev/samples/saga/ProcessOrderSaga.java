@@ -5,6 +5,7 @@ import io.axoniq.dev.samples.order.api.OrderConfirmedEvent;
 import io.axoniq.dev.samples.payment.api.OrderPaidEvent;
 import io.axoniq.dev.samples.payment.api.OrderPaymentCancelledEvent;
 import io.axoniq.dev.samples.payment.api.PayOrderCommand;
+import io.axoniq.dev.samples.payment.api.SagaEndedEvent;
 import io.axoniq.dev.samples.shipment.api.CancelShipmentCommand;
 import io.axoniq.dev.samples.shipment.api.ShipOrderCommand;
 import io.axoniq.dev.samples.shipment.api.ShipmentStatus;
@@ -13,9 +14,11 @@ import io.axoniq.dev.samples.uuid.OrderId;
 import io.axoniq.dev.samples.uuid.PaymentId;
 import io.axoniq.dev.samples.uuid.ShipmentId;
 import io.axoniq.dev.samples.uuid.UUIDProvider;
+import org.axonframework.axonserver.connector.event.axon.AxonServerEventScheduler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.deadline.DeadlineManager;
 import org.axonframework.deadline.annotation.DeadlineHandler;
+import org.axonframework.eventhandling.scheduling.EventScheduler;
 import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.SagaLifecycle;
@@ -51,7 +54,7 @@ public class ProcessOrderSaga {
 
     @StartSaga
     @SagaEventHandler(associationProperty = ORDER_ID_ASSOCIATION)
-    public void on(OrderConfirmedEvent event, DeadlineManager deadlineManager, UUIDProvider uuidProvider) {
+    public void on(OrderConfirmedEvent event, DeadlineManager deadlineManager, UUIDProvider uuidProvider, EventScheduler axonServerEventScheduler) {
         this.orderId = event.getOrderId();
 
         //Send a command to paid to get the order paid. Associate this Saga with the payment Id used.
@@ -67,6 +70,7 @@ public class ProcessOrderSaga {
 
         //This order should be completed in 5 days
         this.orderDeadlineId = deadlineManager.schedule(Duration.of(5, ChronoUnit.DAYS), ORDER_COMPLETE_DEADLINE);
+        axonServerEventScheduler.schedule(Duration.of(5, ChronoUnit.DAYS), new SagaEndedEvent(orderId));
     }
 
     @SagaEventHandler(associationProperty = PAYMENT_ID_ASSOCIATION)

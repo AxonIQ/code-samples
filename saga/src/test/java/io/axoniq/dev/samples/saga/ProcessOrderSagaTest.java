@@ -5,6 +5,7 @@ import io.axoniq.dev.samples.order.api.OrderConfirmedEvent;
 import io.axoniq.dev.samples.payment.api.OrderPaidEvent;
 import io.axoniq.dev.samples.payment.api.OrderPaymentCancelledEvent;
 import io.axoniq.dev.samples.payment.api.PayOrderCommand;
+import io.axoniq.dev.samples.payment.api.SagaEndedEvent;
 import io.axoniq.dev.samples.shipment.api.CancelShipmentCommand;
 import io.axoniq.dev.samples.shipment.api.ShipOrderCommand;
 import io.axoniq.dev.samples.shipment.api.ShipmentStatus;
@@ -33,6 +34,7 @@ public class ProcessOrderSagaTest {
     private final OrderId orderId = new OrderId();
     private final PaymentId paymentId = new PaymentId();
     private final ShipmentId shipmentId = new ShipmentId();
+    private static final String ORDER_AGGREGATE = "Order";
 
 
     private SagaTestFixture<ProcessOrderSaga> testFixture;
@@ -117,6 +119,24 @@ public class ProcessOrderSagaTest {
                    .expectDeadlinesMetMatching(orderCompleteDeadline())
                    .expectDispatchedCommands(new CompleteOrderProcessCommand(orderId, false, false))
                    .expectActiveSagas(0);
+    }
+
+    @Test
+    void onOrderConfirmedScheduledEventTest() {
+        // Check the scheduled event
+        testFixture.givenNoPriorActivity()
+                   .whenPublishingA(new OrderConfirmedEvent(orderId))
+                   .expectScheduledEvent(Duration.of(5, ChronoUnit.DAYS), new SagaEndedEvent(orderId));
+
+        // Check if the event is still scheduled after some time elapsed
+        Duration elapsedTime = Duration.ofMinutes(1);
+
+        testFixture.givenAggregate(ORDER_AGGREGATE)
+                   .published(new OrderConfirmedEvent(orderId))
+                   .whenTimeElapses(elapsedTime)
+                   .expectScheduledEvent(Duration.of(5, ChronoUnit.DAYS).minus(elapsedTime),
+                                         new SagaEndedEvent(orderId));
+
     }
 
     protected static Matcher<List<DeadlineMessage>> orderCompleteDeadline() {
