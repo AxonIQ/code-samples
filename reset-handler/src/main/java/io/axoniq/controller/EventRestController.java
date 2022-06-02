@@ -1,4 +1,4 @@
-package io.axoniq;
+package io.axoniq.controller;
 
 import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.web.bind.annotation.GetMapping;

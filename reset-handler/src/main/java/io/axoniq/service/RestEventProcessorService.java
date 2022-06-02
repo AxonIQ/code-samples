@@ -1,10 +1,12 @@
-package io.axoniq.server;
+package io.axoniq.service;
 
+import org.axonframework.config.Configuration;
+import org.axonframework.eventhandling.StreamingEventProcessor;
 import org.axonframework.eventhandling.tokenstore.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
@@ -16,18 +18,21 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Component
-public class EventProcessorService {
+@Service
+public class RestEventProcessorService implements EventProcessorService {
 
     private final WebClient webClient;
 
     private final Supplier<String> contextSupplier;
     private final Supplier<String> componentSupplier;
     private final Supplier<String> tokenStoreIdSupplier;
+    private final Configuration configuration;
 
-    public EventProcessorService(@Value("${axon.axonserver.context}") String context,
-                                 @Value("${axon.axonserver.component-name}") String component,
-                                 TokenStore tokenStore) {
+
+    public RestEventProcessorService(@Value("${axon.axonserver.context}") String context,
+                                     @Value("${axon.axonserver.component-name}") String component,
+                                     TokenStore tokenStore, Configuration configuration) {
+        this.configuration = configuration;
         this.webClient = WebClient.create("http://localhost:8024");
         this.contextSupplier = () -> context;
         this.componentSupplier = () -> component;
@@ -40,6 +45,7 @@ public class EventProcessorService {
      * @param processorName Name of the processor to be paused.
      * @return Returns a Mono that completes when the request has been accepted by Axon Server.
      */
+    @Override
     public Mono<Void> pause(String processorName) {
         return webClient.patch()
                         .uri("/v1/components/{component}/processors/{processor}/pause?context={context}&tokenStoreIdentifier={tokenStoreId}",
@@ -59,6 +65,7 @@ public class EventProcessorService {
      * @param processorName Name of the processor to be started.
      * @return Returns a Mono that completes when the request has been accepted by Axon Server.
      */
+    @Override
     public Mono<Void> start(String processorName) {
         return webClient.patch()
                         .uri("/v1/components/{component}/processors/{processor}/start?context={context}&tokenStoreIdentifier={tokenStoreId}",
@@ -72,6 +79,20 @@ public class EventProcessorService {
                         .then();
     }
 
+    @Override
+    public Mono<Void> reset(String processorName) {
+        StreamingEventProcessor eventProcessor = configuration.eventProcessingConfiguration()
+                                                      .eventProcessorByProcessingGroup(
+                                                              processorName,
+                                                              StreamingEventProcessor.class)
+                                                      .orElseThrow(IllegalArgumentException::new);
+
+        return this.pause(processorName)
+                                    .then(this.awaitTermination(processorName))
+                                    .then(Mono.<Void>fromRunnable(eventProcessor::resetTokens))
+                                    .then(this.start(processorName));
+    }
+
     /**
      * Check if the given Processor Name has already terminated. It will retry 10 times, one every second and fail if it
      * is not terminated yet. To check if it is terminated, the method looks into the activeThreads number.
@@ -79,6 +100,7 @@ public class EventProcessorService {
      * @param processorName Name of the processor to wait for termination.
      * @return Returns a Mono that completes when processor is terminated.
      */
+//    @terminatedOverride
     public Mono<Void> awaitTermination(String processorName) {
         return webClient.get()
                         .uri("/v1/components/{component}/processors?context={context}",
