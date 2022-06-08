@@ -2,7 +2,6 @@ package io.axoniq.controller;
 
 import io.axoniq.MyFakeProjection;
 import org.junit.ClassRule;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.io.File;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ResetIntegrationTest {
+public class ResetE2ETest {
 
     final static int PORT_A = 8024;
     final static int PORT_B = 8124;
@@ -60,20 +55,20 @@ public class ResetIntegrationTest {
                 .exchange()
                 .expectStatus()
                 .isOk();
-
+        waitForAS();
         verify(projection, times(1)).on(any());
     }
 
 
     @Test
-    void testResetFrameworkWorks(){
+    void testResetWorks(){
         prepareIntegrationTest();
 
         createEvents();
 
         verifyResetEventProcessorByMethod("framework");
         verifyResetEventProcessorByMethod("rest");
-//        verifyResetEventProcessorByMethod("server");
+        verifyResetEventProcessorByMethod("server");
 
     }
 
