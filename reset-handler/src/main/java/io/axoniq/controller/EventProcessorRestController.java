@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 /**
- * Uses the EventProcessorService provided to it based oin the supplied method
+ * Uses the EventProcessorService provided to it based on the supplied method
  */
 @RestController
 public class EventProcessorRestController {

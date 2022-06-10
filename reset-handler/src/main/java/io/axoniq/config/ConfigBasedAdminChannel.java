@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+
+/*
+    Creates an admin channel from the configuration. used to simplify testing in other components.
+ */
 @Component
 public class ConfigBasedAdminChannel {
 

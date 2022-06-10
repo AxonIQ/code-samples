@@ -4,6 +4,9 @@ import org.axonframework.eventhandling.gateway.EventGateway;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/*
+    Creates empty events to allow you to see the effects of a reset
+ */
 @RestController
 public class EventRestController {
 

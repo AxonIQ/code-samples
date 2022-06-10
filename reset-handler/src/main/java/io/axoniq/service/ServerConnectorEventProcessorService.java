@@ -47,10 +47,17 @@ public class ServerConnectorEventProcessorService implements EventProcessorServi
                 .then(start(processorName, tokenStoreIdentifier));
     }
 
+    /*
+     * Resets the token of an event processor. The event processor needs to be stopped for this to work
+     */
     private Mono<Void> resetTokens(StreamingEventProcessor eventProcessor) {
         return Mono.fromRunnable(eventProcessor::resetTokens);
     }
 
+    /*
+     * Starts event processors and ensures that either the axon server waits for them to have started or we wait locally
+     * for them to reach the desired state (pre 4.6)
+     */
     protected Mono<Void> start(String eventProcessorName, String tokenStoreIdentifier) {
         return Mono.fromFuture(() -> adminChannel.startEventProcessor(eventProcessorName, tokenStoreIdentifier))
                    .filter(Result.SUCCESS::equals)
@@ -58,6 +65,10 @@ public class ServerConnectorEventProcessorService implements EventProcessorServi
                    .then();
     }
 
+    /*
+     * Stops event processors and ensures that either the axon server waits for them to have stopped or we wait locally
+     * for them to reach the desired state (pre 4.6)
+     */
     protected Mono<Void> pause(String eventProcessorName, String tokenStoreIdentifier) {
         return Mono.fromFuture(() -> adminChannel.pauseEventProcessor(eventProcessorName, tokenStoreIdentifier))
                    .filter(Result.SUCCESS::equals)
@@ -85,7 +96,6 @@ public class ServerConnectorEventProcessorService implements EventProcessorServi
                    .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(2)))
                    .thenReturn(Result.SUCCESS);
     }
-
 
 
     private String tokenStoreId(String processorName) {
