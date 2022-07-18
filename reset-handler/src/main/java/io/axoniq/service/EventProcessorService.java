@@ -9,5 +9,4 @@ public interface EventProcessorService {
 
     Mono<Void> reset(String processorName);
 
-//    Mono<Void> awaitTermination(String processorName);
 }

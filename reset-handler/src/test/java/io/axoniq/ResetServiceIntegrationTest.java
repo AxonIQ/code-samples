@@ -12,6 +12,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -40,15 +42,27 @@ public class ResetServiceIntegrationTest {
 
     private static final String EVENT_PROCESSOR_NAME="io.axoniq";
 
+    private static final int HTTP_PORT = 8024;
+    private static final int GRPC_PORT = 8124;
+
     @ClassRule
     @Container
     public static DockerComposeContainer environment =
             new DockerComposeContainer(new File("src/test/resources/compose-test.yml"))
-                    .withExposedService("axonserver", 8024, Wait.forListeningPort())
-                    .withExposedService("axonserver", 8124, Wait.forListeningPort())
+                    .withExposedService("axonserver", HTTP_PORT, Wait.forListeningPort())
+                    .withExposedService("axonserver", GRPC_PORT, Wait.forListeningPort())
                     .waitingFor("axonserver", Wait.forLogMessage(".*Started AxonServer in .*",1));
 
+    @DynamicPropertySource
+    public static void properties(DynamicPropertyRegistry registry) {
 
+        int grpcPort = environment.getServicePort("axonserver", GRPC_PORT);
+        int httpPort = environment.getServicePort("axonserver", HTTP_PORT);
+
+        registry.add("axon.axonserver.servers", () -> "localhost:"+grpcPort);
+        registry.add("axon.axonserver.http-url", () -> "http://localhost:"+httpPort);
+
+    }
     @BeforeEach
     void prepare(){
         createEvents();

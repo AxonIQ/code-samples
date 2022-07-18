@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -24,8 +26,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ResetE2ETest {
 
-    final static int PORT_A = 8024;
-    final static int PORT_B = 8124;
+    private static final int HTTP_PORT = 8024;
+    private static final int GRPC_PORT = 8124;
 
     @LocalServerPort
     private int port;
@@ -42,10 +44,19 @@ public class ResetE2ETest {
     @Container
     public static DockerComposeContainer environment =
             new DockerComposeContainer(new File("src/test/resources/compose-test.yml"))
-                    .withExposedService("axonserver", PORT_A, Wait.forListeningPort())
-                    .withExposedService("axonserver", PORT_B, Wait.forListeningPort())
+                    .withExposedService("axonserver", HTTP_PORT, Wait.forListeningPort())
+                    .withExposedService("axonserver", GRPC_PORT, Wait.forListeningPort())
                     .waitingFor("axonserver", Wait.forLogMessage(".*Started AxonServer in .*",1));
+    @DynamicPropertySource
+    public static void properties(DynamicPropertyRegistry registry) {
 
+        int grpcPort = environment.getServicePort("axonserver", GRPC_PORT);
+        int httpPort = environment.getServicePort("axonserver", HTTP_PORT);
+
+        registry.add("axon.axonserver.servers", () -> "localhost:"+grpcPort);
+        registry.add("axon.axonserver.http-url", () -> "http://localhost:"+httpPort);
+
+    }
     @Test
     void testEventsAreCreated(){
         prepareIntegrationTest();
@@ -84,6 +95,7 @@ public class ResetE2ETest {
                     .expectStatus()
                     .isOk();
         }
+        waitForAS();
         verify(projection, times(10)).on(any());
     }
 

@@ -22,7 +22,8 @@ public class ServerConnectorEventProcessorService implements EventProcessorServi
     private final Configuration configuration;
     private final AdminChannel adminChannel;
 
-    public ServerConnectorEventProcessorService(Configuration configuration, AdminChannel adminChannel) {
+    public ServerConnectorEventProcessorService(Configuration configuration,
+                                                AdminChannel adminChannel) {
         this.configuration = configuration;
         this.adminChannel = adminChannel;
     }

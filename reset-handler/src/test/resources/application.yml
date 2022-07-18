@@ -3,4 +3,3 @@ axon:
     context: "default"
     component-name: "component"
     http-url: "http://127.0.0.1:8024"
-

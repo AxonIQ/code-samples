@@ -31,9 +31,11 @@ public class RestEventProcessorService implements EventProcessorService {
 
     public RestEventProcessorService(@Value("${axon.axonserver.context}") String context,
                                      @Value("${axon.axonserver.component-name}") String component,
-                                     TokenStore tokenStore, Configuration configuration) {
+                                     @Value("${axon.axonserver.http-url}") String httpUrl,
+                                     TokenStore tokenStore,
+                                     Configuration configuration) {
         this.configuration = configuration;
-        this.webClient = WebClient.create("http://localhost:8024");
+        this.webClient = WebClient.create(httpUrl!=null?httpUrl:"http://localhost:8024");
         this.contextSupplier = () -> context;
         this.componentSupplier = () -> component;
         this.tokenStoreIdSupplier = () -> tokenStore.retrieveStorageIdentifier().get();
@@ -100,7 +102,6 @@ public class RestEventProcessorService implements EventProcessorService {
      * @param processorName Name of the processor to wait for termination.
      * @return Returns a Mono that completes when processor is terminated.
      */
-//    @terminatedOverride
     public Mono<Void> awaitTermination(String processorName) {
         return webClient.get()
                         .uri("/v1/components/{component}/processors?context={context}",
