@@ -17,6 +17,7 @@
         <module>subscription-query-ui-streaming</module>
         <module>reset-handler</module>
         <module>sequencing-policy</module>
+        <module>multitenant-application</module>
     </modules>
     <packaging>pom</packaging>
 
