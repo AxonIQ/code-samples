@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,24 +37,19 @@ import java.lang.invoke.MethodHandles;
 import java.util.concurrent.CompletableFuture;
 
 
-@RestController
-public class TenantController {
+@Service
+public class CreateTenantService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final Configuration configuration;
     private final AxonServerConnectionManager axonServerConnectionManager;
 
 
-    public TenantController(Configuration configuration,
-                            AxonServerConnectionManager axonServerConnectionManager) {
-        this.configuration = configuration;
+    public CreateTenantService(AxonServerConnectionManager axonServerConnectionManager) {
         this.axonServerConnectionManager = axonServerConnectionManager;
     }
 
-    @PostMapping(path = "/admin/create-tenant")
-    public CompletableFuture<Void> createTenant(@RequestParam String tenantName,
-                                                @RequestParam String replicationGroup,
-                                                @RequestParam boolean initializeSchema) {
+    public CompletableFuture<Void> createTenant(String tenantName,
+                                                String replicationGroup,
+                                                boolean initializeSchema) {
         AxonServerConnection admin = axonServerConnectionManager.getConnection("_admin");
         CreateContextRequest createContextRequest = CreateContextRequest.newBuilder()
                                                          .setName(tenantName)

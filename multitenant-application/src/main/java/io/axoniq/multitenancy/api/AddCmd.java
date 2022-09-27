@@ -12,6 +12,10 @@ public class AddCmd implements Serializable {
     private String id;
     private Integer amount;
 
+    public AddCmd() {
+
+    }
+
     public AddCmd(String id, Integer amount) {
         this.id = id;
         this.amount = amount;
@@ -23,5 +27,13 @@ public class AddCmd implements Serializable {
 
     public Integer getAmount() {
         return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

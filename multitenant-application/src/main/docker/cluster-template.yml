@@ -23,7 +23,7 @@ axoniq:
               node: axonserver-enterprise-1
             - role: PRIMARY
               node: axonserver-enterprise-3
-          name: tenant-one
+          name: default
           contexts:
             - name: tenant-one
               metaData:

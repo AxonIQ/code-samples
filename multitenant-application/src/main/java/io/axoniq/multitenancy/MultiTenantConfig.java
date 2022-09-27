@@ -24,6 +24,7 @@ public class MultiTenantConfig {
             DataSourceProperties properties = new DataSourceProperties();
             properties.setUrl("jdbc:h2:mem:"+tenant.tenantId());
             properties.setDriverClassName("org.h2.Driver");
+            properties.setUsername("sa");
             return properties;
         };
     }
