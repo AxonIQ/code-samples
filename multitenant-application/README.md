@@ -6,7 +6,9 @@ Using Vaadin UI, explore how to create tenants in runtime and dispatch messages 
 
 ## Requirements
  
- - Requires Axon Server EE 4.6+ (avalible in docker folder) with a valid license
+ - Requires Axon Server EE 4.6+ with a valid license
+ - Axon Framework 4.6+
+ - [Multitenancy extension](https://github.com/AxonFramework/extension-multitenancy)
  - Uses In-Memory H2 Database for projections - DB per tenant
 
 ## How to start
