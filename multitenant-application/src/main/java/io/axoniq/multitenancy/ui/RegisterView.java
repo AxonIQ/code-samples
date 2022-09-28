@@ -10,6 +10,8 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import io.axoniq.multitenancy.web.CreateTenantService;
 
 import java.util.Timer;
@@ -27,30 +29,22 @@ public class RegisterView extends VerticalLayout {
         this.createTenantService = createTenantService;
         H1 title = new H1("Register tenant");
 
+        VerticalLayout layout = new VerticalLayout();
+        layout.setAlignItems(Alignment.CENTER);
         TextField tenantName = new TextField("Tenant name");
 
+        layout.add(title);
 
-        FormLayout formLayout = new FormLayout();
-        formLayout.add(title);
-
-
-        formLayout.add(tenantName);
-        formLayout.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0px", 2));
-
-
-        formLayout.setColspan(title, 2);
-        formLayout.setColspan(tenantName, 2);
-
-        formLayout.setWidth("50%");
+        layout.add(tenantName);
 
         Button submitButton = new Button("Register");
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        formLayout.add(submitButton);
-        formLayout.setColspan(submitButton, 2);
+        layout.add(submitButton);
+
         submitButton.getStyle().set("padding", "25px");
-        add(formLayout);
+
+        add(layout);
 
 
         submitButton.addClickListener(e -> {

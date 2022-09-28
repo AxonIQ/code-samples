@@ -9,6 +9,8 @@ import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.axonframework.common.Registration;
 import org.axonframework.extensions.multitenancy.components.MultiTenantAwareComponent;
 import org.axonframework.extensions.multitenancy.components.TenantDescriptor;
@@ -22,10 +24,9 @@ import java.util.stream.Collectors;
 @Route
 public class MainView extends VerticalLayout  {
 
-
-
     public MainView(TenantProvider tenantProvider) {
         VerticalLayout layout = new VerticalLayout();
+
         H1 title = new H1("Login");
         layout.add(title);
 

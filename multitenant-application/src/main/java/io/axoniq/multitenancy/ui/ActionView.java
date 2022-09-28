@@ -35,6 +35,7 @@ public class ActionView extends VerticalLayout implements HasUrlParameter<String
     @Override
     public void setParameter(BeforeEvent beforeEvent, String tenantName) {
         VerticalLayout layout = new VerticalLayout();
+
         H1 title = new H1("Actions (" + tenantName + ")");
         layout.add(title);
 
