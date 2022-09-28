@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,25 +34,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 
-@RestController
-public class EventProcessorController {
+@Service
+public class ResetService {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Configuration configuration;
-    private final AxonServerConnectionManager axonServerConnectionManager;
 
 
-    public EventProcessorController(Configuration configuration,
-                                    AxonServerConnectionManager axonServerConnectionManager) {
+
+    public ResetService(Configuration configuration) {
         this.configuration = configuration;
-        this.axonServerConnectionManager = axonServerConnectionManager;
     }
 
-    @PostMapping(path = "/reset/{processingGroup}")
-    public void reset(@PathVariable String processingGroup) {
+
+    public List<String> listTenantEventProcessors(String tenantName) {
+        return configuration.eventProcessingConfiguration()
+                .eventProcessors().keySet().stream()
+                .filter(eventProcessor -> eventProcessor.contains("@" + tenantName))
+                .collect(Collectors.toList());
+    }
+
+    public void reset(String processingGroup) {
         Assert.hasLength(processingGroup, "Processing Group is mandatory and can't be empty!");
 
         configuration.eventProcessingConfiguration()

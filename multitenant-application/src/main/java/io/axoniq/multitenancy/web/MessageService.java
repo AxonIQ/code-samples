@@ -80,21 +80,18 @@ public class MessageService {
                 ResponseTypes.optionalInstanceOf(GiftCardRecord.class),
                 ResponseTypes.instanceOf(GiftCardRecord.class));
 
-        return sendAndReturnUpdate(new IssueCmd(giftCardId, 50), queryResult)
+        return sendAndReturnUpdate(new IssueCmd(giftCardId, 50), queryResult, tenantName)
                 .map(GiftCardRecord::getId);
     }
 
-    public <U> Mono<U> sendAndReturnUpdate(Object command, SubscriptionQueryResult<?, U> result) {
-        /* The trick here is to subscribe to initial results first, even it does not return any result
-         Subscribing to initialResult creates a buffer for updates, even that we didn't subscribe for updates yet
-         they will wait for us in buffer, after this we can safely send command, and then subscribe to updates */
+    public <U> Mono<U> sendAndReturnUpdate(Object command, SubscriptionQueryResult<?, U> result, String tenantName) {
         return Mono.when(result.initialResult())
-                   .then(Mono.fromCompletionStage(() -> commandGateway.send(command)))
+                   .then(Mono.fromCompletionStage(() -> commandGateway.send(new GenericCommandMessage<>(command)
+                           .withMetaData(Collections.singletonMap(TENANT_CORRELATION_KEY, tenantName)))))
                    .thenMany(result.updates())
                    .timeout(Duration.ofSeconds(180))
                    .next()
                    .doFinally(unused -> result.cancel());
-        /* dont forget to close subscription query on the end and add a timeout */
     }
 
 
