@@ -15,7 +15,7 @@ Using Vaadin UI, explore how to create tenants in runtime and dispatch messages 
 
 While in `src/main/docker` type in terminal `docker-compose up` to start Axon Server EE.
 
-Be sure that you have replace content of `axoniq.license` with a valid license.
+Make sure to replace content of `axoniq.license` with a valid license.
 
 Start application with `mvn spring-boot:run` or manually via favorite IDE.
 
