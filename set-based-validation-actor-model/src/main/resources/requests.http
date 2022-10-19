@@ -1,0 +1,19 @@
+### Create a User and check if the email address exists
+
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "emailAddress": "bob@gmail.com"
+}
+
+### Change the email address and drop the constraint
+
+PUT http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "emailAddress": "bobby@gmail.com",
+  "formerEmailAddress": "bob.com",
+  "userId": "c40bfb81-68f5-4033-ae00-6015e6084e84"
+}
