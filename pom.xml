@@ -18,6 +18,7 @@
         <module>reset-handler</module>
         <module>sequencing-policy</module>
         <module>multitenant-application</module>
+        <module>set-based-validation-actor-model</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -32,6 +33,7 @@
         <jackson.core.version>2.13.2</jackson.core.version>
         <mockito-version>1.10.19</mockito-version>
         <kotlin-maven-version>1.6.21</kotlin-maven-version>
+        <hamcrest-version>3.1</hamcrest-version>
     </properties>
 
     <name>Axon Code Samples</name>
@@ -94,6 +96,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>5.6.9.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>${hamcrest-version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
