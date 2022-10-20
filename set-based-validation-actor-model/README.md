@@ -40,5 +40,8 @@ identifier.
 
 This [requests-file](src/main/resources/requests.http) contains example requests that you can use to see how this works,
 you can start the [DemoApplication](src/main/java/io/axoniq/dev/samples/DemoApplication.java) and see for yourself.
-Enjoy
+
+Created with :heart: by [AxonIQ](http://www.axoniq.io)
+
+[axon]: https://axoniq.io/
 
