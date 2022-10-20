@@ -36,3 +36,9 @@ In this example, I used a String as a unique key, but a custom object can also b
 constraint. An elegant way is to use the object's hash code or concatenate the different values as the aggregate
 identifier.
 
+## Testing the behaviour
+
+This [requests-file](src/main/resources/requests.http) contains example requests that you can use to see how this works,
+you can start the [DemoApplication](src/main/java/io/axoniq/dev/samples/DemoApplication.java) and see for yourself.
+Enjoy
+
