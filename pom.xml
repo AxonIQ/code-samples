@@ -32,7 +32,7 @@
         <swagger.version>3.0.0</swagger.version>
         <jackson.core.version>2.13.2</jackson.core.version>
         <mockito-version>1.10.19</mockito-version>
-        <kotlin-maven-version>1.6.21</kotlin-maven-version>
+        <kotlin-maven-version>1.7.22</kotlin-maven-version>
         <hamcrest-version>3.1</hamcrest-version>
     </properties>
 
