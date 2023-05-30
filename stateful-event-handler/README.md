@@ -10,4 +10,4 @@ The event-handling methods are annotated with `@EventHandler`. During this proce
 
 ## Stateful event processor configuration example
 
-An event processor will (by default) start its token at the head of the stream. It is possible to change this behavior and let the processor take all historical events into account. The configuration example can be found [here](src/main/java/io/axoniq/dev/samples/config/OrderProcessorConfig.java)
+An event processor will (by default) start its token at the tail of the stream. It is possible to change this behavior and let the processor start at the head instead, preventing earlier events from being processed, which could otherwise cause undesirable side effects. The configuration example can be found [here](src/main/java/io/axoniq/dev/samples/config/OrderProcessorConfig.java)

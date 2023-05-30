@@ -13,7 +13,7 @@ public class OrderProcessorConfig {
     public ConfigurerModule configureOrderProcessor() {
         TrackingEventProcessorConfiguration tepConfig =
                 TrackingEventProcessorConfiguration.forSingleThreadedProcessing()
-                        .andInitialTrackingToken(StreamableMessageSource::createTailToken);
+                        .andInitialTrackingToken(StreamableMessageSource::createHeadToken);
         return configurer -> configurer.eventProcessing().registerTrackingEventProcessorConfiguration("OrderProcessor", c -> tepConfig);
     }
 }
