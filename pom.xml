@@ -19,6 +19,7 @@
         <module>sequencing-policy</module>
         <module>multitenant-application</module>
         <module>set-based-validation-actor-model</module>
+        <module>stateful-event-handler</module>
     </modules>
     <packaging>pom</packaging>
 
