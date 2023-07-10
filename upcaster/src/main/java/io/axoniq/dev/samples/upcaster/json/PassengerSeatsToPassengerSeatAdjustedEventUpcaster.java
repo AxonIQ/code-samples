@@ -14,12 +14,12 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * An upcaster implementation that, instead of returning a single entry, returns a {@link Stream} of {@link
- * IntermediateEventRepresentation}s for the {@link io.axoniq.dev.samples.api.PassengerSeatsAdjustedEvent}.
+ * An upcaster implementation that, instead of returning a single entry, returns a {@link Stream} of
+ * {@link IntermediateEventRepresentation}s for the {@link io.axoniq.dev.samples.api.PassengerSeatsAdjustedEvent}.
  * <p>
  * This {@link EventMultiUpcaster} implementation retrieves the {@code "passengerSeats"} collection from the deprecated
- * event. Doing os it is able to upcast the single event to the right amount of {@link
- * io.axoniq.dev.samples.api.PassengerSeatAdjustedEvent}s.
+ * event. Doing os it is able to upcast the single event to the right amount of
+ * {@link io.axoniq.dev.samples.api.PassengerSeatAdjustedEvent}s.
  * <p>
  * Note that the original event is removed from the result, as it is not part of the returned {@code Stream} by the
  * {@link #doUpcast(IntermediateEventRepresentation)} implementation.

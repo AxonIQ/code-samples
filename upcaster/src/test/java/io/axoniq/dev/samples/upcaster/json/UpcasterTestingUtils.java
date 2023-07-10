@@ -12,10 +12,6 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * @author Yvonne Ceelie
- * @author Steven van Beelen
- */
 public abstract class UpcasterTestingUtils {
 
     public static String extractFileContentsToString(String fileName) {

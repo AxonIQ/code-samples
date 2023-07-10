@@ -6,18 +6,19 @@ import org.axonframework.serialization.upcasting.event.EventUpcasterChain;
 import java.util.function.Function;
 
 /**
- * Utility class constructing the {@link EventUpcasterChain} to configure on the {@link
- * org.axonframework.eventsourcing.eventstore.EventStore}.
+ * Utility class constructing the {@link EventUpcasterChain} to configure on the
+ * {@link org.axonframework.eventsourcing.eventstore.EventStore}.
  * <p>
  * In a Spring Boot environment exposing an {@code EventUpcasterChain} bean is sufficient for the framework to pick it
  * up correctly. To that end we can use the {@link #buildEventUpcasterChain()} method.
  * <p>
  * When using Axon's {@link org.axonframework.config.Configurer} directly, you should configure all upcasters separately
- * by invoking the {@link org.axonframework.config.Configurer#registerEventUpcaster(Function)} method. The {@link
- * #configureUpcasters(Configurer)} shows how we should implement this.
+ * by invoking the {@link org.axonframework.config.Configurer#registerEventUpcaster(Function)} method. The
+ * {@link #configureUpcasters(Configurer)} shows how we should implement this.
  *
  * @author Yvonne Ceelie
  */
+@SuppressWarnings("unused")
 public abstract class EventUpcasterChainFactory {
 
     /**

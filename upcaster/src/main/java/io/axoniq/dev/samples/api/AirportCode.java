@@ -7,6 +7,6 @@ public enum AirportCode {
     NYC("New York City"),
     LAX("Los Angeles");
 
-    AirportCode(String airportName) {
+    AirportCode(@SuppressWarnings("unused") String airportName) {
     }
 }
