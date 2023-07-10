@@ -1,6 +1,7 @@
 package io.axoniq.dev.samples.api.dto;
 
 public class RegisterUserDto {
+
     private String emailAddress;
 
     public RegisterUserDto(String emailAddress) {

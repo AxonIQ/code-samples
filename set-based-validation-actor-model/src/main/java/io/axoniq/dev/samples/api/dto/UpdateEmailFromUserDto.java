@@ -5,9 +5,7 @@ import java.util.UUID;
 public class UpdateEmailFromUserDto {
 
     private String emailAddress;
-
     private String formerEmailAddress;
-
     private UUID userId;
 
     public UpdateEmailFromUserDto(String emailAddress, String formerEmailAddress) {

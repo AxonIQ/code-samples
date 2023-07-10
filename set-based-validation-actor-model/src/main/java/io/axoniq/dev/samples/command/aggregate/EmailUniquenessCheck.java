@@ -1,9 +1,9 @@
 package io.axoniq.dev.samples.command.aggregate;
 
-import io.axoniq.dev.samples.api.commands.RegisterUserWithUniqueEmailAddress;
-import io.axoniq.dev.samples.api.commands.RemoveUserWithUniqueEmailAddress;
-import io.axoniq.dev.samples.api.events.EmailAddressApproved;
-import io.axoniq.dev.samples.api.events.EmailAddressRemoved;
+import io.axoniq.dev.samples.api.commands.RegisterUserWithUniqueEmailAddressCommand;
+import io.axoniq.dev.samples.api.commands.RemoveUserWithUniqueEmailAddressCommand;
+import io.axoniq.dev.samples.api.events.EmailAddressApprovedEvent;
+import io.axoniq.dev.samples.api.events.EmailAddressRemovedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateCreationPolicy;
@@ -16,39 +16,37 @@ import org.springframework.util.Assert;
 import java.util.UUID;
 
 @Aggregate
-public class EmailUniquenessCheck {
+class EmailUniquenessCheck {
 
     @AggregateIdentifier
     private String emailAddress;
-
     private UUID userId;
-
     private boolean claimed = false;
 
     @CommandHandler
     @CreationPolicy(AggregateCreationPolicy.CREATE_IF_MISSING)
-    public void handle(RegisterUserWithUniqueEmailAddress command) throws Exception {
+    public void handle(RegisterUserWithUniqueEmailAddressCommand command) throws Exception {
         // A user should only be registered when the email address has not been claimed
         Assert.isTrue(!claimed, () -> "A user with this email address already exists");
-        AggregateLifecycle.createNew(User.class, () -> new User(command.getUserId(), command.getEmail()));
-        AggregateLifecycle.apply(new EmailAddressApproved(command.getEmail(), command.getUserId()));
+        AggregateLifecycle.createNew(User.class, () -> new User(command.userId(), command.email()));
+        AggregateLifecycle.apply(new EmailAddressApprovedEvent(command.email(), command.userId()));
     }
 
     @CommandHandler
-    public void handle(RemoveUserWithUniqueEmailAddress command) {
+    public void handle(RemoveUserWithUniqueEmailAddressCommand command) {
         Assert.isTrue(claimed, () -> "This email address has not been claimed");
-        AggregateLifecycle.apply(new EmailAddressRemoved(command.getEmail(), userId));
+        AggregateLifecycle.apply(new EmailAddressRemovedEvent(command.email(), userId));
     }
 
     @EventSourcingHandler
-    public void on(EmailAddressApproved event) {
-        this.emailAddress = event.getEmailAddress();
+    public void on(EmailAddressApprovedEvent event) {
+        this.emailAddress = event.emailAddress();
         this.claimed = true;
-        this.userId = event.getUserId();
+        this.userId = event.userId();
     }
 
     @EventSourcingHandler
-    public void on(EmailAddressRemoved event) {
+    public void on(EmailAddressRemovedEvent event) {
         this.claimed = false;
     }
 

@@ -1,13 +1,12 @@
 package io.axoniq.dev.samples.command.controller;
 
-import io.axoniq.dev.samples.api.commands.RegisterUserWithUniqueEmailAddress;
-import io.axoniq.dev.samples.api.commands.RemoveUserWithUniqueEmailAddress;
+import io.axoniq.dev.samples.api.commands.RegisterUserWithUniqueEmailAddressCommand;
+import io.axoniq.dev.samples.api.commands.RemoveUserWithUniqueEmailAddressCommand;
 import io.axoniq.dev.samples.api.dto.RegisterUserDto;
 import io.axoniq.dev.samples.api.dto.UpdateEmailFromUserDto;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,6 @@ public class UserController {
 
     private final CommandGateway commandGateway;
 
-
     public UserController(CommandGateway commandGateway) {
         this.commandGateway = commandGateway;
     }
@@ -33,16 +31,19 @@ public class UserController {
     public CompletableFuture<Void> register(@RequestBody RegisterUserDto registerUserDto) {
         UUID generatedUserId = UUID.randomUUID();
         logger.info("UUID [{}]", generatedUserId);
-        return commandGateway.send(new RegisterUserWithUniqueEmailAddress(registerUserDto.getEmailAddress(),
-                                                                          generatedUserId));
+        return commandGateway.send(new RegisterUserWithUniqueEmailAddressCommand(
+                registerUserDto.getEmailAddress(), generatedUserId
+        ));
     }
 
     @PutMapping(path = "/users")
     public CompletableFuture<Void> changeEmailAddress(@RequestBody UpdateEmailFromUserDto updateEmailFromUserDto) {
         UUID generatedUserId = UUID.randomUUID();
-        commandGateway.sendAndWait(new RegisterUserWithUniqueEmailAddress(updateEmailFromUserDto.getEmailAddress(),
-                                                                          generatedUserId));
-        return commandGateway.send(new RemoveUserWithUniqueEmailAddress(updateEmailFromUserDto.getFormerEmailAddress(),
-                                                                        updateEmailFromUserDto.getUserId()));
+        commandGateway.sendAndWait(new RegisterUserWithUniqueEmailAddressCommand(
+                updateEmailFromUserDto.getEmailAddress(), generatedUserId
+        ));
+        return commandGateway.send(new RemoveUserWithUniqueEmailAddressCommand(
+                updateEmailFromUserDto.getFormerEmailAddress(), updateEmailFromUserDto.getUserId()
+        ));
     }
 }
