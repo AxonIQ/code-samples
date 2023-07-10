@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 
 @Entity
 public class OrderProcess {
+
     @EmbeddedId
     private OrderId orderId;
     @Embedded
@@ -25,7 +26,8 @@ public class OrderProcess {
         this.shipmentId = shipmentId;
     }
 
-    public OrderProcess() { }
+    public OrderProcess() {
+    }
 
     public void markAsPaid() {
         orderIsPaid = true;
@@ -50,5 +52,4 @@ public class OrderProcess {
     public ShipmentId getShipmentId() {
         return shipmentId;
     }
-
 }

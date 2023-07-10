@@ -3,17 +3,8 @@ package io.axoniq.dev.samples.shipment.api;
 import io.axoniq.dev.samples.uuid.ShipmentId;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-public class ShipOrderCommand {
+public record ShipOrderCommand(
+        @TargetAggregateIdentifier ShipmentId shipmentId
+) {
 
-    @TargetAggregateIdentifier
-    ShipmentId shipmentId;
-
-
-    public ShipOrderCommand(ShipmentId shipmentId) {
-        this.shipmentId = shipmentId;
-    }
-
-    public ShipmentId getShipmentId() {
-        return shipmentId;
-    }
 }

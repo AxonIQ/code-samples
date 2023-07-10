@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface OrderProcessRepository extends JpaRepository<OrderProcess, OrderId> {
+interface OrderProcessRepository extends JpaRepository<OrderProcess, OrderId> {
+
     Optional<OrderProcess> findByPaymentId(PaymentId paymentId);
+
     Optional<OrderProcess> findByShipmentId(ShipmentId shipmentId);
 }

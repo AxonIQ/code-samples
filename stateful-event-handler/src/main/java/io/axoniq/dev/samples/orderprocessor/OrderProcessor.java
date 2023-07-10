@@ -20,7 +20,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ProcessingGroup("OrderProcessor")
-public class OrderProcessor {
+class OrderProcessor {
+
     private final CommandGateway commandGateway;
     private final OrderProcessRepository orderProcessRepository;
 
@@ -40,24 +41,25 @@ public class OrderProcessor {
         ShipmentId shipmentId = uuidProvider.generateShipmentId();
         commandGateway.send(new ShipOrderCommand(shipmentId));
 
-        OrderProcess orderProcess = new OrderProcess(event.getOrderId(), paymentId, shipmentId);
+        OrderProcess orderProcess = new OrderProcess(event.orderId(), paymentId, shipmentId);
         orderProcessRepository.save(orderProcess);
     }
 
     @EventHandler
     public void on(OrderPaidEvent event) {
-        orderProcessRepository.findByPaymentId(event.getPaymentId()).ifPresent(
+        orderProcessRepository.findByPaymentId(event.paymentId()).ifPresent(
                 orderProcess -> {
                     orderProcess.markAsPaid();
                     if (orderProcess.orderIsDelivered()) {
                         completeOrderProcess(orderProcess);
                     }
-                });
+                }
+        );
     }
 
     @EventHandler
     public void on(OrderPaymentCancelledEvent event) {
-        orderProcessRepository.findByPaymentId(event.getPaymentId()).ifPresent(
+        orderProcessRepository.findByPaymentId(event.paymentId()).ifPresent(
                 orderProcess -> {
                     commandGateway.send(new CancelShipmentCommand(orderProcess.getShipmentId()));
                     completeOrderProcess(orderProcess);
@@ -67,20 +69,24 @@ public class OrderProcessor {
 
     @EventHandler
     public void on(ShipmentStatusUpdatedEvent event) {
-        if (ShipmentStatus.DELIVERED.equals(event.getShipmentStatus())) {
-            orderProcessRepository.findByShipmentId(event.getShipmentId()).ifPresent(
-                    orderProcess -> {
-                        orderProcess.markAsDelivered();
-                        if (orderProcess.orderIsPaid()) {
-                            completeOrderProcess(orderProcess);
-                        }
-                    }
-            );
+        if (!ShipmentStatus.DELIVERED.equals(event.shipmentStatus())) {
+            return;
         }
+
+        orderProcessRepository.findByShipmentId(event.shipmentId()).ifPresent(
+                orderProcess -> {
+                    orderProcess.markAsDelivered();
+                    if (orderProcess.orderIsPaid()) {
+                        completeOrderProcess(orderProcess);
+                    }
+                }
+        );
     }
 
     private void completeOrderProcess(OrderProcess orderProcess) {
-        commandGateway.send(new CompleteOrderProcessCommand(orderProcess.getOrderId(), orderProcess.orderIsPaid(), orderProcess.orderIsDelivered()));
+        commandGateway.send(new CompleteOrderProcessCommand(
+                orderProcess.getOrderId(), orderProcess.orderIsPaid(), orderProcess.orderIsDelivered()
+        ));
         orderProcessRepository.delete(orderProcess);
     }
 }
