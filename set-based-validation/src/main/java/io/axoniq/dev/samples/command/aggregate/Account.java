@@ -24,7 +24,7 @@ public class Account {
 
     @CommandHandler
     public Account(CreateAccountCommand command) {
-        apply(new AccountCreatedEvent(command.getAccountId(), command.getEmailAddress()));
+        apply(new AccountCreatedEvent(command.accountId(), command.emailAddress()));
     }
 
     /**
@@ -35,38 +35,38 @@ public class Account {
     public void handle(ChangeEmailAddressCommand command, Boolean emailAddressExists) {
         if (emailAddressExists) {
             throw new IllegalStateException(String.format("Account with email address %s already exists",
-                                                          command.getUpdatedEmailAddress()));
+                                                          command.updatedEmailAddress()));
         }
-        if (emailAddress.equals(command.getUpdatedEmailAddress())) {
+        if (emailAddress.equals(command.updatedEmailAddress())) {
             throw new IllegalStateException(String.format("Email address %s is already used for account with id %s ",
-                                                          command.getUpdatedEmailAddress(), accountId));
+                                                          command.updatedEmailAddress(), accountId));
         }
-        apply(new EmailAddressChangedEvent(command.getAccountId(), command.getUpdatedEmailAddress()));
+        apply(new EmailAddressChangedEvent(command.accountId(), command.updatedEmailAddress()));
     }
 
     @CommandHandler
     public void handle(AlterEmailAddressCommand command, EmailRepository emailRepository) {
-        if (emailRepository.existsById(command.getUpdatedEmailAddress())) {
+        if (emailRepository.existsById(command.updatedEmailAddress())) {
             throw new IllegalStateException(String.format("Account with email address %s already exists",
-                                                          command.getUpdatedEmailAddress()));
+                                                          command.updatedEmailAddress()));
         }
-        if (emailAddress.equals(command.getUpdatedEmailAddress())) {
+        if (emailAddress.equals(command.updatedEmailAddress())) {
             throw new IllegalStateException(String.format("Email address %s is already used for account with id %s ",
-                                                          command.getUpdatedEmailAddress(), accountId));
+                                                          command.updatedEmailAddress(), accountId));
         }
 
-        apply(new EmailAddressChangedEvent(command.getAccountId(), command.getUpdatedEmailAddress()));
+        apply(new EmailAddressChangedEvent(command.accountId(), command.updatedEmailAddress()));
     }
 
     @EventSourcingHandler
     public void on(AccountCreatedEvent event) {
-        this.accountId = event.getAccountId();
-        this.emailAddress = event.getEmailAddress();
+        this.accountId = event.accountId();
+        this.emailAddress = event.emailAddress();
     }
 
     @EventSourcingHandler
     public void on(EmailAddressChangedEvent event) {
-        this.emailAddress = event.getEmailAddress();
+        this.emailAddress = event.emailAddress();
     }
 
     public Account() {

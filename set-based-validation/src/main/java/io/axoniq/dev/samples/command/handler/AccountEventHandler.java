@@ -12,7 +12,8 @@ import java.util.Optional;
 
 /**
  * Subscribing processor that updates lookup table with email addresses used in the Account. Links to the `Update the
- * look-up table` section in in this [set based validation blog](https://axoniq.io/blog-overview/set-based-validation)
+ * look-up table` section in this <a href="https://axoniq.io/blog-overview/set-based-validation">set based validation
+ * blog</a>.
  *
  * @author Yvonne Ceelie
  */
@@ -22,14 +23,14 @@ public class AccountEventHandler {
 
     @EventHandler
     public void on(AccountCreatedEvent event, EmailRepository emailRepository) {
-        emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
+        emailRepository.save(new EmailJpaEntity(event.emailAddress(), event.accountId()));
     }
 
     @EventHandler
     public void on(EmailAddressChangedEvent event, EmailRepository emailRepository) {
         Optional<EmailJpaEntity> emailEntityOptional = emailRepository
-                .findEmailJpaEntityByAccountId(event.getAccountId());
+                .findEmailJpaEntityByAccountId(event.accountId());
         emailEntityOptional.ifPresent(emailRepository::delete);
-        emailRepository.save(new EmailJpaEntity(event.getEmailAddress(), event.getAccountId()));
+        emailRepository.save(new EmailJpaEntity(event.emailAddress(), event.accountId()));
     }
 }
