@@ -31,7 +31,7 @@ public class EventProcessorService {
         this.webClient = WebClient.create("http://localhost:8024");
         this.contextSupplier = () -> context;
         this.componentSupplier = () -> component;
-        this.tokenStoreIdSupplier = () -> tokenStore.retrieveStorageIdentifier().get();
+        this.tokenStoreIdSupplier = () -> tokenStore.retrieveStorageIdentifier().orElseThrow();
     }
 
     /**

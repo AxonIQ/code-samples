@@ -3,20 +3,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>reset-handler</artifactId>
-
     <parent>
         <groupId>io.axoniq</groupId>
         <artifactId>code-samples</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
+    <artifactId>reset-handler</artifactId>
+
+    <name>Reset Handler</name>
+    <description>Sample application showing how to construct an endpoint to trigger resets for Streaming Processors</description>
+
     <dependencies>
+        <!-- Axon -->
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
         </dependency>
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
@@ -25,19 +29,16 @@
 
     <build>
         <plugins>
+            <!-- TODO perhaps remove if in main pom-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
             </plugin>
+            <!-- TODO perhaps remove if in main pom-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-
 </project>
