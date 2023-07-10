@@ -44,7 +44,7 @@ public class CommandController {
                                                                                           Void.class,
                                                                                           MyEntity.class);
         return sendAndReturnUpdate(command, response)
-                .map(MyEntity::getId);
+                .map(MyEntity::id);
     }
 
     public <U> Mono<U> sendAndReturnUpdate(Object command, SubscriptionQueryResult<?, U> result) {

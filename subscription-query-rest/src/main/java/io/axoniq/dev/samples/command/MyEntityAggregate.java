@@ -9,26 +9,23 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
-/**
- * @author Sara Pellegrini
- * @author Stefan Dragisic
- */
 @Aggregate
-public class MyEntityAggregate {
+class MyEntityAggregate {
 
     @AggregateIdentifier
     private String entityId;
 
     public MyEntityAggregate() {
+        // Required by Axon Framework
     }
 
     @CommandHandler
     public MyEntityAggregate(CreateMyEntityCommand command) {
-        apply(new MyEntityCreatedEvent(command.getEntityId()));
+        apply(new MyEntityCreatedEvent(command.entityId()));
     }
 
     @EventSourcingHandler
     public void on(MyEntityCreatedEvent event) {
-        entityId = event.getEntityId();
+        entityId = event.entityId();
     }
 }
