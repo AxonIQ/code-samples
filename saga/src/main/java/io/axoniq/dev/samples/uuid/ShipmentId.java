@@ -1,5 +1,5 @@
 package io.axoniq.dev.samples.uuid;
 
-public class ShipmentId extends AbstractId{
+public class ShipmentId extends AbstractId {
 
 }

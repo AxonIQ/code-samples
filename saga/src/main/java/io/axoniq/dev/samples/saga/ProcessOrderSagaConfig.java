@@ -10,11 +10,10 @@ public class ProcessOrderSagaConfig {
 
     @Autowired
     public void configure(EventProcessingConfigurer configurer) {
-        configurer.registerPooledStreamingEventProcessor
-                ("ProcessOrderSagaProcessor",
-                 org.axonframework.config.Configuration::eventStore,
-                 (configuration, builder) -> builder.initialToken(
-                         StreamableMessageSource::createTailToken));
+        configurer.registerPooledStreamingEventProcessor(
+                "ProcessOrderSagaProcessor",
+                org.axonframework.config.Configuration::eventStore,
+                (configuration, builder) -> builder.initialToken(StreamableMessageSource::createTailToken)
+        );
     }
-
 }
