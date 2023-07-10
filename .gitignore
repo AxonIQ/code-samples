@@ -37,11 +37,11 @@ out/
 .vscode/
 
 ### Node.js ###
-/node_modules/
-/frontend/
 package.json
 package-lock.json
 tsconfig.json
 types.d.ts
 vite.config.ts
 vite.generated.ts
+/multitenancy/frontend/
+/multitenancy/node_modules/
