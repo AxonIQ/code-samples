@@ -39,10 +39,11 @@ public class QueryController {
     @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
     @GetMapping(path = "/updates", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<String>> updates() {
-        SubscriptionQueryResult<List<String>, String> result = queryGateway
-                .subscriptionQuery(new ModelQuery(),
-                                   ResponseTypes.multipleInstancesOf(String.class),
-                                   ResponseTypes.instanceOf(String.class));
+        //noinspection resource
+        SubscriptionQueryResult<List<String>, String> result =
+                queryGateway.subscriptionQuery(new ModelQuery(),
+                                               ResponseTypes.multipleInstancesOf(String.class),
+                                               ResponseTypes.instanceOf(String.class));
 
         Flux<ServerSentEvent<String>> sseStream = result.initialResult()
                                                         .flatMapMany(Flux::fromIterable)

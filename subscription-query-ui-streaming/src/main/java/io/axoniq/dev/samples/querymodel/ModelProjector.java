@@ -24,7 +24,6 @@ public class ModelProjector {
     private final QueryUpdateEmitter updateEmitter;
     private final List<String> updates;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public ModelProjector(QueryUpdateEmitter updateEmitter) {
         this.updateEmitter = updateEmitter;
         this.updates = new ArrayList<>();
@@ -32,8 +31,8 @@ public class ModelProjector {
 
     @EventHandler
     public void on(StreamUpdatedEvent event) {
-        updates.add(event.getUpdate());
-        updateEmitter.emit(ModelQuery.class, query -> true, event.getUpdate());
+        updates.add(event.update());
+        updateEmitter.emit(ModelQuery.class, query -> true, event.update());
     }
 
     @SuppressWarnings("unused")

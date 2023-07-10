@@ -22,6 +22,7 @@ public class AxonConfig {
         return new LoggingInterceptor<>();
     }
 
+    @SuppressWarnings("resource")
     @Autowired
     public void configureLoggingInterceptor(LoggingInterceptor<Message<?>> loggingInterceptor,
                                             EventGateway eventGateway,
