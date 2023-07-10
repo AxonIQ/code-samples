@@ -7,12 +7,15 @@ validates whether it handles a `FlightEvent` implementation. If it does, it retu
 identifier. Through this approach, the `FlightIdSequencingPolicy` ensures that all events with the same `FlightId` will
 be handled in order within a distributed environment.
 
-The implementation of the `FlightIdSequencingPolicy` is concise because of the common `FlightEvent` used by all flight event implementations.
-Without this base event, the `FlightIdSequencingPolicy` would include an if/else or switch statement containing all flight events to achieve the same.
+The implementation of the `FlightIdSequencingPolicy` is concise because of the common `FlightEvent` used by all flight
+event implementations. Without this base event, the `FlightIdSequencingPolicy` would include an if/else or switch
+statement containing all flight events to achieve the same.
 
 As a bonus, this sample shows how we can achieve the same result with the `PropertySequencingPolicy`.
 
-For more information on sequencing policies (like other implementations) check [this](https://docs.axoniq.io/reference-guide/axon-framework/events/event-processors/streaming#sequential-processing) page.
+For more information on sequencing policies (like other implementations)
+check [this](https://docs.axoniq.io/reference-guide/axon-framework/events/event-processors/streaming#sequential-processing)
+page.
 
 ## Running the application
 

@@ -41,8 +41,8 @@ public class AxonConfig {
     /**
      * Constructs a {@link PropertySequencingPolicy} instance.
      * <p>
-     * Added to show that the {@code PropertySequencingPolicy} in essence works identical as the custom {@link
-     * FlightIdSequencingPolicy}.
+     * Added to show that the {@code PropertySequencingPolicy} in essence works identical as the custom
+     * {@link FlightIdSequencingPolicy}.
      *
      * @return a {@link PropertySequencingPolicy} using the {@link FlightId} to sequence on
      */

@@ -10,5 +10,5 @@ package io.axoniq.dev.samples.sequencingpolicy.coreapi;
  */
 public interface FlightEvent {
 
-    FlightId getFlightId();
+    FlightId flightId();
 }
