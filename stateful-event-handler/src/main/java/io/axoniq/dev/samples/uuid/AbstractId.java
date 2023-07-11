@@ -1,8 +1,9 @@
 package io.axoniq.dev.samples.uuid;
 
+import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.UUID;
-import javax.persistence.Embeddable;
 
 @Embeddable
 abstract class AbstractId implements Serializable {
