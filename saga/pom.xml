@@ -11,8 +11,11 @@
 
     <artifactId>saga</artifactId>
 
-    <name>Saga</name>
-    <description>Sample application showing what a basic Saga implementation may look like</description>
+    <name>Saga - No TOAST in PostgreSQL</name>
+    <description>
+        Sample application showing what a basic Saga implementation may look like,
+        combined with switching PostgreSQLs TOAST behavior
+    </description>
 
     <dependencies>
         <!-- Axon -->
@@ -28,12 +31,21 @@
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <!-- Database -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <!-- Testing -->
         <dependency>

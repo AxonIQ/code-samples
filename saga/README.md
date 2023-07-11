@@ -1,4 +1,14 @@
-# Saga implementation example
+# Saga - No Toast in PostgreSQL
+
+This sample project shows a simple Saga use case (as explained [here](#saga-implementation-example)), stored in
+PostgreSQL replacing the default [TOAST](https://wiki.postgresql.org/wiki/TOAST) behavior (as
+explained [here](#serialized-saga-in-postgresql-without-toast)).
+
+To run this application, you should first start the services described in the `docker-compose.yml`. With that in hand,
+you can run the Spring Boot application, either through a terminal (e.g. `mvn spring-boot:run`) or through your IDE of
+choice.
+
+## Saga Implementation example
 
 This is an example on how to implement a Saga. This use case is implemented in
 the [ProcessOrderSaga](src/main/java/io/axoniq/dev/samples/saga/ProcessOrderSaga.java)
@@ -51,6 +61,6 @@ configuration example can be found [here](src/main/java/io/axoniq/dev/samples/sa
 
 If you are using PostgreSQL the `serialized_saga` column in the saga_entry table will be compressed to OID. If you don't
 want that, you can overwrite the dialect
-like [this](src/main/java/io/axoniq/dev/samples/dialect/AxonPostgreSQLDialect.java). And add a Hibernate mapping with
+like [this](src/main/java/io/axoniq/dev/samples/dialect/NoToastPostgreSQLDialect.java). And add a Hibernate mapping with
 an [orm file](src/main/resources/orm.xml). If needed you can migrate the existing Saga entries with
-a [sql script](src/main/resources/migrateToBytea.sql)
+a [sql script](src/main/resources/migrateToBytea.sql).
