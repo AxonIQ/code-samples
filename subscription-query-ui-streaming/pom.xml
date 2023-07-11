@@ -33,7 +33,6 @@
     </dependencies>
 
     <build>
-        <testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
         <plugins>
             <!-- TODO perhaps remove if in main pom-->
             <plugin>
