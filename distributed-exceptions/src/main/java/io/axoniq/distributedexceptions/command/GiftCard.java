@@ -1,9 +1,9 @@
 package io.axoniq.distributedexceptions.command;
 
-import io.axoniq.distributedexceptions.api.IssueCmd;
-import io.axoniq.distributedexceptions.api.IssuedEvt;
-import io.axoniq.distributedexceptions.api.RedeemCmd;
-import io.axoniq.distributedexceptions.api.RedeemedEvt;
+import io.axoniq.distributedexceptions.api.IssueCardCommand;
+import io.axoniq.distributedexceptions.api.CardIssuedEvent;
+import io.axoniq.distributedexceptions.api.RedeemCardCommand;
+import io.axoniq.distributedexceptions.api.CardRedeemedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -18,7 +18,7 @@ import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
 @Aggregate
 @Profile("command")
-public class GiftCard {
+class GiftCard {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -27,38 +27,38 @@ public class GiftCard {
     private int remainingValue;
 
     @CommandHandler
-    public GiftCard(IssueCmd cmd) {
-        logger.debug("handling {}", cmd);
-        if (cmd.getAmount() <= 0) {
-            throw new NegativeOrZeroAmount(cmd.getAmount(), "amount <= 0");
+    public GiftCard(IssueCardCommand command) {
+        logger.debug("handling {}", command);
+        if (command.amount() <= 0) {
+            throw new NegativeOrZeroAmount(command.amount(), "amount <= 0");
         }
-        apply(new IssuedEvt(cmd.getId(), cmd.getAmount()));
+        apply(new CardIssuedEvent(command.id(), command.amount()));
     }
 
     @CommandHandler
-    public void handle(RedeemCmd cmd) {
-        logger.debug("handling {}", cmd);
-        if (cmd.getAmount() <= 0) {
-            throw new NegativeOrZeroAmount(cmd.getAmount(), "amount <= 0");
+    public void handle(RedeemCardCommand command) {
+        logger.debug("handling {}", command);
+        if (command.amount() <= 0) {
+            throw new NegativeOrZeroAmount(command.amount(), "amount <= 0");
         }
-        if (cmd.getAmount() > remainingValue) {
+        if (command.amount() > remainingValue) {
             throw new InsufficientFunds("amount > remaining value");
         }
-        apply(new RedeemedEvt(giftCardId, cmd.getAmount()));
+        apply(new CardRedeemedEvent(giftCardId, command.amount()));
     }
 
     @EventSourcingHandler
-    public void on(IssuedEvt evt) {
-        logger.debug("applying {}", evt);
-        giftCardId = evt.getId();
-        remainingValue = evt.getAmount();
+    public void on(CardIssuedEvent event) {
+        logger.debug("applying {}", event);
+        giftCardId = event.id();
+        remainingValue = event.amount();
         logger.debug("new remaining value: {}", remainingValue);
     }
 
     @EventSourcingHandler
-    public void on(RedeemedEvt evt) {
-        logger.debug("applying {}", evt);
-        remainingValue -= evt.getAmount();
+    public void on(CardRedeemedEvent event) {
+        logger.debug("applying {}", event);
+        remainingValue -= event.amount();
         logger.debug("new remaining value: {}", remainingValue);
     }
 

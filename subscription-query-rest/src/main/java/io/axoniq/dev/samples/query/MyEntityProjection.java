@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/**
- * @author Sara Pellegrini
- * @author Stefan Dragisic
- */
 @Component
 class MyEntityProjection {
 
@@ -31,14 +27,14 @@ class MyEntityProjection {
 
     @EventHandler
     public void on(MyEntityCreatedEvent event, @MetaDataValue("correlationId") String correlationId) {
-        MyEntity entity = new MyEntity(event.getEntityId());
+        MyEntity entity = new MyEntity(event.entityId());
 
         /* save your entity in your repository here */
 
         /* Inject correlationId from Event Metadata, which is basically command id that produced this event.
          Emit and update to all observers that are interested in this correlationId */
         emitter.emit(GetMyEntityByCorrelationIdQuery.class,
-                     query -> query.getCorrelationId().equals(correlationId),
+                     query -> query.correlationId().equals(correlationId),
                      entity);
     }
 }

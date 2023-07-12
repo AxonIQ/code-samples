@@ -6,18 +6,19 @@ import io.axoniq.dev.samples.command.handler.AccountEventHandler;
 import io.axoniq.dev.samples.command.persistence.EmailJpaEntity;
 import io.axoniq.dev.samples.command.persistence.EmailRepository;
 import org.junit.jupiter.api.*;
-import org.mockito.*;
 
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-public class AccountEventHandlerTest {
+class AccountEventHandlerTest {
+
+    private static final java.util.UUID UUID = java.util.UUID.randomUUID();
+    private static final String EMAIL_ADDRESS = "bob@gmail.com";
+
+    private final EmailRepository emailRepository = mock(EmailRepository.class);
 
     private AccountEventHandler testSubject;
-    private final EmailRepository emailRepository = mock(EmailRepository.class);
-    public static final java.util.UUID UUID = java.util.UUID.randomUUID();
-    public static final String EMAIL_ADDRESS = "bob@gmail.com";
 
     @BeforeEach
     void setup() {
@@ -28,7 +29,7 @@ public class AccountEventHandlerTest {
     void accountCreatedTest() {
         testSubject.on(new AccountCreatedEvent(UUID, EMAIL_ADDRESS), emailRepository);
         EmailJpaEntity emailJpaEntity = new EmailJpaEntity(EMAIL_ADDRESS, UUID);
-        Mockito.verify(emailRepository).save(emailJpaEntity);
+        verify(emailRepository).save(emailJpaEntity);
     }
 
     @Test
@@ -38,7 +39,7 @@ public class AccountEventHandlerTest {
                 UUID)));
         testSubject.on(new EmailAddressChangedEvent(UUID, EMAIL_ADDRESS), emailRepository);
         EmailJpaEntity emailJpaEntity = new EmailJpaEntity(EMAIL_ADDRESS, UUID);
-        Mockito.verify(emailRepository).delete(emailJpaEntity);
-        Mockito.verify(emailRepository).save(emailJpaEntity);
+        verify(emailRepository).delete(emailJpaEntity);
+        verify(emailRepository).save(emailJpaEntity);
     }
 }

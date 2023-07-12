@@ -1,0 +1,6 @@
+{
+  "/app": {
+    "target": "http://localhost:8080/app",
+    "secure": false
+  }
+}

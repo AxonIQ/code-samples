@@ -1,0 +1,7 @@
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" version="2.0">
+    <entity class="org.axonframework.modelling.saga.repository.jpa.SagaEntry">
+        <attribute-override name="serializedSaga">
+            <column name="serializedSaga" column-definition="BYTEA"></column>
+        </attribute-override>
+    </entity>
+</entity-mappings>

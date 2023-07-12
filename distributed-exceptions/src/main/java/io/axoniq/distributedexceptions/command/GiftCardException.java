@@ -8,8 +8,9 @@ import io.axoniq.distributedexceptions.api.GiftCardBusinessErrorCode;
  * @author Stefan Andjelkovic
  */
 class GiftCardException extends RuntimeException {
-    private String errorMessage;
-    private GiftCardBusinessErrorCode errorCode;
+
+    private final String errorMessage;
+    private final GiftCardBusinessErrorCode errorCode;
 
     public GiftCardException(String errorMessage, GiftCardBusinessErrorCode errorCode) {
         super(errorMessage);
@@ -26,22 +27,19 @@ class GiftCardException extends RuntimeException {
     }
 }
 
-/**
- * @author Stefan Andjelkovic
- */
 class InsufficientFunds extends GiftCardException {
+
     public InsufficientFunds() {
         super("amount > remaining value", GiftCardBusinessErrorCode.INSUFFICIENT_FUNDS);
     }
+
     public InsufficientFunds(String errorMessage) {
         super(errorMessage, GiftCardBusinessErrorCode.INSUFFICIENT_FUNDS);
     }
 }
 
-/**
- * @author Stefan Andjelkovic
- */
 class NegativeOrZeroAmount extends GiftCardException {
+
     private int amount;
 
     public NegativeOrZeroAmount(int amount) {

@@ -18,19 +18,22 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-public class AccountTest {
+class AccountTest {
 
     private static final UUID UUID = java.util.UUID.randomUUID();
     private static final String EMAIL_ADDRESS = "bob@gmail.com";
     private static final String EMAIL_ADDRESS_CHANGED = "bob2@gmail.com";
 
+    private EmailRepository emailRepository;
+
     private FixtureConfiguration<Account> fixture;
-    private final EmailRepository emailRepository = mock(EmailRepository.class);
-    private final EmailAlreadyExistsResolverFactory emailAlreadyExistsResolverFactory =
-            new EmailAlreadyExistsResolverFactory(emailRepository);
 
     @BeforeEach
     void setup() {
+        emailRepository = mock(EmailRepository.class);
+        EmailAlreadyExistsResolverFactory emailAlreadyExistsResolverFactory =
+                new EmailAlreadyExistsResolverFactory(emailRepository);
+
         fixture = new AggregateTestFixture<>(Account.class);
         fixture.registerInjectableResource(new EmailJpaEntity(EMAIL_ADDRESS, UUID));
         fixture.registerInjectableResource(emailRepository);

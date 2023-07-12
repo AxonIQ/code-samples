@@ -11,20 +11,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
+import javax.annotation.Nonnull;
 
-/**
- * @author Stefan Andjelkovic
- */
 public class ExceptionWrappingHandlerInterceptor implements MessageHandlerInterceptor<CommandMessage<?>> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
-    public Object handle(UnitOfWork<? extends CommandMessage<?>> unitOfWork, InterceptorChain interceptorChain) throws Exception {
+    public Object handle(@Nonnull UnitOfWork<? extends CommandMessage<?>> unitOfWork,
+                         @Nonnull InterceptorChain interceptorChain) {
         try {
             return interceptorChain.proceed();
         } catch (Throwable e) {
-            throw new CommandExecutionException("An exception has occurred during command execution", e, exceptionDetails(e));
+            throw new CommandExecutionException(
+                    "An exception has occurred during command execution", e, exceptionDetails(e)
+            );
         }
     }
 
@@ -36,16 +37,16 @@ public class ExceptionWrappingHandlerInterceptor implements MessageHandlerInterc
         // alternatively this can be a centralised place to do a check on exception's more specific instance
         // and populate the details accordingly (code, message, etc), instead of relying on the Domain Exception
         // to contain all the information and mapping logic
-        if (throwable instanceof GiftCardException) {
-            GiftCardException gce = (GiftCardException) throwable;
-            GiftCardBusinessError businessError = new GiftCardBusinessError(gce.getClass().getName(), gce.getErrorCode(),
-                                                                            gce.getErrorMessage());
-            logger.info("Converted GiftCardException to " + businessError.toString());
+        if (throwable instanceof GiftCardException gce) {
+            GiftCardBusinessError businessError = new GiftCardBusinessError(
+                    gce.getClass().getName(), gce.getErrorCode(), gce.getErrorMessage()
+            );
+            logger.info("Converted GiftCardException to " + businessError);
             return businessError;
         } else {
-            GiftCardBusinessError businessError = new GiftCardBusinessError(throwable.getClass().getName(),
-                                                                            GiftCardBusinessErrorCode.UNKNOWN,
-                                                                            throwable.getMessage());
+            GiftCardBusinessError businessError = new GiftCardBusinessError(
+                    throwable.getClass().getName(), GiftCardBusinessErrorCode.UNKNOWN, throwable.getMessage()
+            );
             logger.info("Converted CommandExecutionException to " + businessError);
             return businessError;
         }

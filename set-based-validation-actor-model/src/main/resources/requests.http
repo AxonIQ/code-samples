@@ -1,0 +1,19 @@
+### Create a User and check if the email address exists
+
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "emailAddress": "bob@gmail.com"
+}
+
+### Change the email address and release the claim on the email address. Take the userId from the create user.
+
+PUT http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "emailAddress": "robert@gmail.com",
+  "formerEmailAddress": "bob@gmail.com",
+  "userId": "cd1f8637-d41c-4a37-bc75-cc052d2d262e"
+}

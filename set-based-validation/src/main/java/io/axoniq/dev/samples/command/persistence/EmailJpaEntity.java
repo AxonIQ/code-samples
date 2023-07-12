@@ -1,9 +1,10 @@
 package io.axoniq.dev.samples.command.persistence;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 import java.util.UUID;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
 public class EmailJpaEntity {

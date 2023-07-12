@@ -1,18 +1,15 @@
 package io.axoniq.distributedexceptions.api;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.Nonnull;
 
-/**
- * @author Stefan Andjelkovic
- */
 public class GiftCardBusinessError {
 
     private final String name;
-    @NotNull
+    @Nonnull
     private final GiftCardBusinessErrorCode code;
     private final String message;
 
-    public GiftCardBusinessError(String name, @NotNull GiftCardBusinessErrorCode code, String message) {
+    public GiftCardBusinessError(String name, @Nonnull GiftCardBusinessErrorCode code, String message) {
         this.name = name;
         this.code = code;
         this.message = message;
@@ -22,7 +19,7 @@ public class GiftCardBusinessError {
         return name;
     }
 
-    @NotNull
+    @Nonnull
     public GiftCardBusinessErrorCode getCode() {
         return code;
     }
