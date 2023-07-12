@@ -22,6 +22,7 @@
         <module>sequencing-policy</module>
         <module>set-based-validation</module>
         <module>set-based-validation-actor-model</module>
+        <module>snapshots</module>
         <module>stateful-event-handler</module>
         <module>subscription-query-rest</module>
         <module>subscription-query-streaming</module>

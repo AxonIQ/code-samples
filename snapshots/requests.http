@@ -1,0 +1,16 @@
+### Create a new Entity with initial id of "entity-id" and name of "Entity Name".
+POST http://localhost:8080/entity/entity-id?name="Entity Name"
+Content-Type: application/json
+
+{
+}
+
+### Update the name of the Entity to "New Name".
+PATCH http://localhost:8080/entity/entity-id?name="New Name"
+Content-Type: application/json
+
+{
+}
+
+### Every time you send 5 Events to the Aggregate, you should see a Snapshot created log line.
+### o.a.a.c.event.axon.AxonServerEventStore  : Snapshot created
