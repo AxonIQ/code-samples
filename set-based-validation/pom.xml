@@ -61,6 +61,13 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${spring-doc.version}</version>
+            <exclusions>
+                <!-- Excluded due to CVE-2022-41854 and since we're not using it -->
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Testing -->
         <dependency>

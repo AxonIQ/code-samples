@@ -1,5 +1,0 @@
-axon:
-  axonserver:
-    context: "default"
-    component-name: "component"
-
