@@ -1,4 +1,4 @@
-name: Axon Code Samples
+name: AxonIQ Code Samples
 
 on: [push, pull_request]
 
@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 11, 17 ]
+        java: [ 17 ]
 
-    name: Build and tests on JDK ${{ matrix.java }}
+    name: Build and Test on JDK ${{ matrix.java }}
 
     steps:
       - name: Checkout code
@@ -28,5 +28,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven
 
-      - name: Build and verify
-        run: mvn clean verify
+      - name: Build and Verify
+        run: ./mvnw -B -U -Dstyle.color=always clean verify
