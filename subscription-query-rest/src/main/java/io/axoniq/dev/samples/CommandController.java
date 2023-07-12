@@ -15,10 +15,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
-/**
- * @author Sara Pellegrini
- * @author Stefan Dragisic
- */
 @RestController
 public class CommandController {
 

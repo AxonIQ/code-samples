@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>${spring.boot.version}</version>
+            <version>${spring-boot.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.core.version}</version>
+            <version>${jackson-core.version}</version>
             <scope>compile</scope>
         </dependency>
         <!-- Database -->
@@ -51,9 +51,9 @@
         </dependency>
         <!-- UI -->
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${spring-doc.version}</version>
         </dependency>
         <!-- Testing -->
         <dependency>
@@ -71,19 +71,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <!-- TODO perhaps remove if in main pom-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <!-- TODO perhaps remove if in main pom-->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

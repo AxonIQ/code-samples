@@ -18,9 +18,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @EnableScheduling
 @SpringBootApplication
-public class SubscriptionQueryUiStreamingApplication {
+public class SubscriptionQueryStreamingApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SubscriptionQueryUiStreamingApplication.class, args);
+        SpringApplication.run(SubscriptionQueryStreamingApplication.class, args);
     }
 }

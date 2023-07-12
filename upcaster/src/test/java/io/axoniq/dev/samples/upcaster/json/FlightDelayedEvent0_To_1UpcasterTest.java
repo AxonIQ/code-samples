@@ -17,6 +17,7 @@ import java.util.UUID;
 import static io.axoniq.dev.samples.upcaster.json.UpcasterTestingUtils.extractFileContentsToString;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("NewClassNamingConvention")
 class FlightDelayedEvent0_To_1UpcasterTest {
 
     private static final String PAYLOAD_TYPE = "io.axoniq.dev.samples.api.FlightDelayedEvent";

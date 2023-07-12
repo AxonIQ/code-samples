@@ -24,7 +24,7 @@
         <module>set-based-validation-actor-model</module>
         <module>stateful-event-handler</module>
         <module>subscription-query-rest</module>
-        <module>subscription-query-ui-streaming</module>
+        <module>subscription-query-streaming</module>
         <module>upcaster</module>
     </modules>
 
@@ -37,17 +37,17 @@
         <kotlin.maven.version>1.9.0</kotlin.maven.version>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
-        <axon.bom.version>4.8.0</axon.bom.version>
+        <axon-bom.version>4.8.0</axon-bom.version>
         <!--Spring-->
-        <spring.boot.version>3.1.1</spring.boot.version>
+        <spring-boot.version>3.1.1</spring-boot.version>
         <!--Serialization-->
-        <jackson.core.version>2.15.2</jackson.core.version>
+        <jackson-core.version>2.15.2</jackson-core.version>
         <!-- Database -->
-        <hibernate.core.version>6.2.6.Final</hibernate.core.version>
+        <hibernate-core.version>6.2.6.Final</hibernate-core.version>
         <!--Other-->
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
-        <reactor.core.version>3.5.7</reactor.core.version>
-        <swagger.version>3.0.0</swagger.version>
+        <reactor-core.version>3.5.7</reactor-core.version>
+        <spring-doc.version>2.1.0</spring-doc.version>
         <!--Testing-->
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>5.9.3</junit.version>
@@ -55,8 +55,8 @@
         <mockito.version>5.4.0</mockito.version>
         <testcontainers.version>1.18.3</testcontainers.version>
         <!-- Build and Plugins -->
-        <maven.compiler.version>3.11.0</maven.compiler.version>
-        <maven.surefire.version>3.1.2</maven.surefire.version>
+        <maven-compiler.version>3.11.0</maven-compiler.version>
+        <maven-surefire.version>3.1.2</maven-surefire.version>
     </properties>
 
     <dependencyManagement>
@@ -65,7 +65,7 @@
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-bom</artifactId>
-                <version>${axon.bom.version}</version>
+                <version>${axon-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -73,37 +73,31 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${spring.boot.version}</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-webflux</artifactId>
-                <version>${spring.boot.version}</version>
+                <version>${spring-boot.version}</version>
             </dependency>
             <!--Other-->
             <dependency>
                 <groupId>io.projectreactor</groupId>
                 <artifactId>reactor-core</artifactId>
-                <version>${reactor.core.version}</version>
+                <version>${reactor-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>${findbugs-jsr305.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20220320</version>
-                <!--                TODO what is this used for? -->
-            </dependency>
             <!-- Database -->
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>${hibernate.core.version}</version>
+                <version>${hibernate-core.version}</version>
             </dependency>
             <!--Testing-->
             <dependency>
@@ -147,17 +141,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven.surefire.version}</version>
+                    <version>${maven-surefire.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.version}</version>
+                    <version>${maven-compiler.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring.boot.version}</version>
+                    <version>${spring-boot.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
