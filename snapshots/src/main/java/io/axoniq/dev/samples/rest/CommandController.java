@@ -12,13 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.CompletableFuture;
 
-/**
- * @author Sara Pellegrini
- * @author Lucas Campos
- */
 @RestController
 @RequestMapping("/entity")
-public class CommandController {
+class CommandController {
 
     private final CommandGateway commandGateway;
 

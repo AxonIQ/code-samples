@@ -1,24 +1,8 @@
 package io.axoniq.dev.samples.api;
 
-/**
- * @author Sara Pellegrini
- */
-public class MyEntityRenamedEvent {
+public record MyEntityRenamedEvent(
+        String entityId,
+        String name
+) {
 
-    private final String entityId;
-
-    private final String name;
-
-    public MyEntityRenamedEvent(String entityId, String name) {
-        this.entityId = entityId;
-        this.name = name;
-    }
-
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public String getName() {
-        return name;
-    }
 }
