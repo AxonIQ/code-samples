@@ -1,16 +1,38 @@
 version: 2
 updates:
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 5
+  labels:
+    - "Type: Dependency Upgrade"
+    - "Priority 1: Must"
+  reviewers:
+    - "gklijs"
+    - "Morlack"
+    - "smcvb" # Main
 - package-ecosystem: maven
   directory: "/"
   schedule:
     interval: daily
   open-pull-requests-limit: 5
-  # Specify labels for pull requests
   labels:
     - "Type: Dependency Upgrade"
     - "Priority 1: Must"
-  # Add reviewers
   reviewers:
-    - "sandjelkovic"
-    - "saratry"
-    - "schananas"
+    - "gklijs"
+    - "Morlack"
+    - "smcvb" # Main
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 5
+  labels:
+    - "Type: Dependency Upgrade"
+    - "Priority 1: Must"
+  reviewers:
+    - "gklijs"
+    - "Morlack"
+    - "smcvb" # Main
