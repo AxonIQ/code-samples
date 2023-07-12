@@ -74,7 +74,7 @@ public class GiftCardController {
                           logger.debug("Received BusinessError with data: " + giftCardBusinessError);
                           logger.error("Unable to create GiftCard due to validation constrains. Reason: "
                                                + giftCardBusinessError);
-                          return giftCardBusinessError.getCode() + " : " + giftCardBusinessError.getName();
+                          return giftCardBusinessError.code() + " : " + giftCardBusinessError.name();
                       })
                       .orElseGet(() -> {
                           logger.error("Unable to create GiftCard due to " + throwable);
