@@ -14,6 +14,10 @@
     <name>Upcaster</name>
     <description>Module showing several Upcaster implementations</description>
 
+    <properties>
+        <jsonassert.version>1.5.1</jsonassert.version>
+    </properties>
+
     <dependencies>
         <!-- Axon -->
         <dependency>
@@ -29,6 +33,7 @@
         <dependency>
             <groupId>org.skyscreamer</groupId>
             <artifactId>jsonassert</artifactId>
+            <version>${jsonassert.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

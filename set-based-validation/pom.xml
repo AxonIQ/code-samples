@@ -14,6 +14,13 @@
     <name>Set-Based Validation</name>
     <description>Module explaining an approach to deal with Set-Based Validation</description>
 
+    <properties>
+        <!--Serialization-->
+        <jackson-core.version>2.15.2</jackson-core.version>
+        <!--UI-->
+        <spring-doc.version>2.1.0</spring-doc.version>
+    </properties>
+
     <dependencies>
         <!-- Axon -->
         <dependency>
