@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 17 ]
+        java-version: [ 17 ]
 
-    name: Build and Test on JDK ${{ matrix.java }}
+    name: Build and Test on JDK ${{ matrix.java-version }}
 
     steps:
       - name: Checkout code
