@@ -9,9 +9,9 @@ updates:
     - "Type: Dependency Upgrade"
     - "Priority 1: Must"
   reviewers:
+    - "CodeDrivenMitch"
     - "gklijs"
-    - "Morlack"
-    - "smcvb" # Main
+    - "smcvb"
 - package-ecosystem: maven
   directory: "/"
   schedule:
@@ -21,9 +21,9 @@ updates:
     - "Type: Dependency Upgrade"
     - "Priority 1: Must"
   reviewers:
+    - "CodeDrivenMitch"
     - "gklijs"
-    - "Morlack"
-    - "smcvb" # Main
+    - "smcvb"
 - package-ecosystem: npm
   directory: "/"
   schedule:
@@ -33,6 +33,6 @@ updates:
     - "Type: Dependency Upgrade"
     - "Priority 1: Must"
   reviewers:
+    - "CodeDrivenMitch"
     - "gklijs"
-    - "Morlack"
-    - "smcvb" # Main
+    - "smcvb"
