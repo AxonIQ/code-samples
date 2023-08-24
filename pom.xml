@@ -35,7 +35,7 @@
         <!-- Language -->
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <kotlin.version>1.9.0</kotlin.version>
-        <kotlin.maven.version>1.9.0</kotlin.maven.version>
+        <kotlin.maven.version>1.9.10</kotlin.maven.version>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
         <axon-bom.version>4.8.2</axon-bom.version>
