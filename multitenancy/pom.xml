@@ -18,7 +18,7 @@
         <flyway.version>9.22.3</flyway.version>
         <h2.version>2.2.224</h2.version>
         <!-- UI -->
-        <vaadin.version>24.1.12</vaadin.version>
+        <vaadin.version>24.2.0</vaadin.version>
     </properties>
 
     <dependencyManagement>
