@@ -53,7 +53,7 @@
         <testcontainers.version>1.19.1</testcontainers.version>
         <!-- Build and Plugins -->
         <maven-compiler.version>3.11.0</maven-compiler.version>
-        <maven-surefire.version>3.1.2</maven-surefire.version>
+        <maven-surefire.version>3.2.1</maven-surefire.version>
     </properties>
 
     <dependencyManagement>
