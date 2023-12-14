@@ -1,38 +1,56 @@
 version: 2
+
 updates:
-- package-ecosystem: github-actions
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 5
-  labels:
-    - "Type: Dependency Upgrade"
-    - "Priority 1: Must"
-  reviewers:
-    - "CodeDrivenMitch"
-    - "gklijs"
-    - "smcvb"
-- package-ecosystem: maven
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 5
-  labels:
-    - "Type: Dependency Upgrade"
-    - "Priority 1: Must"
-  reviewers:
-    - "CodeDrivenMitch"
-    - "gklijs"
-    - "smcvb"
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 5
-  labels:
-    - "Type: Dependency Upgrade"
-    - "Priority 1: Must"
-  reviewers:
-    - "CodeDrivenMitch"
-    - "gklijs"
-    - "smcvb"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: "sunday"
+    open-pull-requests-limit: 5
+    labels:
+      - "Type: Dependency Upgrade"
+      - "Priority 1: Must"
+    reviewers:
+      - "AxonFramework/framework-developers"
+    groups:
+      github-dependencies:
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+
+  - package-ecosystem: maven
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: "sunday"
+    open-pull-requests-limit: 5
+    labels:
+      - "Type: Dependency Upgrade"
+      - "Priority 1: Must"
+    reviewers:
+      - "AxonFramework/framework-developers"
+    groups:
+      maven-dependencies:
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
+
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: "sunday"
+    open-pull-requests-limit: 5
+    labels:
+      - "Type: Dependency Upgrade"
+      - "Priority 1: Must"
+    reviewers:
+      - "AxonFramework/framework-developers"
+    groups:
+      npm-dependencies:
+        update-types:
+          - "patch"
+          - "minor"
+          - "major"
