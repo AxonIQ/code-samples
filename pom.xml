@@ -34,13 +34,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Language -->
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <kotlin.version>1.9.21</kotlin.version>
-        <kotlin.maven.version>1.9.21</kotlin.maven.version>
+        <kotlin.version>1.9.22</kotlin.version>
+        <kotlin.maven.version>1.9.22</kotlin.maven.version>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
         <axon-bom.version>4.9.2</axon-bom.version>
         <!--Spring-->
-        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-boot.version>3.2.1</spring-boot.version>
         <!-- Database -->
         <hibernate-core.version>6.2.6.Final</hibernate-core.version>
         <!--Other-->
@@ -52,7 +52,7 @@
         <mockito.version>5.8.0</mockito.version>
         <testcontainers.version>1.19.3</testcontainers.version>
         <!-- Build and Plugins -->
-        <maven-compiler.version>3.11.0</maven-compiler.version>
+        <maven-compiler.version>3.12.0</maven-compiler.version>
         <maven-surefire.version>3.2.3</maven-surefire.version>
     </properties>
 
