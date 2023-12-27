@@ -52,7 +52,7 @@
         <mockito.version>5.8.0</mockito.version>
         <testcontainers.version>1.19.3</testcontainers.version>
         <!-- Build and Plugins -->
-        <maven-compiler.version>3.12.0</maven-compiler.version>
+        <maven-compiler.version>3.12.1</maven-compiler.version>
         <maven-surefire.version>3.2.3</maven-surefire.version>
     </properties>
 
