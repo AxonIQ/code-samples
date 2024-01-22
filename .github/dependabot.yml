@@ -11,7 +11,7 @@ updates:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
     reviewers:
-      - "AxonFramework/inspector-axon"
+      - "AxonFramework/framework-developers"
     groups:
       github-dependencies:
         update-types:
@@ -29,7 +29,7 @@ updates:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
     reviewers:
-      - "AxonFramework/inspector-axon"
+      - "AxonFramework/framework-developers"
     groups:
       maven-dependencies:
         update-types:
@@ -47,7 +47,7 @@ updates:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
     reviewers:
-      - "AxonFramework/inspector-axon"
+      - "AxonFramework/framework-developers"
     groups:
       npm-dependencies:
         update-types:
