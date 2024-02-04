@@ -38,7 +38,7 @@
         <kotlin.maven.version>1.9.22</kotlin.maven.version>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
-        <axon-bom.version>4.9.2</axon-bom.version>
+        <axon-bom.version>4.9.3</axon-bom.version>
         <!--Spring-->
         <spring-boot.version>3.2.2</spring-boot.version>
         <!-- Database -->
