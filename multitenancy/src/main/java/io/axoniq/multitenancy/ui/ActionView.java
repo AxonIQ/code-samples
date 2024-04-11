@@ -49,6 +49,11 @@ public class ActionView extends VerticalLayout implements HasUrlParameter<String
             showSuccess(tenantName);
         }));
 
+        layout.add(new Button("Schedule events...", evt -> {
+            messageService.scheduleEvents(tenantName);
+            showSuccess(tenantName);
+        }));
+
         layout.add(new Button("Send queries...", evt -> {
             messageService.sendQueries(tenantName);
             showSuccess(tenantName);
