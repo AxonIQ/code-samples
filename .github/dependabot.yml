@@ -11,7 +11,9 @@ updates:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
     reviewers:
-      - "AxonFramework/framework-developers"
+    - "CodeDrivenMitch"
+    - "gklijs"
+    - "smcvb"
     groups:
       github-dependencies:
         update-types:
@@ -29,7 +31,9 @@ updates:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
     reviewers:
-      - "AxonFramework/framework-developers"
+    - "CodeDrivenMitch"
+    - "gklijs"
+    - "smcvb"
     groups:
       maven-dependencies:
         update-types:
@@ -47,7 +51,9 @@ updates:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
     reviewers:
-      - "AxonFramework/framework-developers"
+      - "CodeDrivenMitch"
+      - "gklijs"
+      - "smcvb"
     groups:
       npm-dependencies:
         update-types:
