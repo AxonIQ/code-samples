@@ -15,10 +15,10 @@
 
     <properties>
         <!-- Database -->
-        <flyway.version>10.13.0</flyway.version>
+        <flyway.version>10.14.0</flyway.version>
         <h2.version>2.2.224</h2.version>
         <!-- UI -->
-        <vaadin.version>24.3.12</vaadin.version>
+        <vaadin.version>24.3.13</vaadin.version>
     </properties>
 
     <dependencyManagement>
