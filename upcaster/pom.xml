@@ -15,7 +15,7 @@
     <description>Module showing several Upcaster implementations</description>
 
     <properties>
-        <jsonassert.version>1.5.1</jsonassert.version>
+        <jsonassert.version>1.5.3</jsonassert.version>
     </properties>
 
     <dependencies>
