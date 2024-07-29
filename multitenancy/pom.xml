@@ -39,6 +39,17 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
+            <version>4.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-configuration</artifactId>
+            <version>4.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.axoniq</groupId>
+            <artifactId>axonserver-connector-java</artifactId>
+            <version>2024.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
@@ -48,7 +59,19 @@
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy-spring-boot-starter</artifactId>
+            <version>4.10.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.axonframework.extensions.multitenancy</groupId>
+            <artifactId>axon-multitenancy-spring-boot-autoconfigure</artifactId>
+            <version>4.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.axonframework.extensions.multitenancy</groupId>
+            <artifactId>axon-multitenancy</artifactId>
+            <version>4.10.0</version>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -120,6 +143,23 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>io.axoniq.multitenancy.MultitenancyExampleApplication</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- package -->
             <!-- The Spring Boot Maven plugin for easy execution from CLI and packaging -->
             <plugin>

@@ -4,6 +4,7 @@ import io.axoniq.multitenancy.api.FindAllCardsQuery;
 import io.axoniq.multitenancy.api.FindCardQuery;
 import io.axoniq.multitenancy.api.GiftCardRecord;
 import io.axoniq.multitenancy.api.CardIssuedEvent;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.queryhandling.QueryHandler;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@ProcessingGroup("giftcard")
 @Component
 class GiftCardHandler {
 

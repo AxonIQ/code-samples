@@ -5,6 +5,7 @@ import io.axoniq.multitenancy.api.FundsAddedEvent;
 import io.axoniq.multitenancy.api.IssueCardCommand;
 import io.axoniq.multitenancy.api.CardIssuedEvent;
 import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.spring.stereotype.Aggregate;
@@ -15,6 +16,7 @@ import java.lang.invoke.MethodHandles;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 
+@ProcessingGroup("giftcard")
 @Aggregate
 class GiftCard {
 
