@@ -19,6 +19,7 @@
         <h2.version>2.3.230</h2.version>
         <!-- UI -->
         <vaadin.version>24.4.7</vaadin.version>
+        <java.version>21</java.version>
     </properties>
 
     <dependencyManagement>
@@ -59,17 +60,17 @@
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy-spring-boot-starter</artifactId>
-            <version>4.10.0</version>
+            <version>4.10.1</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy-spring-boot-autoconfigure</artifactId>
-            <version>4.10.0</version>
+            <version>4.10.1</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy</artifactId>
-            <version>4.10.0</version>
+            <version>4.10.1</version>
         </dependency>
 
         <!-- Spring -->
@@ -158,6 +159,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>21</release>
+                </configuration>
             </plugin>
 
             <!-- package -->

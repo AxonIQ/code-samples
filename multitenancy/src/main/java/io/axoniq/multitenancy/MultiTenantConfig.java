@@ -10,6 +10,9 @@ import org.axonframework.extensions.multitenancy.configuration.MultiTenantStream
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 @Configuration
 public class MultiTenantConfig {
 
@@ -19,24 +22,10 @@ public class MultiTenantConfig {
     }
 
     @Bean
-    public MultiTenantStreamableMessageSourceProvider multiTenantStreamableMessageSourceProvider(AxonServerEventStore defaultEventStore) {
-        return (defaultTenantSource, processorName, tenantDescriptor, configuration) -> {
-            if (tenantDescriptor.tenantId().startsWith("tenant-")) {
-                return defaultTenantSource;
-            }
-            return defaultEventStore;
-
-        };
-    }
-
-    @Bean
-    public AxonServerEventStore defaultEventStore(AxonServerConfiguration configuration, AxonServerConnectionManager connectionManager) {
-        return AxonServerEventStore.builder()
-                .defaultContext("default")
-                .configuration(configuration)
-                .platformConnectionManager(connectionManager)
-                .snapshotFilter(SnapshotFilter.allowAll())
-                .build();
+    public ScheduledExecutorService persistentStreamScheduler() {
+        return Executors.newScheduledThreadPool(10, Thread.ofVirtual()
+                                                          .name("persistent-streams-", 0)
+                                                          .factory());
     }
 
     // UNCOMMENT THIS BEAN TO ENABLE MULTITENANCY WITH MULTIPLE DATA SOURCES
