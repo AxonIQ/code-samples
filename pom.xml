@@ -34,8 +34,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Language -->
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <kotlin.version>2.0.0</kotlin.version>
-        <kotlin.maven.version>2.0.0</kotlin.maven.version>
+        <kotlin.version>2.0.10</kotlin.version>
+        <kotlin.maven.version>2.0.10</kotlin.maven.version>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
         <axon-bom.version>4.10.0</axon-bom.version>
