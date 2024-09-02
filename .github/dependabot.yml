@@ -12,7 +12,6 @@ updates:
       - "Priority 1: Must"
     reviewers:
     - "CodeDrivenMitch"
-    - "gklijs"
     - "smcvb"
     groups:
       github-dependencies:
@@ -32,7 +31,6 @@ updates:
       - "Priority 1: Must"
     reviewers:
     - "CodeDrivenMitch"
-    - "gklijs"
     - "smcvb"
     groups:
       maven-dependencies:
@@ -52,7 +50,7 @@ updates:
       - "Priority 1: Must"
     reviewers:
       - "CodeDrivenMitch"
-      - "gklijs"
+
       - "smcvb"
     groups:
       npm-dependencies:
