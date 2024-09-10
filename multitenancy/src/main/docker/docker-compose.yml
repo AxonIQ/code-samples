@@ -1,84 +1,20 @@
 version: '3.8'
+
 services:
-  axonserver-enterprise-1:
-    image: axoniq/axonserver-enterprise:4.6.4-dev
-    hostname: axonserver-enterprise-1
+  axonserver:
+    image: axoniq/axonserver:latest
+    container_name: axonserver
     environment:
-      - AXONIQ_AXONSERVER_CLUSTERTEMPLATE_PATH=/axonserver/cluster-template.yml
-      - AXONIQ_AXONSERVER_ENTERPRISE_LICENSE-DIRECTORY=/axonserver
-      - SERVER_PORT=8024
-      - AXONIQ_AXONSERVER_PORT=8124
-      - AXONIQ_AXONSERVER_METRICS_GRPC_ENABLED=true
-      - AXONIQ_AXONSERVER_METRICS_GRPC_PROMETHEUS-ENABLED=true
-    volumes:
-      - axonserver-enterprise-1-log:/axonserver/log
-      - axonserver-enterprise-1-events:/axonserver/events
-      - axonserver-enterprise-1-data:/axonserver/data
-      - ./axoniq.license:/axonserver/axoniq.license
-      - ./cluster-template.yml:/axonserver/cluster-template.yml
+      - AXONIQ_AXONSERVER_STANDALONE=true
     ports:
-      - '8024:8024'
-      - '8124:8124'
-      - '8224:8224'
-    networks:
-      - axon-net
-
-  axonserver-enterprise-2:
-    image: axoniq/axonserver-enterprise:4.6.4-dev
-    hostname: axonserver-enterprise-2
-    environment:
-      - AXONIQ_AXONSERVER_CLUSTERTEMPLATE_PATH=/axonserver/cluster-template.yml
-      - AXONIQ_AXONSERVER_ENTERPRISE_LICENSE-DIRECTORY=/axonserver
-      - SERVER_PORT=8025
-      - AXONIQ_AXONSERVER_PORT=8125
-      - AXONIQ_AXONSERVER_METRICS_GRPC_ENABLED=true
-      - AXONIQ_AXONSERVER_METRICS_GRPC_PROMETHEUS-ENABLED=true
+      - "8024:8024"
+      - "8124:8124"
     volumes:
-      - axonserver-enterprise-2-log:/axonserver/log
-      - axonserver-enterprise-2-events:/axonserver/events
-      - axonserver-enterprise-2-data:/axonserver/data
-      - ./axoniq.license:/axonserver/axoniq.license
-      - ./cluster-template.yml:/axonserver/cluster-template.yml
-    ports:
-      - '8025:8025'
-      - '8125:8125'
-      - '8225:8225'
-    networks:
-      - axon-net
-
-  axonserver-enterprise-3:
-    image: axoniq/axonserver-enterprise:4.6.4-dev
-    hostname: axonserver-enterprise-3
-    environment:
-      - AXONIQ_AXONSERVER_CLUSTERTEMPLATE_PATH=/axonserver/cluster-template.yml
-      - AXONIQ_AXONSERVER_ENTERPRISE_LICENSE-DIRECTORY=/axonserver
-      - SERVER_PORT=8026
-      - AXONIQ_AXONSERVER_PORT=8126
-      - AXONIQ_AXONSERVER_METRICS_GRPC_ENABLED=true
-      - AXONIQ_AXONSERVER_METRICS_GRPC_PROMETHEUS-ENABLED=true
-    volumes:
-      - axonserver-enterprise-3-log:/axonserver/log
-      - axonserver-enterprise-3-events:/axonserver/events
-      - axonserver-enterprise-3-data:/axonserver/data
-      - ./axoniq.license:/axonserver/axoniq.license
-      - ./cluster-template.yml:/axonserver/cluster-template.yml
-    ports:
-      - '8026:8026'
-      - '8126:8126'
-      - '8226:8226'
-    networks:
-      - axon-net
+      - axonserver-data:/data
+      - axonserver-events:/eventdata
+      - axonserver-config:/config:ro
 
 volumes:
-  axonserver-enterprise-1-log:
-  axonserver-enterprise-1-events:
-  axonserver-enterprise-1-data:
-  axonserver-enterprise-2-log:
-  axonserver-enterprise-2-events:
-  axonserver-enterprise-2-data:
-  axonserver-enterprise-3-log:
-  axonserver-enterprise-3-events:
-  axonserver-enterprise-3-data:
-
-networks:
-  axon-net:
+  axonserver-data:
+  axonserver-events:
+  axonserver-config:
