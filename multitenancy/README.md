@@ -1,54 +1,55 @@
-# Multi-tenant playground
+# Workshop: Multitenancy & Persistent Streams with Axon Server
+## Axon Conference 2024
 
-This simple app allows you to experiment with multi-tenancy feature in Axon Framework.
-By using [Multitenancy extension](https://github.com/AxonFramework/extension-multitenancy) this app can connect to multiple contexts at once dynamicly.
-Using Vaadin UI, explore how to create tenants in runtime and dispatch messages to them.
+This workshop introduces participants to the powerful combination of multitenancy and persistent streams in Axon Server 2024.2.1. You'll learn how to build scalable, multi-tenant applications and leverage the efficiency of persistent streams for event processing.
 
-## Requirements
- 
- - Requires Axon Server EE 4.6+ with a valid license
- - Axon Framework 4.6+
- - [Multitenancy extension](https://github.com/AxonFramework/extension-multitenancy)
- - Uses In-Memory H2 Database for projections - DB per tenant
+### Prerequisites
 
-## How to start
+- Java 21
+- Axon Server 2024.2.1
+- Docker
+- Basic knowledge of Axon Framework and event-driven architectures
 
-While in `src/main/docker` type in terminal `docker-compose up` to start Axon Server EE.
+### Getting Started
 
-Make sure to replace content of `axoniq.license` with a valid license.
+1. Clone this repository:
 
-Start application with `mvn spring-boot:run` or manually via favorite IDE.
+   ```bash
+   git clone https://github.com/your-repo/axon-multitenancy-workshop.git
+   ```
 
-After starting application visit and interact with UI at [localhost:8080](http://localhost:8080)
+2. Start Axon Server with Docker Compose:
 
-You may start by registering a new tenant.
+3. Upload the provided license file to Axon Server in the License Tab of the Axon Server dashboard.
+   ```bash
+   docker-compose up -d
+   ```
+4. Run the application:
 
-### With UI you can:
- - Login as existing tenant
-![](login.png)
- - Register new tenant at runtime
-   ![](register.png)
- - Send commands, queries, events
-   ![](actions.png)
- - Reset projections
-![](reset.png)
- - Explore H2 Database used for projections - per tenant
- - ![](h2.png)
+   ```bash
+   ./mvnw clean spring-boot:run
+   ```
+5. Visit the application UI at `http://localhost:8080`
 
-## How it works
 
-### Multi-tenant configuration
+### Workshop Steps
 
-[MultiTenantConfig#tenantFilter](src/main/java/io/axoniq/multitenancy/MultiTenantConfig.java) configures application to connect to any context which name starts with `tenant-`.
-If new context is created during runtime that matches the filter, application will automatically connect to that tenant.
+1. **Create Tenants**: Use the UI to create multiple tenants for our demo system.
 
-[MultiTenantConfig#tenantDataSourceResolver](src/main/java/io/axoniq/multitenancy/MultiTenantConfig.java) configures application to use DB for projections per tenant. It defines datasource properties for tenant.
-Important: DB needs to be created and schema needs to be initialiesd before context is created, otherwise you will see exception such as DB/Table not found...
+2. **Send Commands**: Initiate various actions for different tenants.
 
-[CreateTenantService#createTenant](src/main/java/io/axoniq/multitenancy/web/CreateTenantService.java) uses Admin API to interact with Axon Server and create tenant context.
-Before creating context it creates embedded H2 database. As H2 database is in memory, it will not be persistent after application restart, while Axon Server contexts will. 
-Be sure to clean up contexts if you are planing to play with this application multiple times or you may expect to see some exceptions.
+3. **Explore Persistent Streams**: Navigate to the Streams page in Axon Server dashboard. Observe how events are processed and confirm all events have been caught up.
 
-[MessageService](src/main/java/io/axoniq/multitenancy/web/MessageService.java) routes messages to specific tenant by setting `TENANT_CORRELATION_KEY` MetaData to initial message.
+4. **Introduce an Error**: Modify the codebase to add a new event handler that throws an error with a specific message.
 
-[ResetService](src/main/java/io/axoniq/multitenancy/web/ResetService.java) lists all event processors and resets one for specificity tenant. Convention is that Event Processor name contains original event processor name and tenant name. Such as `even_processor_name@tenant_name`.
+5. **Observe Error Handling**: Check the UI and Axon Server dashboard to see how the system responds to the introduced error.
+
+6. **Error Resolution and Replay**: Fix the error in the code. Perform a full replay of events for the affected stream to ensure data consistency.
+
+7. **Create a Filtered Stream**: In `application.properties`, define a new stream that only replays events for a specific aggregate ID.
+
+### Additional Resources
+
+- [Introducing Axon Server 2024.1](https://www.axoniq.io/blog/axoniq-server-2024-1)
+- [Multitenancy with Axon](https://www.axoniq.io/blog/multitenancy-with-axon)
+
