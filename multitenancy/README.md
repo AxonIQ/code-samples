@@ -66,13 +66,20 @@ The Gift Card Management application is set up such that it is very straightforw
 
 ---
 
-1. **Create Tenants**: Use the UI to create multiple tenants for our demo system.
+## 2 - Create Gift Cards and Add Funds
 
-2. **Send Commands**: Initiate various actions for different tenants.
+We are now inclined to fill up the gift cards for each of the newly created tenants. 
+To that end, we will issue several cards and add funds to some of them, for all tenants, by using the provided "Send commands" operation in the UI.
+Each click of "Send commands" button will issue a single gift card with one euro on it.
+Following the `IssueCardCommand`, the operation will send forty-nine `AddsFundsCommands` adding one euro to the card each, totalling the `remainingValue` of the gift card to 50,- euros.
 
-3. **Explore Persistent Streams**: Navigate to the Streams page in Axon Server dashboard. Observe how events are processed and confirm all events have been caught up.
+> **Task 2**
+>
+> 1. Visit http://localhost:8080.
+> 2. Select one of your tenants and click "Send commands".
+> 3. Click "or go back" and repeat step 2 until performed for each tenant.
 
-4. **Introduce an Error**: Modify the codebase to add a new event handler that throws an error with a specific message.
+---
 
 5. **Observe Error Handling**: Check the UI and Axon Server dashboard to see how the system responds to the introduced error.
 
