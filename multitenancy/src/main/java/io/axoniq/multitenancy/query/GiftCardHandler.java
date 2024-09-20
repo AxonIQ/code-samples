@@ -1,9 +1,10 @@
 package io.axoniq.multitenancy.query;
 
+import io.axoniq.multitenancy.api.CardIssuedEvent;
 import io.axoniq.multitenancy.api.FindAllCardsQuery;
 import io.axoniq.multitenancy.api.FindCardQuery;
+import io.axoniq.multitenancy.api.FundsAddedEvent;
 import io.axoniq.multitenancy.api.GiftCardRecord;
-import io.axoniq.multitenancy.api.CardIssuedEvent;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.MetaData;
@@ -43,6 +44,12 @@ class GiftCardHandler {
                                 query -> Objects.equals(event.id(), query.id()),
                                 new GiftCardRecord(event.id(), event.amount(), event.amount(), "payload")
         );
+    }
+
+    @EventHandler
+    public void on(FundsAddedEvent event) {
+        giftCardJpaRepository.findById(event.id())
+                             .ifPresent(entity -> entity.addFunds(event.amount()));
     }
 
     @QueryHandler

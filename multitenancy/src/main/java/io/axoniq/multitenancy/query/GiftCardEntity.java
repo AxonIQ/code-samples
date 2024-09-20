@@ -31,4 +31,8 @@ class GiftCardEntity {
     public Integer getRemainingValue() {
         return remainingValue;
     }
+
+    public void addFunds(int amount) {
+        remainingValue += amount;
+    }
 }
