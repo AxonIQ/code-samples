@@ -53,13 +53,18 @@ Upon accessing Axon Server's dashboard, it is **very important** to upload the p
 
 ## 1 - Create Tenants
 
-   ```bash
-   ./mvnw clean spring-boot:run
-   ```
-5. Visit the application UI at `http://localhost:8080`
+The Gift Card Management application is set up such that it is very straightforward to contain several tenants by using the Multitenancy Extension.
 
+> **Task 1**
+>
+> 1. Start `MultitenancyExampleApplication` application:
+> ```bash
+> ../mvnw clean spring-boot:run
+> ```
+> 2. Visit http://localhost:8080.
+> 3. Create at least three tenants, for example "Mitchells-Store", "Stevazon", and "Marco's List."
 
-### Workshop Steps
+---
 
 1. **Create Tenants**: Use the UI to create multiple tenants for our demo system.
 
