@@ -1,30 +1,57 @@
-# Workshop: Multitenancy & Persistent Streams with Axon Server
-## Axon Conference 2024
+# Multitenancy & Persistent Streams with Axon Server Workshop
 
-This workshop introduces participants to the powerful combination of multitenancy and persistent streams in Axon Server 2024.2.1. You'll learn how to build scalable, multi-tenant applications and leverage the efficiency of persistent streams for event processing.
+This workshop introduces participants to the powerful combination of [multitenancy](https://library.axoniq.io/multitenancy_extension_guide/main/index.html) and [persistent streams](https://library.axoniq.io/axon_framework_ref/events/event-processors/subscribing.html#_persistent_streams) in Axon Server. 
+You'll learn how to build scalable, multi-tenant applications, and leverage the efficiency of persistent streams for event processing.
 
-### Prerequisites
+If you have any questions during the workshop, please ask one of the AxonIQ developers walking around the room!
+Or, if you are doing this workshop at a later date, [reach out on our Discuss](https://discuss.axoniq.io/).
 
+![https://www.axoniq.io/axoniq-conference-2024](.assets/con24.png)
+
+## Introduction
+
+This repository contains a number of code samples concerning Axon Framework and Axon Server applications. 
+The `multitenancy` module is specifically intended to showcase a multi-tenant application using [Axon Framework](https://github.com/AxonFramework/AxonFramework), the [Axon Framework Multi-Tenancy extension](https://github.com/AxonFramework/extension-multitenancy), and [Axon Server](https://www.axoniq.io/products/axon-server).
+
+The multi-tenant application contained in this module is the (by AxonIQ frequently used) Gift Card Management domain. 
+As such, it provides a means to issue gift cards, add funds to gift cards, and retrieve the issued cards.
+The `GiftCard` aggregate can thus be issued and money can be added to it.
+The events are handled by the `giftcard` projection, which saves a gift card with its current remaining amount into a database.
+Lastly, this application has a UI through which you can interact with the multitenant Gift Card Management system.
+
+## Getting started
+
+Make sure you have the following tools available:
 - Java 21
 - Axon Server 2024.2.1
 - Docker
 - Basic knowledge of Axon Framework and event-driven architectures
 
-### Getting Started
+From here on out, you can clone the `code-samples` repository:
 
-1. Clone this repository:
+```bash
+git clone git@github.com:AxonIQ/code-samples.git
+```
 
-   ```bash
-   git clone https://github.com/your-repo/axon-multitenancy-workshop.git
-   ```
+And then checkout the `conference2024` branch, and open the `multitenancy` directory.
 
-2. Start Axon Server with Docker Compose:
+### Start Axon Server
 
-3. Upload the provided license file to Axon Server in the License Tab of the Axon Server dashboard.
-   ```bash
-   docker-compose up -d
-   ```
-4. Run the application:
+We will use Axon Server during the workshop as an event storage engine and the backbone to support multiple tenants.
+This module contains a Docker Compose file to start Axon Server:
+
+```bash
+docker-compose up -d
+```
+
+If you prefer, you can [download a ZIP file with AxonServer as a standalone JAR](https://download.axoniq.io/axonserver/AxonServer.zip).
+This will also give you the Axon Server CLI and information on how to run and configure the server.
+
+After starting Axon Server, you should be able to check the dashboard by visiting: [http://localhost:8024](http://localhost:8024)
+
+Upon accessing Axon Server's dashboard, it is **very important** to upload the provided license file to Axon Server in the _License_ tab in the bottom left corner of the dashboard.
+
+## 1 - Create Tenants
 
    ```bash
    ./mvnw clean spring-boot:run
