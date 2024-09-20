@@ -130,6 +130,28 @@ Before we can show those, we need to ensure exceptions have actually been thrown
 
 ---
 
+## 6 - Error Resolution and Persistent Stream Replaying
+
+All nice and well, but we obviously do not want flaky event handlers in our Gift Card Management system.
+To fix our projections, we will thus need to solve the bug and replay the events.
+As Axon Server is in charge of maintaining the position for Persistent Streams it is capable to reset these to initiate a replay!  
+
+> **Task 6**
+>
+> 1. Shutdown `MultitenancyExampleApplication`.
+> 2. Remove the exceptional code of the `FundsAddedEvent` handler.
+> 3. Start `MultitenancyExampleApplication` application:
+> ```bash
+> ../mvnw clean spring-boot:run
+> ```
+> 4. Open http://localhost:8024 and visit the "Streams" tab again.
+> 5. Click the clock icon in the far right of the faulty tenant.
+> 6. Select "Tail of event store - index 0".
+> 7. Revisit the database at http://localhost:8080/h2-console.
+> 8. Validate that all rows of the `GIFT_CARD_ENTITY` table have a value of _51_.
+
+---
+
 ### Additional Resources
 
 - [Introducing Axon Server 2024.1](https://www.axoniq.io/blog/axoniq-server-2024-1)
