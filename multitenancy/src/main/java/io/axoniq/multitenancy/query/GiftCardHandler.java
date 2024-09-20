@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @ProcessingGroup("giftcard")
 @Component
@@ -54,13 +54,22 @@ class GiftCardHandler {
 
     @QueryHandler
     public List<GiftCardRecord> handle(FindAllCardsQuery query, MetaData metaData) {
-        logger.debug("@" + metaData + " - " + "FindGiftCardQry: " + query);
-        return Collections.emptyList();
+        logger.debug("@" + metaData + " - " + "FindAllCardsQuery: " + query);
+        return StreamSupport.stream(giftCardJpaRepository.findAll().spliterator(), false)
+                            .map(GiftCardHandler::mapToRecord)
+                            .toList();
     }
 
     @QueryHandler
     public Optional<GiftCardRecord> handle(FindCardQuery query, MetaData metaData) {
-        logger.debug("@" + metaData + " - " + "FindGiftCardQry: " + query);
-        return Optional.empty();
+        logger.debug("@" + metaData + " - " + "FindCardQuery: " + query);
+        return giftCardJpaRepository.findById(query.id()).map(GiftCardHandler::mapToRecord);
+    }
+
+    private static GiftCardRecord mapToRecord(GiftCardEntity entity) {
+        return new GiftCardRecord(entity.getId(),
+                                  entity.getInitialValue(),
+                                  entity.getRemainingValue(),
+                                  "payload");
     }
 }
