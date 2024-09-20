@@ -95,6 +95,22 @@ Hence, we will navigate to the Persistent Streams page and observe that all the 
 
 ---
 
+## 4 - Flaky Event Handlers
+
+Now that we are aware that our Event Handlers using Persistent Streams are caught up, let us introduce some errors in the system.
+We are going to adjust the `FundsAddedEvent` handler in the `GiftCardHandler` such that it will (sometimes) throw an exception.
+
+> **Task 4**
+>
+> 1. Shutdown `MultitenancyExampleApplication`.
+> 2. Open the `GiftCardHandler` file in the `query` package and navigate to the `FundsAddedEvent` handler.
+> 3. Adjust the `FundsAddedEvent` handler such that it throws an exception. For example, based on a randomly generated value.
+> 4. Start `MultitenancyExampleApplication` application:
+> ```bash
+> ../mvnw clean spring-boot:run
+> ```
+
+---
 
 ### Additional Resources
 
