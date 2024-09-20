@@ -182,6 +182,29 @@ In `application.properties`, define a new stream that only replays events for a 
 
 ---
 
+## Bonus - Connect to AxonIQ Console
+
+As you have started the multitenant Gift Card Management service several times now, you have likely seen the log statement from `AxonIQConsoleModule`:
+
+> You have not configured AxonIQ Console. AxonIQ Console provides out-of-the box monitoring
+> and management capabilities for your Axon Application, starting with it is free.
+> Visit https://console.axoniq.io for more information!
+> Suppress this message by setting system property disable-axoniq-console-message to true.
+
+One of AxonIQ Console's monitoring capabilities, as about message sources like the Persistent Stream!
+
+> **Bonus Task**
+>
+> 1. Browse to https://console.axoniq.io
+> 2. Login or create an account
+> 3. Create a new workspace called "gift card management" with environment name "persistent-streams"
+> 4. Follow the "Spring Boot Installation" method shown in the dashboard.
+> 5. Browse to the "Applications" page and select the "Multitenant Gift Card Management" applications
+> 6. In the "Configuration" tab, select "Processors".
+> 7. What do you see in the "Message Source" column?
+
+---
+
 ### Additional Resources
 
 - [Introducing Axon Server 2024.1](https://www.axoniq.io/blog/axoniq-server-2024-1)
