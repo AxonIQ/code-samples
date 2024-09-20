@@ -152,6 +152,36 @@ As Axon Server is in charge of maintaining the position for Persistent Streams i
 
 ---
 
+## 7 - Filtered Persistent Streams
+
+Now that we have used Persistent Streams for our multitenant Gift Card Management application and seen its error and reset behavior, it is time to investigate another feature: filtering.
+When configuring a Persistent Stream you are able to define the `filter` property.
+This `filter` property can take in any [Axon Server Query](https://library.axoniq.io/axon-server-query-language-guide/index.html).
+So, for this exercise, let us adjust the properties to only stream events from a single aggregate!
+
+In `application.properties`, define a new stream that only replays events for a specific aggregate identifier.
+
+> **Task 7**
+>
+> 1. Visit the Axon Server dashboard at http://localhost:8024 
+> 2. Open the "Search" page.
+> 3. Select one of the contexts that have been created for each of your tenants. For example, "tenant-Stevazon."
+> 4. Click the looking class to perform a "search all."
+> 5. In the table of events, hover over an "Aggregate Identifier" and click the looking glass icon that pops up.
+>    This will automatically construct a query for you, which we can use for our `filter` property. 
+> 6. Open the `application.properties` of the multitenant Gift Card Management application.
+> 7. Comment the `giftcard-stream1` lines and uncomment the `filtered-stream` lines.
+> 8. Copy the Aggregate Identifier query from the Axon Server Dashboard and paste it in the line:
+>   `axon.axonserver.persistent-streams.filtered-stream.filter={FILTER_HERE}`
+> 8. To trigger the configuration change, shutdown `MultitenancyExampleApplication`.
+> 9. Start the `MultitenancyExampleApplication` application again:
+> ```bash
+> ../mvnw clean spring-boot:run
+> ```
+> 10. Revisit the database at http://localhost:8080/h2-console and make sure only a single Gift Card is stored.
+
+---
+
 ### Additional Resources
 
 - [Introducing Axon Server 2024.1](https://www.axoniq.io/blog/axoniq-server-2024-1)
