@@ -81,11 +81,20 @@ Following the `IssueCardCommand`, the operation will send forty-nine `AddsFundsC
 
 ---
 
-5. **Observe Error Handling**: Check the UI and Axon Server dashboard to see how the system responds to the introduced error.
+## 3 - Explore Persistent Streams
 
-6. **Error Resolution and Replay**: Fix the error in the code. Perform a full replay of events for the affected stream to ensure data consistency.
+Now that the gift card management application contains several tenants with "actual" gift cards in them, we can start taking a look at the [Persistent Stream](https://library.axoniq.io/axon_framework_ref/events/event-processors/subscribing.html#_persistent_streams) functionality of Axon Server and Axon Framework. 
+Hence, we will navigate to the Persistent Streams page and observe that all the event handlers have been caught up.
 
-7. **Create a Filtered Stream**: In `application.properties`, define a new stream that only replays events for a specific aggregate ID.
+> **Task 3**
+>
+> 1. Visit http://localhost:8024.
+> 2. Open the "Events" window.
+> 3. Observe the "Streams" tab.
+> 4. Have all the segments been caught up?
+
+---
+
 
 ### Additional Resources
 
