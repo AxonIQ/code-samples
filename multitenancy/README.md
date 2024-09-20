@@ -112,6 +112,24 @@ We are going to adjust the `FundsAddedEvent` handler in the `GiftCardHandler` su
 
 ---
 
+## 5 - Observing flaky Event Handling
+
+Sadly, our Gift Card Management system now has some flaky behavior during event handling.
+Luckily, the Persistent Streams provide helpful functionality for just these scenarios.
+Before we can show those, we need to ensure exceptions have actually been thrown:
+
+> **Task 5**
+>
+> 1. Open http://localhost:8080 and http://localhost:8024 side by side.
+> 2. Navigate to the "Streams" tab of the "Events" window in the Axon Server dashboard.
+> 3. Open up one of your tenants in the Gift Card Management application and click "Send commands."
+> 4. What do you see on the "Streams" tab?
+> 5. Visit http://localhost:8080/h2-console to check the query models. 
+>    The JDBC URL is `jdbc:h2:mem:all-tenants` and the password is `sa`.
+> 6. Validate the `GIFT_CARD_ENTITY` table's contents.
+
+---
+
 ### Additional Resources
 
 - [Introducing Axon Server 2024.1](https://www.axoniq.io/blog/axoniq-server-2024-1)
