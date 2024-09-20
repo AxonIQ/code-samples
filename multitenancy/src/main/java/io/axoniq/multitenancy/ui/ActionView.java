@@ -15,18 +15,14 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import io.axoniq.multitenancy.web.MessageService;
-import io.axoniq.multitenancy.web.ResetService;
 
 @Route("action")
 public class ActionView extends VerticalLayout implements HasUrlParameter<String> {
 
     private final MessageService messageService;
-    private final ResetService resetService;
 
-    public ActionView(MessageService messageService,
-                      ResetService resetService) {
+    public ActionView(MessageService messageService) {
         this.messageService = messageService;
-        this.resetService = resetService;
     }
 
     @Override
@@ -64,35 +60,12 @@ public class ActionView extends VerticalLayout implements HasUrlParameter<String
             showSuccess(tenantName);
         }));
 
-        layout.add(new Button("Reset projections...", evt -> {
-            Dialog dialog = new Dialog();
-
-            dialog.setHeaderTitle("Reset");
-            VerticalLayout content = new VerticalLayout();
-            content.setSpacing(false);
-            content.setPadding(false);
-
-            resetService.listTenantEventProcessors(tenantName)
-                        .forEach(ep -> {
-                            Button resetEp = new Button(ep, e -> {
-                                resetService.reset(ep);
-                                showSuccess(tenantName);
-                            });
-                            content.add(resetEp);
-                        });
-
-            dialog.add(content);
-            Button cancelButton = new Button("Close", e -> dialog.close());
-            dialog.getFooter().add(cancelButton);
-            dialog.open();
-        }));
-
         layout.add(new Button("Explore projections...", evt -> {
             Dialog dialog = new Dialog();
 
             dialog.setHeaderTitle("Explore projections");
 
-            Span name = new Span("JDBC URL: jdbc:h2:mem:" + tenantName);
+            Span name = new Span("JDBC URL: jdbc:h2:mem:all-tenants");
             Span email = new Span("username: sa");
 
             VerticalLayout content = new VerticalLayout(name, email);
