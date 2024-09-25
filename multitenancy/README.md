@@ -41,6 +41,7 @@ We will use Axon Server during the workshop as an event storage engine and the b
 This module contains a Docker Compose file to start Axon Server:
 
 ```bash
+docker-compose pull
 docker-compose up -d
 ```
 
