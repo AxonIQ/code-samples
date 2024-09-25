@@ -48,6 +48,7 @@ class GiftCardHandler {
 
     @EventHandler
     public void on(FundsAddedEvent event) {
+        //CurrentUnitOfWork.get().rollback(new TransactionException("This is nasty transaction exception!"));
         giftCardJpaRepository.findById(event.id())
                              .ifPresent(entity -> entity.addFunds(event.amount()));
     }
