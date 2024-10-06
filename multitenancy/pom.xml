@@ -15,10 +15,10 @@
 
     <properties>
         <!-- Database -->
-        <flyway.version>10.18.2</flyway.version>
+        <flyway.version>10.19.0</flyway.version>
         <h2.version>2.3.232</h2.version>
         <!-- UI -->
-        <vaadin.version>24.4.12</vaadin.version>
+        <vaadin.version>24.4.13</vaadin.version>
         <java.version>21</java.version>
     </properties>
 
@@ -60,17 +60,17 @@
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy-spring-boot-starter</artifactId>
-            <version>4.10.1</version>
+            <version>4.10.2</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy-spring-boot-autoconfigure</artifactId>
-            <version>4.10.1</version>
+            <version>4.10.2</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy</artifactId>
-            <version>4.10.1</version>
+            <version>4.10.2</version>
         </dependency>
 
         <!-- Spring -->
