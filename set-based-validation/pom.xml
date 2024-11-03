@@ -16,7 +16,7 @@
 
     <properties>
         <!--Serialization-->
-        <jackson-core.version>2.18.0</jackson-core.version>
+        <jackson-core.version>2.18.1</jackson-core.version>
         <!--UI-->
         <spring-doc.version>2.6.0</spring-doc.version>
     </properties>
