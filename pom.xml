@@ -40,7 +40,7 @@
         <!-- Axon -->
         <axon-bom.version>4.10.3</axon-bom.version>
         <!--Spring-->
-        <spring-boot.version>3.3.5</spring-boot.version>
+        <spring-boot.version>3.4.0</spring-boot.version>
         <!-- Database -->
         <hibernate-core.version>6.2.6.Final</hibernate-core.version>
         <!--Other-->
@@ -50,7 +50,7 @@
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>5.11.3</junit.version>
         <mockito.version>5.14.2</mockito.version>
-        <testcontainers.version>1.20.3</testcontainers.version>
+        <testcontainers.version>1.20.4</testcontainers.version>
         <!-- Build and Plugins -->
         <maven-compiler.version>3.13.0</maven-compiler.version>
         <maven-surefire.version>3.5.2</maven-surefire.version>
