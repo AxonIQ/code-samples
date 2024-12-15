@@ -15,10 +15,10 @@
 
     <properties>
         <!-- Database -->
-        <flyway.version>11.0.1</flyway.version>
+        <flyway.version>11.1.0</flyway.version>
         <h2.version>2.3.232</h2.version>
         <!-- UI -->
-        <vaadin.version>24.5.7</vaadin.version>
+        <vaadin.version>24.5.8</vaadin.version>
         <java.version>21</java.version>
     </properties>
 
@@ -40,12 +40,12 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>4.10.2</version>
+            <version>4.10.3</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-configuration</artifactId>
-            <version>4.10.2</version>
+            <version>4.10.3</version>
         </dependency>
         <dependency>
             <groupId>io.axoniq</groupId>
