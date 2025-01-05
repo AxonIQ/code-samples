@@ -18,7 +18,7 @@
         <!--Serialization-->
         <jackson-core.version>2.18.2</jackson-core.version>
         <!--UI-->
-        <spring-doc.version>2.7.0</spring-doc.version>
+        <spring-doc.version>2.8.0</spring-doc.version>
     </properties>
 
     <dependencies>
