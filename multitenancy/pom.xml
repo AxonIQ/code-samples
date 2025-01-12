@@ -15,10 +15,10 @@
 
     <properties>
         <!-- Database -->
-        <flyway.version>11.1.0</flyway.version>
+        <flyway.version>11.1.1</flyway.version>
         <h2.version>2.3.232</h2.version>
         <!-- UI -->
-        <vaadin.version>24.6.0</vaadin.version>
+        <vaadin.version>24.6.1</vaadin.version>
         <java.version>21</java.version>
     </properties>
 
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>io.axoniq</groupId>
             <artifactId>axonserver-connector-java</artifactId>
-            <version>2024.1.1</version>
+            <version>2024.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
