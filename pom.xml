@@ -40,7 +40,7 @@
         <!-- Axon -->
         <axon-bom.version>4.10.4</axon-bom.version>
         <!--Spring-->
-        <spring-boot.version>3.4.1</spring-boot.version>
+        <spring-boot.version>3.4.2</spring-boot.version>
         <!-- Database -->
         <hibernate-core.version>6.2.6.Final</hibernate-core.version>
         <!--Other-->
