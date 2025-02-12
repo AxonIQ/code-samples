@@ -13,6 +13,7 @@ import org.axonframework.spring.serialization.avro.AvroSchemaScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 @SpringBootApplication
 @AvroSchemaScan
@@ -23,6 +24,7 @@ public class SerializationAvroApplication {
         SpringApplication.run(SerializationAvroApplication.class, args);
     }
 
+    @Profile("manualSchemaStore")
     @Bean("defaultAxonSchemaStore")
     public SchemaStore defaultAxonSchemaStore() {
         var cache = new SchemaStore.Cache();
