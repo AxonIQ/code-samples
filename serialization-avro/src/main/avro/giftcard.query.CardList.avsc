@@ -1,0 +1,17 @@
+{
+    "type": "record",
+    "namespace": "io.axoniq.dev.samples.serializationavro.api",
+    "name": "Card",
+    "doc": "Represents a gift card.",
+    "revision": "1",
+    "fields": [
+        {
+            "name": "id",
+            "type": "string"
+        },
+        {
+            "name": "amount",
+            "type": "int"
+        }
+    ]
+}
