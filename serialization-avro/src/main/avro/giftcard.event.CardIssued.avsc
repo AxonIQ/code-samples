@@ -1,9 +1,10 @@
 {
     "type": "record",
     "namespace": "io.axoniq.dev.samples.serializationavro.api",
-    "name": "IssueCardCommand",
-    "doc": "Issues a new gift card.",
+    "name": "CardIssuedEvent",
+    "doc": "A new gift card is issued.",
     "revision": "1",
+    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
     "fields": [
         {
             "name": "id",

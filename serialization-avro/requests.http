@@ -1,30 +1,124 @@
 ### Create a new GiftCard with initial amount of 50. Response will contain the GiftCard (aggregate)\
 ### which will be used for later requests
 
-POST http://localhost:8080/giftcard
+POST http://localhost:8282/giftcard
 Content-Type: application/json
 
 {
   "amount": 50
 }
 
+> {%
+
+const expected = {
+  status: 200,
+  contentType: "text/plain;charset=UTF-8"
+};
+
+client.test("Request executed with correct HTTP status", function () {
+  client.assert(response.status === expected.status, `Response status is not ${expected.status}, but ${response.status}`);
+});
+client.test("Content-Type is correct", () => {
+  const contentType = response.headers.valueOf("content-type");
+  client.assert(contentType === expected.contentType, `Response Content-Type is not ${expected.contentType}, but ${contentType}`);
+  client.global.set("cardId", response.body);
+});
+
+%}
+
 ### Try to create a GiftCard with invalid (negative) amount. Will not work and will cause a domain exception.
 
-POST http://localhost:8080/giftcard
+POST http://localhost:8282/giftcard
 Content-Type: application/json
 
 {
   "amount": -5
 }
 
-### Redeem amount of a given GiftCard. Domain exceptions can be caused by either redeeming more than the GiftCard
-### currently has, or by sending negative amount.
-### Infrastructure type error can be caused by referencing non existing GiftCard (by ID)
-### Change UUID to one returned by working POST (create GiftCard) call
+> {%
 
-PUT http://localhost:8080/giftcard/d8961637-2825-4b1b-ab14-f2a63d9ab1b5
+const expected = {
+  status: 400,
+  contentType: "text/plain;charset=UTF-8"
+};
+
+client.test("Request executed with correct HTTP status", function () {
+  client.assert(response.status === expected.status, `Response status is not ${expected.status}, but ${response.status}`);
+});
+client.test("Content-Type is correct", () => {
+  const contentType = response.headers.valueOf("content-type");
+  client.assert(contentType === expected.contentType, `Response Content-Type is not ${expected.contentType}, but ${contentType}`);
+});
+
+%}
+
+### Redeem amount of a given GiftCard.
+# Domain exceptions can be caused by either redeeming more than the GiftCard currently has, or by sending negative amount.
+# Infrastructure type error can be caused by referencing non existing GiftCard (by ID)
+
+PUT http://localhost:8282/giftcard/{{cardId}}
 Content-Type: application/json
 
 {
   "amount": 1
 }
+
+> {%
+
+const expected = {
+  status: 200,
+  contentType: "text/plain;charset=UTF-8"
+};
+
+client.test("Request executed with correct HTTP status", function () {
+  client.assert(response.status === expected.status, `Response status is not ${expected.status}, but ${response.status}`);
+});
+client.test("Content-Type is correct", () => {
+  const contentType = response.headers.valueOf("content-type");
+  client.assert(contentType === expected.contentType, `Response Content-Type is not ${expected.contentType}, but ${contentType}`);
+});
+
+%}
+
+### Retrieve all cards
+
+GET http://localhost:8282/inventory
+Accept: application/json
+
+> {%
+
+const expected = {
+  status: 200,
+  contentType: "application/json"
+};
+
+client.test("Request executed with correct HTTP status", function () {
+  client.assert(response.status === expected.status, `Response status is not ${expected.status}, but ${response.status}`);
+});
+client.test("Content-Type is correct", () => {
+  const contentType = response.headers.valueOf("content-type");
+  client.assert(contentType === expected.contentType, `Response Content-Type is not ${expected.contentType}, but ${contentType}`);
+});
+
+%}
+
+### Retrieve card by id
+
+GET http://localhost:8282/inventory/{{cardId}}
+Accept: application/json
+
+> {%
+
+const expected = {
+  status: 200,
+  contentType: "application/json"
+};
+
+client.test("Request executed with correct HTTP status", function () {
+  client.assert(response.status === expected.status, `Response status is not ${expected.status}, but ${response.status}`);
+});
+client.test("Content-Type is correct", () => {
+const contentType = response.headers.valueOf("content-type");
+  client.assert(contentType === expected.contentType, `Response Content-Type is not ${expected.contentType}, but ${contentType}`);
+});
+%}

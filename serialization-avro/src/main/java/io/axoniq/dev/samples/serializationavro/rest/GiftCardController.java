@@ -1,13 +1,12 @@
-package io.axoniq.distributedexceptions.rest;
+package io.axoniq.dev.samples.serializationavro.rest;
 
-import io.axoniq.distributedexceptions.api.GiftCardBusinessError;
-import io.axoniq.distributedexceptions.api.IssueCardCommand;
-import io.axoniq.distributedexceptions.api.RedeemCardCommand;
+import io.axoniq.dev.samples.serializationavro.api.GiftCardBusinessError;
+import io.axoniq.dev.samples.serializationavro.api.IssueCardCommand;
+import io.axoniq.dev.samples.serializationavro.api.RedeemCardCommand;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +19,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@Profile("rest")
+
 @RestController
 @RequestMapping("/giftcard")
 public class GiftCardController {

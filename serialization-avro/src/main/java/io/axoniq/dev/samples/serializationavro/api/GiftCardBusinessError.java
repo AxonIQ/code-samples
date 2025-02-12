@@ -1,4 +1,4 @@
-package io.axoniq.distributedexceptions.api;
+package io.axoniq.dev.samples.serializationavro.api;
 
 import javax.annotation.Nonnull;
 

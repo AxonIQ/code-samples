@@ -1,4 +1,4 @@
-package io.axoniq.distributedexceptions.rest;
+package io.axoniq.dev.samples.serializationavro.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,6 +1,6 @@
 axoniq:
   axonserver:
-    name: axon-avro-server
+    name: axonserver-serialization-avro
     hostname: localhost
     standalone: true
     accesscontrol:

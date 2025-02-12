@@ -1,17 +1,14 @@
 {
     "type": "record",
     "namespace": "io.axoniq.dev.samples.serializationavro.api",
-    "name": "Card",
-    "doc": "Represents a gift card.",
+    "name": "GetCardByIdQuery",
+    "doc": "Query for git card by given id.",
     "revision": "1",
+    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
     "fields": [
         {
             "name": "id",
             "type": "string"
-        },
-        {
-            "name": "amount",
-            "type": "int"
         }
     ]
 }

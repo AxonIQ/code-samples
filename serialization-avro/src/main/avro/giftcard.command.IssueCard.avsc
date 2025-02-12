@@ -1,0 +1,19 @@
+{
+    "type": "record",
+    "namespace": "io.axoniq.dev.samples.serializationavro.api",
+    "name": "IssueCardCommand",
+    "doc": "Issues a new gift card.",
+    "revision": "1",
+    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
+    "fields": [
+        {
+            "name": "id",
+            "type": "string",
+            "javaAnnotation": "org.axonframework.modelling.command.TargetAggregateIdentifier"
+        },
+        {
+            "name": "amount",
+            "type": "int"
+        }
+    ]
+}

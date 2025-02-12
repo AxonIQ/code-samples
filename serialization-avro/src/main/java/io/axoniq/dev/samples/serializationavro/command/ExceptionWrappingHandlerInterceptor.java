@@ -1,7 +1,7 @@
-package io.axoniq.distributedexceptions.command;
+package io.axoniq.dev.samples.serializationavro.command;
 
-import io.axoniq.distributedexceptions.api.GiftCardBusinessError;
-import io.axoniq.distributedexceptions.api.GiftCardBusinessErrorCode;
+import io.axoniq.dev.samples.serializationavro.api.GiftCardBusinessError;
+import io.axoniq.dev.samples.serializationavro.api.GiftCardBusinessErrorCode;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.messaging.InterceptorChain;
@@ -10,8 +10,8 @@ import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import javax.annotation.Nonnull;
+import java.lang.invoke.MethodHandles;
 
 public class ExceptionWrappingHandlerInterceptor implements MessageHandlerInterceptor<CommandMessage<?>> {
 

@@ -1,4 +1,4 @@
-package io.axoniq.distributedexceptions.command;
+package io.axoniq.dev.samples.serializationavro.command;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.springframework.beans.factory.annotation.Autowired;

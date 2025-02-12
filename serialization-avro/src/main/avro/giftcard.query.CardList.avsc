@@ -1,17 +1,31 @@
 {
     "type": "record",
     "namespace": "io.axoniq.dev.samples.serializationavro.api",
-    "name": "Card",
-    "doc": "Represents a gift card.",
+    "name": "CardList",
+    "doc": "Represents a list of gift cards.",
     "revision": "1",
+    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
     "fields": [
         {
-            "name": "id",
-            "type": "string"
-        },
-        {
-            "name": "amount",
-            "type": "int"
+            "name": "elements",
+            "type": {
+                "type": "array",
+                "items": {
+                    "name": "Card",
+                    "doc": "Represents a gift card.",
+                    "type": "record",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "string"
+                        },
+                        {
+                            "name": "amount",
+                            "type": "int"
+                        }
+                    ]
+                }
+            }
         }
     ]
 }

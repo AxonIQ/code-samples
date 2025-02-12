@@ -1,4 +1,4 @@
-package io.axoniq.distributedexceptions.api;
+package io.axoniq.dev.samples.serializationavro.api;
 
 /**
  * Public domain specific error codes
