@@ -5,7 +5,8 @@ For commands, events, queries, and query responses the Avro schema definitions a
 in `src/main/avro` directory. 
 
 
-Here is an example for `CardIssuedEvent` event:
+Here is an example schema for the `CardIssuedEvent` event:
+
 
 ```avroschema
 {
