@@ -1,9 +1,6 @@
 package io.axoniq.dev.samples.serializationavro.command;
 
-import io.axoniq.dev.samples.serializationavro.api.CardIssuedEvent;
-import io.axoniq.dev.samples.serializationavro.api.CardRedeemedEvent;
-import io.axoniq.dev.samples.serializationavro.api.IssueCardCommand;
-import io.axoniq.dev.samples.serializationavro.api.RedeemCardCommand;
+import io.axoniq.dev.samples.serializationavro.api.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;

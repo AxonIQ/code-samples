@@ -1,6 +1,5 @@
 package io.axoniq.dev.samples.serializationavro.rest;
 
-import io.axoniq.dev.samples.serializationavro.api.GiftCardBusinessError;
 import io.axoniq.dev.samples.serializationavro.api.IssueCardCommand;
 import io.axoniq.dev.samples.serializationavro.api.RedeemCardCommand;
 import org.axonframework.commandhandling.CommandExecutionException;
@@ -39,8 +38,7 @@ public class GiftCardController {
                              .thenApply(it -> ResponseEntity.ok(String.valueOf(it)))
                              .exceptionally(e -> {
                                  logException(e);
-                                 String errorResponse = getErrorResponseMessage(e.getCause());
-                                 return ResponseEntity.badRequest().body(errorResponse);
+                                 return ResponseEntity.badRequest().body(e.getCause().getMessage());
                              });
     }
 
@@ -51,11 +49,7 @@ public class GiftCardController {
                              .thenApply(it -> ResponseEntity.ok(""))
                              .exceptionally(e -> {
                                  logException(e);
-                                 String errorResponse = getErrorResponseMessage(e.getCause());
-                                 // This is also the place where this error can be handled, the command retried etc
-                                 // or a different logical flow can be attempted
-                                 // or at least map to frontend friendly error codes / messages.
-                                 return ResponseEntity.badRequest().body(errorResponse);
+                                 return ResponseEntity.badRequest().body(e.getCause().getMessage());
                              });
     }
 
@@ -63,25 +57,5 @@ public class GiftCardController {
         logger.info("exception is " + throwable.getClass().getSimpleName()
                             + " and cause is " + throwable.getCause().getClass().getSimpleName());
         logger.error(throwable.getMessage());
-    }
-
-    private String getErrorResponseMessage(Throwable throwable) {
-        if (throwable instanceof CommandExecutionException cee) {
-            return cee.getDetails()
-                      .map((Object it) -> {
-                          GiftCardBusinessError giftCardBusinessError = (GiftCardBusinessError) it;
-                          logger.debug("Received BusinessError with data: " + giftCardBusinessError);
-                          logger.error("Unable to create GiftCard due to validation constrains. Reason: "
-                                               + giftCardBusinessError);
-                          return giftCardBusinessError.code() + " : " + giftCardBusinessError.name();
-                      })
-                      .orElseGet(() -> {
-                          logger.error("Unable to create GiftCard due to " + throwable);
-                          return cee.getMessage();
-                      });
-        } else {
-            logger.error("Unable to create GiftCard due to unknown generic exception " + throwable);
-            return throwable.getMessage();
-        }
     }
 }
