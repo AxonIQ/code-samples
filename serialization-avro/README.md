@@ -1,8 +1,9 @@
 # Serialization with Apache Avro
 
-This sample demonstrates usage of Apache Avro for messaging and storage of events inside AxonServer.
-For commands, events and queries and query responses the Avro schema definitions are provided and are located 
+This sample demonstrates usage of Apache Avro as the serializer for messaging and storage of events inside Axon Server.
+For commands, events, queries, and query responses the Avro schema definitions are provided and are located 
 in `src/main/avro` directory. 
+
 
 Here is an example for `CardIssuedEvent` event:
 
