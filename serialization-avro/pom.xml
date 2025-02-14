@@ -15,8 +15,6 @@
     <description>Module demonstrating usage of Apache Avro as serialization format for messages and events</description>
 
     <properties>
-        <!-- FIXME: upgrade top level and remove here -->
-        <axon.version>4.11.0-SNAPSHOT</axon.version>
         <avro.version>1.12.0</avro.version>
     </properties>
 
@@ -24,43 +22,11 @@
         <!-- Axon -->
         <dependency>
             <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-configuration</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-modelling</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-eventsourcing</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>${axon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-server-connector</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-messaging</artifactId>
-            <version>${axon.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring-boot-autoconfigure</artifactId>
-            <version>${axon.version}</version>
         </dependency>
 
         <!-- Apache Avro -->

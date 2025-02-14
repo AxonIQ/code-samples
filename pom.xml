@@ -40,7 +40,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
-        <axon-bom.version>4.10.4</axon-bom.version>
+        <axon-bom.version>4.11.0</axon-bom.version>
         <!--Spring-->
         <spring-boot.version>3.4.2</spring-boot.version>
         <!-- Database -->
