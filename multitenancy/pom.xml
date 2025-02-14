@@ -40,44 +40,36 @@
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
-            <version>4.10.3</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-configuration</artifactId>
-            <version>4.10.3</version>
         </dependency>
         <dependency>
             <groupId>io.axoniq</groupId>
             <artifactId>axonserver-connector-java</artifactId>
-            <version>2024.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy-spring-boot-starter</artifactId>
-            <version>4.10.3</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy-spring-boot-autoconfigure</artifactId>
-            <version>4.10.3</version>
         </dependency>
         <dependency>
             <groupId>org.axonframework.extensions.multitenancy</groupId>
             <artifactId>axon-multitenancy</artifactId>
-            <version>4.10.3</version>
         </dependency>
 
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -127,6 +119,7 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
             <!-- Takes care of synchronizing java dependencies and imports in package.json and main.js files.
@@ -145,6 +138,9 @@
                 </executions>
             </plugin>
 
+            <!-- package -->
+            <!-- The Spring Boot Maven plugin for easy execution from CLI and packaging -->
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -159,21 +155,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <release>21</release>
-                </configuration>
-            </plugin>
-
-            <!-- package -->
-            <!-- The Spring Boot Maven plugin for easy execution from CLI and packaging -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
