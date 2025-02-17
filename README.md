@@ -21,18 +21,19 @@ Down below is an exhaustive list of all the sample:
 4. [Reset Handler](reset-handler/README.md) - Sample showing how to reset a `StreamingEventProcessor`.
 5. [Saga - No TOAST in PostgreSQL](saga/README.md) - Sample showing a basis Saga, that's stored in a PostgreSQL
    without [TOAST](https://wiki.postgresql.org/wiki/TOAST).
-6. [Sequencing Policy](sequencing-policy/README.md) - Sample showing how to set up a custom `SequencingPolicy` to adjust
+6. [Serialization Avro](serialization-avro/README.md) - Sample showing usage of Apache Avro Commands/Events/Queries. 
+7. [Sequencing Policy](sequencing-policy/README.md) - Sample showing how to set up a custom `SequencingPolicy` to adjust
    the event sequence for a `StreamingEventProcessor`.
-7. [Set-Based Validation](set-based-validation/README.md) - Sample showing several approaches to implement set-based
+8. [Set-Based Validation](set-based-validation/README.md) - Sample showing several approaches to implement set-based
    validation.
-8. [Set-Based Validation - Actor Model](set-based-validation-actor-model/README.md) - Sample showing how to implement
+9. [Set-Based Validation - Actor Model](set-based-validation-actor-model/README.md) - Sample showing how to implement
    set-based validation through a dedicated aggregate instance.
-9. [Snapshots](snapshots/README.md) - Sample showing how to configure aggregate snapshotting.
-10. [Stateful Event Handler](stateful-event-handler/README.md) - Sample showing a stateful event handler that can be
+10. [Snapshots](snapshots/README.md) - Sample showing how to configure aggregate snapshotting.
+11. [Stateful Event Handler](stateful-event-handler/README.md) - Sample showing a stateful event handler that can be
     used as a replacement for sagas.
-11. [Subscription Query - REST](subscription-query-rest/README.md) - Sample showing how to use Axon's subscription query
+12. [Subscription Query - REST](subscription-query-rest/README.md) - Sample showing how to use Axon's subscription query
     cleanly in a REST-based controller.
-12. [Subscription Query - Streaming](subscription-query-streaming/README.md) - Sample showing how to use Axon's
+13. [Subscription Query - Streaming](subscription-query-streaming/README.md) - Sample showing how to use Axon's
     subscription query cleanly in a streaming-based controller.
-13. [Upcasters](upcaster/README.md) - Sample showing several implementations of upcasters.
+14. [Upcasters](upcaster/README.md) - Sample showing several implementations of upcasters.
 

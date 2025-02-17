@@ -1,0 +1,6 @@
+------------------------------------------------------------------------------------------------------------------------
+Gift card sample application using Apache Avro Serialization for messages and events
+
+ powered by SpringBoot ${spring-boot.version}
+ running on http://localhost:${server.port}
+------------------------------------------------------------------------------------------------------------------------

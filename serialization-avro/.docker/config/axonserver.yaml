@@ -1,0 +1,14 @@
+axoniq:
+  axonserver:
+    name: axonserver-serialization-avro
+    hostname: localhost
+    standalone: true
+    accesscontrol:
+      enabled: false
+      tokendir: ./data
+    devmode:
+      enabled: true
+    event:
+      segment-size: 1000000 # 1mb for small segments
+    snapshot:
+      segment-size: 1000000 # 1mb for small segments
