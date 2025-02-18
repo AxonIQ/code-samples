@@ -45,3 +45,4 @@ vite.config.ts
 vite.generated.ts
 /multitenancy/frontend/
 /multitenancy/node_modules/
+multitenancy/src/main/frontend
