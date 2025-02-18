@@ -1,0 +1,14 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+      file: serialization-avro/docker-compose.yml
+
+server:
+  port: 8282
+
+axon:
+  serializer:
+    events: avro
+    messages: avro
+    general: jackson

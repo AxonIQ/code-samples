@@ -1,0 +1,13 @@
+services:
+  axonserver:
+    image: axoniq/axonserver
+    container_name: axonserver-serialization-avro
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+    volumes:
+      - .docker/config:/axonserver/config:ro
+      - .docker/data:/axonserver/data
+      - .docker/events:/axonserver/events
+      - .docker/log:/axonserver/log
+      - .docker/plugins:/axonserver/plugins
