@@ -10,9 +10,6 @@ updates:
     labels:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
-    reviewers:
-    - "CodeDrivenMitch"
-    - "smcvb"
     groups:
       github-dependencies:
         update-types:
@@ -29,9 +26,6 @@ updates:
     labels:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
-    reviewers:
-    - "CodeDrivenMitch"
-    - "smcvb"
     groups:
       maven-dependencies:
         update-types:
@@ -48,10 +42,6 @@ updates:
     labels:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
-    reviewers:
-      - "CodeDrivenMitch"
-
-      - "smcvb"
     groups:
       npm-dependencies:
         update-types:
