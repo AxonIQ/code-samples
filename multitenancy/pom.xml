@@ -15,7 +15,7 @@
 
     <properties>
         <!-- Database -->
-        <flyway.version>11.10.2</flyway.version>
+        <flyway.version>11.10.3</flyway.version>
         <h2.version>2.3.232</h2.version>
         <!-- UI -->
         <vaadin.version>24.8.3</vaadin.version>
