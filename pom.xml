@@ -40,7 +40,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
-        <axon-bom.version>4.12.0</axon-bom.version>
+        <axon-bom.version>4.12.1</axon-bom.version>
         <!--Spring-->
         <spring-boot.version>3.5.4</spring-boot.version>
         <!-- Database -->
@@ -71,22 +71,22 @@
             <dependency>
                 <groupId>io.axoniq</groupId>
                 <artifactId>axonserver-connector-java</artifactId>
-                <version>2025.1.1</version>
+                <version>2025.2.0-EAP</version>
             </dependency>
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-server-connector</artifactId>
-                <version>4.12.0</version>
+                <version>4.12.1</version>
             </dependency>
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-messaging</artifactId>
-                <version>4.12.0</version>
+                <version>4.12.1</version>
             </dependency>
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-spring-boot-autoconfigure</artifactId>
-                <version>4.12.0</version>
+                <version>4.12.1</version>
             </dependency>
 
             <!--Spring-->
