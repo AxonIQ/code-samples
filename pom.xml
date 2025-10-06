@@ -76,17 +76,14 @@
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-server-connector</artifactId>
-                <version>5.0.0-preview</version>
             </dependency>
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-messaging</artifactId>
-                <version>5.0.0-preview</version>
             </dependency>
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-spring-boot-autoconfigure</artifactId>
-                <version>5.0.0-preview</version>
             </dependency>
 
             <!--Spring-->
