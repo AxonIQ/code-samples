@@ -35,22 +35,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Language -->
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <kotlin.version>2.2.20</kotlin.version>
-        <kotlin.maven.version>2.2.20</kotlin.maven.version>
+        <kotlin.version>2.2.21</kotlin.version>
+        <kotlin.maven.version>2.2.21</kotlin.maven.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Axon -->
-        <axon-bom.version>4.12.1</axon-bom.version>
+        <axon-bom.version>4.12.2</axon-bom.version>
         <!--Spring-->
-        <spring-boot.version>3.5.6</spring-boot.version>
+        <spring-boot.version>4.0.0</spring-boot.version>
         <!-- Database -->
         <hibernate-core.version>6.2.6.Final</hibernate-core.version>
         <!--Other-->
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
-        <reactor-core.version>3.7.11</reactor-core.version>
+        <reactor-core.version>3.8.0</reactor-core.version>
         <!--Testing-->
         <hamcrest.version>1.3</hamcrest.version>
-        <junit.version>6.0.0</junit.version>
+        <junit.version>6.0.1</junit.version>
         <mockito.version>5.20.0</mockito.version>
         <testcontainers.version>1.21.3</testcontainers.version>
         <!-- Build and Plugins -->
@@ -76,17 +76,17 @@
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-server-connector</artifactId>
-                <version>4.12.1</version>
+                <version>5.0.0-preview</version>
             </dependency>
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-messaging</artifactId>
-                <version>4.12.1</version>
+                <version>5.0.0-preview</version>
             </dependency>
             <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-spring-boot-autoconfigure</artifactId>
-                <version>4.12.1</version>
+                <version>5.0.0-preview</version>
             </dependency>
 
             <!--Spring-->
