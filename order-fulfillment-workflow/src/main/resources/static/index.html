@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Fulfillment — Live Tracking</title>
+    <style>
+        :root { color-scheme: light dark; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 920px; margin: 2rem auto; padding: 0 1rem; }
+        h1 { margin-bottom: 0.25rem; }
+        .sub { color: #888; margin-top: 0; }
+        section { border: 1px solid #ccc4; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+        form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+        input, button { padding: 0.5rem 0.75rem; font-size: 0.95rem; border-radius: 6px; border: 1px solid #ccc6; }
+        button { cursor: pointer; background: #2d6cdf; color: white; border-color: #2d6cdf; }
+        button.secondary { background: transparent; color: inherit; border-color: #aaa; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid #ccc4; font-size: 0.9rem; }
+        .status { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
+        .PLACED          { background: #ffe6a8; color: #5b3a00; }
+        .AWAITING_PAYMENT{ background: #cfe2ff; color: #1f3d80; }
+        .SHIPPED         { background: #c8f0d2; color: #14532d; }
+        .conn { font-size: 0.85rem; color: #888; }
+        .conn .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #aaa; margin-right: 0.4rem; vertical-align: middle; }
+        .conn.live .dot { background: #2ecc71; }
+        code { font-size: 0.82rem; }
+    </style>
+</head>
+<body>
+<h1>Order Fulfillment</h1>
+<p class="sub">Live workflow tracking via Server-Sent Events.</p>
+
+<section>
+    <h3 style="margin-top:0">Place order</h3>
+    <form id="placeForm">
+        <input name="customerId" placeholder="customerId" value="cust-1" required>
+        <input name="email" placeholder="email" value="alice@example.com" required>
+        <input name="amount" type="number" step="0.01" placeholder="amount" value="49.99" required>
+        <button type="submit">Place</button>
+    </form>
+</section>
+
+<section>
+    <h3 style="margin-top:0">Confirm payment</h3>
+    <form id="payForm">
+        <input name="orderId" placeholder="orderId" required style="flex:1; min-width: 280px;">
+        <button type="submit" class="secondary">Confirm payment</button>
+    </form>
+</section>
+
+<section>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="margin:0">Live updates</h3>
+        <span id="conn" class="conn"><span class="dot"></span>connecting…</span>
+    </div>
+    <table>
+        <thead>
+        <tr><th>Time</th><th>Order</th><th>Status</th><th>Detail</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+    </table>
+</section>
+
+<script>
+const rows = document.getElementById('rows');
+const conn = document.getElementById('conn');
+const lastByOrder = new Map();
+
+function shorten(id) { return id ? id.slice(0, 8) + '…' : ''; }
+function fmt(ts)    { return new Date(ts).toLocaleTimeString(); }
+
+function renderRow(ev) {
+    const tr = document.createElement('tr');
+    const detail = ev.type === 'PLACED'
+        ? `${ev.customerId} · ${ev.email} · $${ev.amount}`
+        : ev.type === 'SHIPPED'
+            ? `tracking: <code>${ev.trackingNumber}</code>`
+            : '';
+    tr.innerHTML = `
+        <td>${fmt(ev.timestamp)}</td>
+        <td><code title="${ev.orderId}">${shorten(ev.orderId)}</code></td>
+        <td><span class="status ${ev.type}">${ev.type.replace('_',' ')}</span></td>
+        <td>${detail}</td>`;
+    rows.prepend(tr);
+}
+
+function connect() {
+    const es = new EventSource('/orders/stream');
+    es.addEventListener('order', e => {
+        const ev = JSON.parse(e.data);
+        lastByOrder.set(ev.orderId, ev);
+        renderRow(ev);
+    });
+    es.onopen  = () => { conn.classList.add('live');    conn.lastChild.textContent = 'live'; };
+    es.onerror = () => { conn.classList.remove('live'); conn.lastChild.textContent = 'reconnecting…'; };
+}
+connect();
+
+document.getElementById('placeForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const params = new URLSearchParams(f);
+    const res = await fetch('/orders?' + params, { method: 'POST' });
+    const orderId = await res.text();
+    document.querySelector('#payForm input[name=orderId]').value = orderId;
+});
+
+document.getElementById('payForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const orderId = e.target.orderId.value.trim();
+    if (!orderId) return;
+    await fetch(`/orders/${encodeURIComponent(orderId)}/payment`, { method: 'POST' });
+});
+</script>
+</body>
+</html>

@@ -2,11 +2,13 @@ package io.axoniq.demo.orderfulfillment.controller;
 
 import io.axoniq.demo.orderfulfillment.api.OrderPlaced;
 import io.axoniq.demo.orderfulfillment.api.PaymentConfirmed;
+import io.axoniq.demo.orderfulfillment.projection.OrderEventStream;
 import io.axoniq.demo.orderfulfillment.projection.OrderStatus;
 import io.axoniq.demo.orderfulfillment.projection.OrderStatusProjection;
 import org.axonframework.messaging.eventhandling.gateway.EventGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.UUID;
 
@@ -25,10 +28,14 @@ public class OrderController {
 
     private final EventGateway eventGateway;
     private final OrderStatusProjection projection;
+    private final OrderEventStream eventStream;
 
-    public OrderController(EventGateway eventGateway, OrderStatusProjection projection) {
+    public OrderController(EventGateway eventGateway,
+                           OrderStatusProjection projection,
+                           OrderEventStream eventStream) {
         this.eventGateway = eventGateway;
         this.projection = projection;
+        this.eventStream = eventStream;
     }
 
     @PostMapping
@@ -52,5 +59,10 @@ public class OrderController {
         return projection.findById(orderId)
                          .map(ResponseEntity::ok)
                          .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter stream() {
+        return eventStream.subscribe();
     }
 }
