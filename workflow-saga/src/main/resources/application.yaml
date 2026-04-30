@@ -1,0 +1,10 @@
+server:
+  port: 9091
+
+spring:
+  application:
+    name: workflow-saga
+
+axon:
+  axon-server:
+    enabled: true
