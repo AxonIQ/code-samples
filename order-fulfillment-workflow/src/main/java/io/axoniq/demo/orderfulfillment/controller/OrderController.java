@@ -5,6 +5,7 @@ import io.axoniq.demo.orderfulfillment.api.PaymentConfirmed;
 import io.axoniq.demo.orderfulfillment.projection.OrderEventStream;
 import io.axoniq.demo.orderfulfillment.projection.OrderStatus;
 import io.axoniq.demo.orderfulfillment.projection.OrderStatusProjection;
+import io.axoniq.demo.orderfulfillment.simulator.Cities;
 import org.axonframework.messaging.eventhandling.gateway.EventGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +42,17 @@ public class OrderController {
     @PostMapping
     public String placeOrder(@RequestParam("customerId") String customerId,
                              @RequestParam("email") String email,
-                             @RequestParam("amount") double amount) {
+                             @RequestParam("amount") double amount,
+                             @RequestParam(value = "scenario", required = false) String scenario) {
         var orderId = UUID.randomUUID().toString();
-        logger.info("Publishing OrderPlaced for order {}.", orderId);
-        eventGateway.publish(null, new OrderPlaced(orderId, customerId, email, amount));
+        var route = Cities.randomPair();
+        logger.info("Publishing OrderPlaced for order {} ({} → {}).",
+                    orderId, route[0].name(), route[1].name());
+        eventGateway.publish(null, new OrderPlaced(
+                orderId, customerId, email, amount,
+                route[0].name(), route[0].lat(), route[0].lng(),
+                route[1].name(), route[1].lat(), route[1].lng(),
+                scenario == null ? "happy" : scenario));
         return orderId;
     }
 

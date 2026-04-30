@@ -1,6 +1,7 @@
 package io.axoniq.demo.orderfulfillment.workflow;
 
 import io.axoniq.demo.orderfulfillment.api.PaymentConfirmed;
+import io.axoniq.demo.orderfulfillment.service.FailureRecorder;
 import io.axoniq.demo.orderfulfillment.service.InventoryService;
 import io.axoniq.demo.orderfulfillment.service.NotificationService;
 import io.axoniq.demo.orderfulfillment.service.PaymentService;
@@ -12,7 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static io.axoniq.workflow.dsl.api.AssociationsUtils.associate;
 import static io.axoniq.workflow.dsl.simple.SimpleWorkflowContext.equalsTo;
@@ -29,15 +32,18 @@ public class OrderFulfillmentWorkflow {
     private final PaymentService payment;
     private final ShippingService shipping;
     private final NotificationService notifications;
+    private final FailureRecorder failures;
 
     public OrderFulfillmentWorkflow(InventoryService inventory,
                                     PaymentService payment,
                                     ShippingService shipping,
-                                    NotificationService notifications) {
+                                    NotificationService notifications,
+                                    FailureRecorder failures) {
         this.inventory = inventory;
         this.payment = payment;
         this.shipping = shipping;
         this.notifications = notifications;
+        this.failures = failures;
     }
 
     @Workflow(
@@ -50,24 +56,40 @@ public class OrderFulfillmentWorkflow {
         var customerId = (String) ctx.workflowPayload().get("customerId");
         var email = (String) ctx.workflowPayload().get("email");
         var amount = ctx.workflowPayload().get("amount");
+        var scenario = (String) ctx.workflowPayload().get("scenario");
+        var originLat = ((Number) ctx.workflowPayload().get("originLat")).doubleValue();
+        var originLng = ((Number) ctx.workflowPayload().get("originLng")).doubleValue();
+        var destLat = ((Number) ctx.workflowPayload().get("destinationLat")).doubleValue();
+        var destLng = ((Number) ctx.workflowPayload().get("destinationLng")).doubleValue();
 
-        logger.info("Order {} workflow started for customer {} (amount {}).", orderId, customerId, amount);
+        logger.info("Order {} workflow started for customer {} (amount {}, scenario {}).",
+                    orderId, customerId, amount, scenario);
+
+        var paymentTimeout = "payment-timeout".equals(scenario)
+                ? Duration.ofSeconds(4)
+                : Duration.ofSeconds(45);
 
         var paymentConfirmation = ctx.waitForEvent(
                 "awaitPayment",
                 PaymentConfirmed.class,
                 associate(payloadProperty("orderId"), equalsTo(orderId)),
-                Duration.ofMinutes(15)
+                paymentTimeout
         );
 
         var reserved = ctx.awaitExecute(
                 "reserveStock",
-                Map.of("customerId", customerId, "amount", amount),
+                Map.of("customerId", customerId, "amount", amount, "scenario", scenario),
                 Boolean.class,
                 inventory::reserveStock
         );
         if (!reserved) {
             paymentConfirmation.cancel("Stock unavailable");
+            ctx.awaitExecute(
+                    "recordOutOfStock",
+                    Map.of("orderId", orderId, "reason", "Out of stock"),
+                    Boolean.class,
+                    failures::record
+            );
             ctx.fail(new RuntimeException("Stock unavailable for order " + orderId));
             return;
         }
@@ -84,21 +106,38 @@ public class OrderFulfillmentWorkflow {
         );
 
         paymentConfirmation.await();
-        var confirmation = paymentConfirmation.<Map<String, Object>>result()
-                                              .orElseThrow(() -> new IllegalStateException("Payment not confirmed"));
-        var transactionId = (String) confirmation.get("transactionId");
+        var confirmation = paymentConfirmation.<Map<String, Object>>result();
+        if (confirmation.isEmpty()) {
+            ctx.awaitExecute(
+                    "recordPaymentTimeout",
+                    Map.of("orderId", orderId, "reason", "Payment timed out"),
+                    Boolean.class,
+                    failures::record
+            );
+            ctx.fail(new RuntimeException("Payment timed out for order " + orderId));
+            return;
+        }
+        var transactionId = (String) confirmation.get().get("transactionId");
         logger.info("Order {} payment confirmed (transaction {}).", orderId, transactionId);
 
-        // The Completed event of this step is `ShipOrderCompleted` (in our api namespace) — that is
-        // the durable "order shipped" signal projections subscribe to. Nothing publishes it manually.
-        var shipResult = ctx.awaitExecute(
+        // The Completed event of this step is `ShipOrderCompleted` — that is the durable signal
+        // the truck-movement simulator subscribes to. The trackingNumber is generated up front so
+        // both the Started and Completed events expose it.
+        var trackingNumber = "TRK-" + UUID.randomUUID();
+        var shipPayload = new HashMap<String, Object>();
+        shipPayload.put("orderId", orderId);
+        shipPayload.put("trackingNumber", trackingNumber);
+        shipPayload.put("originLat", originLat);
+        shipPayload.put("originLng", originLng);
+        shipPayload.put("destinationLat", destLat);
+        shipPayload.put("destinationLng", destLng);
+        ctx.awaitExecute(
                 "shipOrder",
-                Map.of("orderId", orderId, "transactionId", transactionId),
+                shipPayload,
                 (pc, p) -> shipping.shipOrder(p),
                 Duration.ofSeconds(30),
                 namespace("io.axoniq.demo.orderfulfillment.api")
         );
-        var trackingNumber = (String) shipResult.get("trackingNumber");
 
         ctx.awaitExecute("notifyCustomer", Boolean.class, () -> {
             notifications.sendConfirmation(email, trackingNumber);

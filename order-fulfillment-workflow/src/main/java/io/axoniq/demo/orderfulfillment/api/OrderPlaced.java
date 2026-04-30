@@ -7,6 +7,13 @@ public record OrderPlaced(
         String orderId,
         String customerId,
         String email,
-        double amount
+        double amount,
+        String originCity,
+        double originLat,
+        double originLng,
+        String destinationCity,
+        double destinationLat,
+        double destinationLng,
+        String scenario
 ) {
 }

@@ -47,21 +47,12 @@ class OrderFulfillmentIT {
                 String.class);
         assertThat(orderId).isNotBlank();
 
-        // Wait for the projection to observe the workflow's `InitiatingPaymentForCustomerStarted`
-        // event — this proves the `awaitPayment` wait has been registered before we post the
-        // PaymentConfirmed event, eliminating a race in the previous version of this test.
-        await().atMost(20, TimeUnit.SECONDS).untilAsserted(() -> {
+        // Auto-payment robot confirms shortly after the workflow registers `awaitPayment`, so the
+        // order should advance through IN_TRANSIT and reach DELIVERED without a manual payment POST.
+        await().atMost(45, TimeUnit.SECONDS).untilAsserted(() -> {
             var status = restTemplate.getForObject("/orders/" + orderId, OrderStatus.class);
             assertThat(status).isNotNull();
-            assertThat(status.status()).isEqualTo(OrderStatus.Status.AWAITING_PAYMENT);
-        });
-
-        restTemplate.postForEntity("/orders/" + orderId + "/payment", null, Void.class);
-
-        await().atMost(30, TimeUnit.SECONDS).untilAsserted(() -> {
-            var status = restTemplate.getForObject("/orders/" + orderId, OrderStatus.class);
-            assertThat(status).isNotNull();
-            assertThat(status.status()).isEqualTo(OrderStatus.Status.SHIPPED);
+            assertThat(status.status()).isEqualTo(OrderStatus.Status.DELIVERED);
             assertThat(status.trackingNumber()).startsWith("TRK-");
         });
     }

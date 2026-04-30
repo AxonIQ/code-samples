@@ -12,8 +12,14 @@ public class InventoryService {
     private static final Logger logger = LoggerFactory.getLogger(InventoryService.class);
 
     public boolean reserveStock(Map<String, Object> payload) {
-        logger.info("Reserving stock for customer {} (amount {}).",
-                    payload.get("customerId"), payload.get("amount"));
+        var customerId = payload.get("customerId");
+        var amount = payload.get("amount");
+        var scenario = (String) payload.get("scenario");
+        if ("out-of-stock".equals(scenario)) {
+            logger.info("Stock unavailable (forced) for customer {} (amount {}).", customerId, amount);
+            return false;
+        }
+        logger.info("Reserving stock for customer {} (amount {}).", customerId, amount);
         return true;
     }
 }

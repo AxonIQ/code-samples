@@ -1,21 +1,24 @@
 package io.axoniq.demo.orderfulfillment.projection;
 
 import io.axoniq.demo.orderfulfillment.api.InitiatingPaymentForCustomerStarted;
+import io.axoniq.demo.orderfulfillment.api.OrderDelivered;
+import io.axoniq.demo.orderfulfillment.api.OrderFailed;
 import io.axoniq.demo.orderfulfillment.api.OrderPlaced;
 import io.axoniq.demo.orderfulfillment.api.ShipOrderCompleted;
+import io.axoniq.demo.orderfulfillment.api.TruckLocationUpdated;
 import org.axonframework.messaging.eventhandling.annotation.EventHandler;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * Builds order status by listening to the externally-published {@link OrderPlaced} and to the
- * workflow engine's auto-emitted {@link InitiatingPaymentForCustomerStarted} (the Started event
- * of the {@code initiatePayment} step) and {@link ShipOrderCompleted} (the Completed event of
- * the {@code shipOrder} step).
+ * Builds order status from workflow Started/Completed events plus the simulator's truck-movement
+ * events. The projection is the system of record for the live UI — every status change here is
+ * what the SSE stream broadcasts.
  */
 @Component
 public class OrderStatusProjection {
@@ -30,6 +33,17 @@ public class OrderStatusProjection {
                                    event.email(),
                                    event.amount(),
                                    OrderStatus.Status.PLACED,
+                                   null,
+                                   event.originCity(),
+                                   event.originLat(),
+                                   event.originLng(),
+                                   event.destinationCity(),
+                                   event.destinationLat(),
+                                   event.destinationLng(),
+                                   event.originLat(),
+                                   event.originLng(),
+                                   0.0,
+                                   event.scenario(),
                                    null));
     }
 
@@ -41,10 +55,30 @@ public class OrderStatusProjection {
     @EventHandler
     public void on(ShipOrderCompleted event) {
         orders.computeIfPresent(event.orderId(),
-                                (id, current) -> current.shipped(event.trackingNumber()));
+                                (id, current) -> current.dispatched(event.trackingNumber()));
+    }
+
+    @EventHandler
+    public void on(TruckLocationUpdated event) {
+        orders.computeIfPresent(event.orderId(),
+                                (id, current) -> current.moved(event.lat(), event.lng(), event.progress()));
+    }
+
+    @EventHandler
+    public void on(OrderDelivered event) {
+        orders.computeIfPresent(event.orderId(), (id, current) -> current.delivered());
+    }
+
+    @EventHandler
+    public void on(OrderFailed event) {
+        orders.computeIfPresent(event.orderId(), (id, current) -> current.failed(event.reason()));
     }
 
     public Optional<OrderStatus> findById(String orderId) {
         return Optional.ofNullable(orders.get(orderId));
+    }
+
+    public Collection<OrderStatus> findAll() {
+        return orders.values();
     }
 }
