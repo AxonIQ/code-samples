@@ -1,7 +1,7 @@
 # Order Fulfillment Workflow
 
 Sample project showing how to model an order fulfillment process using the
-**Axon Workflow Engine**. The workflow is written as plain imperative Java —
+**Axoniq Workflow Engine**. The workflow is written as plain imperative Java —
 the engine handles event sourcing, crash recovery, and audit trails.
 
 ```java
