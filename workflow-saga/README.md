@@ -1,6 +1,6 @@
 # Workflow Saga — replacing the legacy `ProcessOrderSaga`
 
-This module is a one-to-one rewrite of the [`saga`](../saga/README.md) sample, using the **Axon
+This module is a one-to-one rewrite of the [`saga`](../saga/README.md) sample, using the **Axoniq
 Workflow Engine** instead of `@Saga`. The exact same orchestration — start on order confirmation,
 request payment + shipment in parallel, react to either of two payment outcomes, complete the
 process — is expressed as plain imperative Java.
