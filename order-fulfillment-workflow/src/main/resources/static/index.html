@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Fulfillment — Live Simulator</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0d1117;
+            --panel: #161b22;
+            --panel-2: #1f2630;
+            --border: #30363d;
+            --fg: #e6edf3;
+            --muted: #8b949e;
+            --accent: #2d6cdf;
+            --placed: #f0c674;
+            --awaiting: #58a6ff;
+            --transit: #d2a8ff;
+            --delivered: #3fb950;
+            --failed: #f85149;
+        }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; }
+        body {
+            background: var(--bg); color: var(--fg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: grid;
+            grid-template-columns: 320px 1fr 360px;
+            grid-template-rows: 56px 1fr;
+        }
+        header {
+            grid-column: 1 / -1;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 1.25rem;
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 { font-size: 1rem; margin: 0; font-weight: 600; letter-spacing: 0.02em; }
+        header .conn { font-size: 0.78rem; color: var(--muted); }
+        header .conn .dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #aaa; margin-right: 0.4rem; vertical-align: middle;
+            transition: background 0.2s;
+        }
+        header .conn.live .dot { background: var(--delivered); box-shadow: 0 0 8px var(--delivered); }
+
+        aside.left, aside.right {
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        aside.right { border-right: none; border-left: 1px solid var(--border); }
+
+        h2 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em;
+             color: var(--muted); margin: 1.25rem 0 0.5rem; }
+        h2:first-child { margin-top: 0; }
+
+        .controls { display: grid; gap: 0.5rem; }
+        .controls button {
+            cursor: pointer; padding: 0.6rem 0.75rem; font-size: 0.87rem;
+            background: var(--panel-2); color: var(--fg); border: 1px solid var(--border);
+            border-radius: 6px; text-align: left;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .controls button:hover { border-color: var(--accent); background: #1f2a3a; }
+        .controls button.primary { background: var(--accent); border-color: var(--accent); color: white; }
+        .controls button.primary:hover { background: #1e58c2; }
+        .controls button.danger:hover { border-color: var(--failed); }
+        .controls button .pill {
+            font-size: 0.7rem; padding: 0.1rem 0.5rem; border-radius: 999px;
+            background: rgba(255,255,255,0.08); color: var(--muted);
+        }
+
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+        .stat {
+            padding: 0.6rem 0.75rem; background: var(--panel-2);
+            border: 1px solid var(--border); border-radius: 6px;
+            display: flex; flex-direction: column; gap: 0.15rem;
+        }
+        .stat .label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat .value { font-size: 1.4rem; font-weight: 600; }
+        .stat.placed    .value { color: var(--placed); }
+        .stat.awaiting  .value { color: var(--awaiting); }
+        .stat.transit   .value { color: var(--transit); }
+        .stat.delivered .value { color: var(--delivered); }
+        .stat.failed    .value { color: var(--failed); }
+        .stat.total     .value { color: var(--fg); }
+
+        #map { width: 100%; height: 100%; background: #0a1020; }
+
+        .activity { display: flex; flex-direction: column; gap: 0.4rem; }
+        .activity .row {
+            font-size: 0.8rem; padding: 0.5rem 0.6rem;
+            background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px;
+            display: grid; grid-template-columns: 64px 1fr; gap: 0.6rem; align-items: center;
+            animation: fadein 0.25s ease-out;
+        }
+        @keyframes fadein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        .activity .row .when { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.75rem; }
+        .activity .row .what code { font-size: 0.72rem; opacity: 0.7; }
+        .status-pill {
+            display: inline-block; padding: 0.05rem 0.5rem; border-radius: 999px;
+            font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em;
+            border: 1px solid currentColor;
+        }
+        .status-pill.PLACED           { color: var(--placed); }
+        .status-pill.AWAITING_PAYMENT { color: var(--awaiting); }
+        .status-pill.IN_TRANSIT       { color: var(--transit); }
+        .status-pill.DELIVERED        { color: var(--delivered); }
+        .status-pill.FAILED           { color: var(--failed); }
+
+        /* Leaflet popup overrides for the dark theme */
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+            background: var(--panel-2); color: var(--fg);
+            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .leaflet-popup-content { font-size: 0.8rem; line-height: 1.4; margin: 0.6rem 0.75rem; }
+        .leaflet-popup-content code { color: var(--muted); }
+        .leaflet-container { background: #0a1020; }
+        .leaflet-control-attribution { background: rgba(13,17,23,0.8) !important; color: var(--muted) !important; }
+        .leaflet-control-attribution a { color: var(--awaiting) !important; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Order Fulfillment — Live Simulator</h1>
+    <span id="conn" class="conn"><span class="dot"></span><span class="label">connecting…</span></span>
+</header>
+
+<aside class="left">
+    <h2>Simulate</h2>
+    <div class="controls">
+        <button id="btnSingle"   class="primary">Place 1 order             <span class="pill">happy</span></button>
+        <button id="btnBurst5"   class="primary">Burst                     <span class="pill">×5</span></button>
+        <button id="btnBurst25"  class="primary">Stress test               <span class="pill">×25</span></button>
+        <button id="btnOOS"      class="danger">Inject out-of-stock         <span class="pill">fail</span></button>
+        <button id="btnTimeout"  class="danger">Inject payment timeout      <span class="pill">fail</span></button>
+        <button id="btnMixed">Mixed burst (happy + faults)              <span class="pill">×15</span></button>
+    </div>
+
+    <h2>Stats</h2>
+    <div class="stats">
+        <div class="stat total">     <span class="label">Total</span>            <span class="value" id="s-total">0</span></div>
+        <div class="stat placed">    <span class="label">Placed</span>           <span class="value" id="s-PLACED">0</span></div>
+        <div class="stat awaiting">  <span class="label">Awaiting pay</span>     <span class="value" id="s-AWAITING_PAYMENT">0</span></div>
+        <div class="stat transit">   <span class="label">In transit</span>       <span class="value" id="s-IN_TRANSIT">0</span></div>
+        <div class="stat delivered"> <span class="label">Delivered</span>        <span class="value" id="s-DELIVERED">0</span></div>
+        <div class="stat failed">    <span class="label">Failed</span>           <span class="value" id="s-FAILED">0</span></div>
+    </div>
+
+    <h2>Legend</h2>
+    <div style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.78rem; color:var(--muted);">
+        <span><span class="status-pill PLACED">PLACED</span> order received</span>
+        <span><span class="status-pill AWAITING_PAYMENT">AWAITING PAY</span> workflow waiting</span>
+        <span><span class="status-pill IN_TRANSIT">IN TRANSIT</span> truck en route</span>
+        <span><span class="status-pill DELIVERED">DELIVERED</span> arrived</span>
+        <span><span class="status-pill FAILED">FAILED</span> stock / timeout</span>
+    </div>
+</aside>
+
+<div id="map"></div>
+
+<aside class="right">
+    <h2>Activity</h2>
+    <div id="activity" class="activity"></div>
+</aside>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const STATUS_COLORS = {
+    PLACED:           '#f0c674',
+    AWAITING_PAYMENT: '#58a6ff',
+    IN_TRANSIT:       '#d2a8ff',
+    DELIVERED:        '#3fb950',
+    FAILED:           '#f85149'
+};
+
+const map = L.map('map', { zoomControl: true, preferCanvas: true })
+    .setView([39.8283, -98.5795], 4);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CARTO',
+    subdomains: 'abcd', maxZoom: 19
+}).addTo(map);
+
+const orders = new Map();   // orderId -> { status, marker, line, originMarker, destMarker, data }
+const stats  = { total: 0, PLACED: 0, AWAITING_PAYMENT: 0, IN_TRANSIT: 0, DELIVERED: 0, FAILED: 0 };
+const activity = document.getElementById('activity');
+
+function recomputeStats() {
+    Object.keys(stats).forEach(k => stats[k] = 0);
+    stats.total = orders.size;
+    for (const o of orders.values()) stats[o.status] = (stats[o.status] || 0) + 1;
+    for (const k of Object.keys(stats)) {
+        const el = document.getElementById('s-' + (k === 'total' ? 'total' : k));
+        if (el) el.textContent = stats[k];
+    }
+}
+
+function shorten(id) { return id ? id.slice(0, 8) : ''; }
+
+function popupHtml(o) {
+    const d = o.data;
+    const tracking = d.trackingNumber ? `<div>Tracking: <code>${d.trackingNumber}</code></div>` : '';
+    const reason   = d.failureReason  ? `<div style="color:var(--failed)">Reason: ${d.failureReason}</div>` : '';
+    return `
+        <strong>${shorten(d.orderId)}</strong>
+        <span class="status-pill ${o.status}" style="margin-left:0.4rem">${o.status.replace('_',' ')}</span>
+        <div style="margin-top:0.3rem">${d.customerId ?? ''} · $${(d.amount ?? 0).toFixed(2)}</div>
+        <div><code>${d.originCity ?? ''} → ${d.destinationCity ?? ''}</code></div>
+        ${tracking}${reason}`;
+}
+
+function ensureOrder(orderId, seed) {
+    let o = orders.get(orderId);
+    if (o) return o;
+    const data = seed || { orderId };
+    const lat = data.originLat ?? data.currentLat ?? 39.5;
+    const lng = data.originLng ?? data.currentLng ?? -98.0;
+    const status = data.status || 'PLACED';
+
+    const marker = L.circleMarker([lat, lng], {
+        radius: 6, color: STATUS_COLORS[status], fillColor: STATUS_COLORS[status],
+        fillOpacity: 0.85, weight: 2
+    }).addTo(map);
+
+    let line = null, originMarker = null, destMarker = null;
+    if (data.originLat != null && data.destinationLat != null) {
+        line = L.polyline(
+            [[data.originLat, data.originLng], [data.destinationLat, data.destinationLng]],
+            { color: STATUS_COLORS[status], weight: 1.5, opacity: 0.45, dashArray: '4 6' }
+        ).addTo(map);
+        originMarker = L.circleMarker([data.originLat, data.originLng], {
+            radius: 3, color: '#8b949e', fillColor: '#8b949e', fillOpacity: 0.9, weight: 1
+        }).addTo(map);
+        destMarker = L.circleMarker([data.destinationLat, data.destinationLng], {
+            radius: 3, color: '#8b949e', fillColor: '#8b949e', fillOpacity: 0.9, weight: 1
+        }).addTo(map);
+    }
+
+    o = { status, marker, line, originMarker, destMarker, data };
+    marker.bindPopup(() => popupHtml(o));
+    orders.set(orderId, o);
+    return o;
+}
+
+function setStatus(o, newStatus) {
+    o.status = newStatus;
+    const c = STATUS_COLORS[newStatus];
+    o.marker.setStyle({ color: c, fillColor: c });
+    if (o.line) {
+        const opacity = (newStatus === 'IN_TRANSIT' || newStatus === 'DELIVERED') ? 0.85 : 0.45;
+        const dash = (newStatus === 'IN_TRANSIT' || newStatus === 'DELIVERED') ? null : '4 6';
+        o.line.setStyle({ color: c, opacity, dashArray: dash });
+    }
+    if (newStatus === 'DELIVERED') {
+        o.marker.setStyle({ radius: 8 });
+        setTimeout(() => removeOrder(o.data.orderId), 4000);
+    }
+    if (newStatus === 'FAILED') {
+        o.marker.setStyle({ radius: 8, weight: 3 });
+        setTimeout(() => removeOrder(o.data.orderId), 6000);
+    }
+}
+
+function removeOrder(orderId) {
+    const o = orders.get(orderId);
+    if (!o) return;
+    if (o.marker)       map.removeLayer(o.marker);
+    if (o.line)         map.removeLayer(o.line);
+    if (o.originMarker) map.removeLayer(o.originMarker);
+    if (o.destMarker)   map.removeLayer(o.destMarker);
+    orders.delete(orderId);
+    recomputeStats();
+}
+
+function pushActivity(html) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = html;
+    activity.prepend(row);
+    while (activity.children.length > 30) activity.removeChild(activity.lastChild);
+}
+
+function activityRow(type, orderId, extra = '') {
+    const t = new Date().toLocaleTimeString();
+    const sub = shorten(orderId);
+    pushActivity(`
+        <span class="when">${t}</span>
+        <span class="what">
+            <span class="status-pill ${type}">${type.replace('_',' ')}</span>
+            <code>${sub}</code> ${extra}
+        </span>`);
+}
+
+const conn = document.getElementById('conn');
+function setConn(state) {
+    if (state === 'live') { conn.classList.add('live'); conn.querySelector('.label').textContent = 'live'; }
+    else                  { conn.classList.remove('live'); conn.querySelector('.label').textContent = state; }
+}
+
+function connect() {
+    const es = new EventSource('/orders/stream');
+    es.onopen  = () => setConn('live');
+    es.onerror = () => setConn('reconnecting…');
+
+    es.addEventListener('snapshot', e => {
+        const list = JSON.parse(e.data);
+        for (const item of list) {
+            const o = ensureOrder(item.orderId, item);
+            setStatus(o, item.status);
+            if (item.currentLat && item.currentLng) {
+                o.marker.setLatLng([item.currentLat, item.currentLng]);
+            }
+        }
+        recomputeStats();
+    });
+
+    es.addEventListener('order', e => {
+        const ev = JSON.parse(e.data);
+        const o = ensureOrder(ev.orderId, ev.type === 'PLACED' ? ev : null);
+        if (ev.type === 'PLACED') {
+            Object.assign(o.data, ev);
+            setStatus(o, 'PLACED');
+            const tag = ev.scenario && ev.scenario !== 'happy' ? ` <code>${ev.scenario}</code>` : '';
+            activityRow('PLACED', ev.orderId, `${ev.originCity} → ${ev.destinationCity}${tag}`);
+        } else if (ev.type === 'AWAITING_PAYMENT') {
+            setStatus(o, 'AWAITING_PAYMENT');
+            activityRow('AWAITING_PAYMENT', ev.orderId);
+        } else if (ev.type === 'IN_TRANSIT') {
+            o.data.trackingNumber = ev.trackingNumber;
+            setStatus(o, 'IN_TRANSIT');
+            activityRow('IN_TRANSIT', ev.orderId, `<code>${ev.trackingNumber}</code>`);
+        } else if (ev.type === 'DELIVERED') {
+            setStatus(o, 'DELIVERED');
+            activityRow('DELIVERED', ev.orderId);
+        } else if (ev.type === 'FAILED') {
+            o.data.failureReason = ev.reason;
+            setStatus(o, 'FAILED');
+            activityRow('FAILED', ev.orderId, ev.reason);
+        }
+        recomputeStats();
+    });
+
+    es.addEventListener('location', e => {
+        const ev = JSON.parse(e.data);
+        const o = orders.get(ev.orderId);
+        if (!o) return;
+        o.marker.setLatLng([ev.lat, ev.lng]);
+        o.data.currentLat = ev.lat;
+        o.data.currentLng = ev.lng;
+        o.data.progress = ev.progress;
+    });
+}
+connect();
+
+async function post(url) {
+    try { await fetch(url, { method: 'POST' }); }
+    catch (e) { console.error(e); }
+}
+document.getElementById('btnSingle')  .onclick = () => post('/simulate/single');
+document.getElementById('btnBurst5')  .onclick = () => post('/simulate/burst?count=5');
+document.getElementById('btnBurst25') .onclick = () => post('/simulate/burst?count=25');
+document.getElementById('btnOOS')     .onclick = () => post('/simulate/scenario?type=out-of-stock');
+document.getElementById('btnTimeout') .onclick = () => post('/simulate/scenario?type=payment-timeout');
+document.getElementById('btnMixed')   .onclick = async () => {
+    await post('/simulate/burst?count=10');
+    await post('/simulate/burst?count=3&scenario=out-of-stock');
+    await post('/simulate/burst?count=2&scenario=payment-timeout');
+};
+</script>
+</body>
+</html>

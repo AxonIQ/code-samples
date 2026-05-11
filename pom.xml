@@ -17,6 +17,7 @@
         <module>axon-spring-template</module>
         <module>distributed-exceptions</module>
         <module>multitenancy</module>
+        <module>order-fulfillment-workflow</module>
         <module>reset-handler</module>
         <module>saga</module>
         <module>serialization-avro</module>
@@ -28,6 +29,7 @@
         <module>subscription-query-rest</module>
         <module>subscription-query-streaming</module>
         <module>upcaster</module>
+        <module>workflow-saga</module>
     </modules>
 
     <properties>

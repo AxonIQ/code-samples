@@ -1,0 +1,10 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: order-fulfillment-workflow
+
+axon:
+  axon-server:
+    enabled: true

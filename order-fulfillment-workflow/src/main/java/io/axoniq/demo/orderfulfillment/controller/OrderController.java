@@ -1,0 +1,76 @@
+package io.axoniq.demo.orderfulfillment.controller;
+
+import io.axoniq.demo.orderfulfillment.api.OrderPlaced;
+import io.axoniq.demo.orderfulfillment.api.PaymentConfirmed;
+import io.axoniq.demo.orderfulfillment.projection.OrderEventStream;
+import io.axoniq.demo.orderfulfillment.projection.OrderStatus;
+import io.axoniq.demo.orderfulfillment.projection.OrderStatusProjection;
+import io.axoniq.demo.orderfulfillment.simulator.Cities;
+import org.axonframework.messaging.eventhandling.gateway.EventGateway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/orders")
+public class OrderController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+
+    private final EventGateway eventGateway;
+    private final OrderStatusProjection projection;
+    private final OrderEventStream eventStream;
+
+    public OrderController(EventGateway eventGateway,
+                           OrderStatusProjection projection,
+                           OrderEventStream eventStream) {
+        this.eventGateway = eventGateway;
+        this.projection = projection;
+        this.eventStream = eventStream;
+    }
+
+    @PostMapping
+    public String placeOrder(@RequestParam("customerId") String customerId,
+                             @RequestParam("email") String email,
+                             @RequestParam("amount") double amount,
+                             @RequestParam(value = "scenario", required = false) String scenario) {
+        var orderId = UUID.randomUUID().toString();
+        var route = Cities.randomPair();
+        logger.info("Publishing OrderPlaced for order {} ({} → {}).",
+                    orderId, route[0].name(), route[1].name());
+        eventGateway.publish(null, new OrderPlaced(
+                orderId, customerId, email, amount,
+                route[0].name(), route[0].lat(), route[0].lng(),
+                route[1].name(), route[1].lat(), route[1].lng(),
+                scenario == null ? "happy" : scenario));
+        return orderId;
+    }
+
+    @PostMapping("/{orderId}/payment")
+    public void confirmPayment(@PathVariable("orderId") String orderId) {
+        logger.info("Publishing PaymentConfirmed for order {}.", orderId);
+        eventGateway.publish(null, new PaymentConfirmed(orderId, "txn-" + UUID.randomUUID()));
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderStatus> getStatus(@PathVariable("orderId") String orderId) {
+        return projection.findById(orderId)
+                         .map(ResponseEntity::ok)
+                         .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter stream() {
+        return eventStream.subscribe();
+    }
+}
