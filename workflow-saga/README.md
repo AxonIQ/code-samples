@@ -5,9 +5,11 @@ Workflow Engine** instead of `@Saga`. The exact same orchestration — start on 
 request payment + shipment in parallel, react to either of two payment outcomes, complete the
 process — is expressed as plain imperative Java.
 
-## What got simpler
+## Comparison: `@Saga` vs `@Workflow`
 
-Side-by-side: same business behaviour, expressed two different ways.
+Same business behaviour, expressed two different ways. Neither model is a strict
+upgrade over the other — they make different trade-offs, and which one fits
+better depends on the orchestration you're modelling.
 
 |                                  | `saga` module (`@Saga`)                                                                                                                                                                                                                                                                                                                                                                                                                          | `workflow-saga` module (`@Workflow`)                                                                                                                                                                                                                                                                                                                |
 |----------------------------------|---|---|
@@ -17,6 +19,36 @@ Side-by-side: same business behaviour, expressed two different ways.
 | Branching on outcomes            | Multiple `@SagaEventHandler` methods, with `if (orderIsPaid && orderIsDelivered)` flags; a separate `@DeadlineHandler` for the deadline; explicit `SagaLifecycle.end()` plus `deadlineManager.cancelSchedule(...)`                                                                                                                                                                                                                              | Standard Java `if`/`else`. The deadline is just `Duration.ofDays(5)` passed to `waitForEvent`. No lifecycle plumbing — when the workflow returns, it ends.                                                                                                                                                                                          |
 | Race / parallelism                | Implicit, via independent event handlers and shared mutable fields                                                                                                                                                                                                                                                                                                                                                                              | Explicit, via `ctx.anyMatch(WorkflowStepResult::success, paid, paymentCancelled)`                                                                                                                                                                                                                                                                  |
 | Cancellation of pending waits    | Manual: cancel deadlines via `DeadlineManager`, end saga via `SagaLifecycle.end()`                                                                                                                                                                                                                                                                                                                                                              | `delivered.cancel("payment cancelled")` and the workflow simply returns                                                                                                                                                                                                                                                                              |
+
+### Where `@Workflow` reads more naturally
+
+- The control flow is one ordinary Java method. `if`/`else`, early `return`, and
+  local variables describe the orchestration directly, without translating it
+  into a state machine spread across multiple handler methods.
+- Correlation, timeouts, and cancellation are local to the call site
+  (`waitForEvent("...", ..., Duration.ofDays(5))`, `delivered.cancel(...)`),
+  rather than spread between annotations, deadline managers, and lifecycle
+  calls.
+- The engine event-sources every step automatically, so there's no
+  `eventGateway.publish` inside the orchestration and nothing to keep in sync
+  between the orchestration and a projection.
+
+### Where `@Saga` reads more naturally
+
+- A saga naturally decomposes into small, individually-named methods — one per
+  `@SagaEventHandler`. The workflow's `execute(SimpleWorkflowContext ctx)` is a
+  single ~70-line method, which is harder to scan at a glance and harder to
+  unit-test in isolation. For sagas with more branches than this one, that
+  single method grows fast.
+- Saga state lives in named class fields, so "what does this saga remember
+  between events?" is answered by reading the class. In the workflow, the
+  equivalent information is encoded in local variables and the engine's stored
+  state — less direct when debugging.
+- `@SagaEventHandler` makes each correlation explicit at the method level,
+  which is convenient when you want to grep the codebase for every place a
+  particular event participates in an orchestration.
+- The annotation-driven model has been the Axon Framework idiom for years —
+  existing teams won't need to learn a new programming model to maintain it.
 
 The whole orchestration is one `execute(SimpleWorkflowContext ctx)` method:
 
@@ -65,10 +97,12 @@ public void execute(SimpleWorkflowContext ctx) {
 }
 ```
 
-There is no `@StartSaga`, no `@EndSaga`, no `@DeadlineHandler`, no `SagaLifecycle.associateWith`, no
-serialized saga state, and no `eventGateway.publish` calls — the workflow never publishes events
-itself. The engine event-sources every step and emits a Started/Completed event pair for each
-`awaitExecute`; projections subscribe to those naturally-emitted events.
+In the workflow model, lifecycle and persistence are handled by the engine rather than by code in
+the orchestration class: there's no `@StartSaga`, `@EndSaga`, `@DeadlineHandler`,
+`SagaLifecycle.associateWith`, or `eventGateway.publish`. The engine event-sources every step and
+emits a Started/Completed event pair for each `awaitExecute`, which projections subscribe to.
+That moves boilerplate out of the orchestration, at the cost of a single longer `execute(...)`
+method — see the trade-off table above.
 
 ## Running the application
 

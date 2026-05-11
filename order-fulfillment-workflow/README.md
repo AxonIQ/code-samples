@@ -37,15 +37,7 @@ public void execute(SimpleWorkflowContext ctx) {
 - Java 21+
 - Maven 3.9+
 - Docker (for Axon Server)
-- The Axon Workflow Engine (`io.axoniq.framework.workflow:*:1.0.0-SNAPSHOT`) installed in the local Maven repository
-
-If the workflow engine isn't published yet, build it locally first:
-
-```bash
-git clone git@github.com:AxonIQ/extension-workflow.git
-cd extension-workflow
-mvn clean install -DskipTests
-```
+- The Axoniq Workflow Engine (`io.axoniq.framework.workflow:*:0.1.0`), available on Maven Central
 
 ## Running the application
 

@@ -1,5 +1,7 @@
 package io.axoniq.demo.orderfulfillment.projection;
 
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import io.axoniq.demo.orderfulfillment.api.InitiatingPaymentForCustomerStarted;
 import io.axoniq.demo.orderfulfillment.api.OrderDelivered;
 import io.axoniq.demo.orderfulfillment.api.OrderFailed;
@@ -14,7 +16,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -31,9 +32,11 @@ public class OrderEventStream {
 
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
     private final OrderStatusProjection projection;
+    private final ObjectMapper objectMapper;
 
-    public OrderEventStream(OrderStatusProjection projection) {
+    public OrderEventStream(OrderStatusProjection projection, ObjectMapper objectMapper) {
         this.projection = projection;
+        this.objectMapper = objectMapper;
     }
 
     public SseEmitter subscribe() {
@@ -52,19 +55,8 @@ public class OrderEventStream {
 
     @EventHandler
     public void on(OrderPlaced event) {
-        var payload = new HashMap<String, Object>();
+        Map<String, Object> payload = objectMapper.convertValue(event, new TypeReference<>() {});
         payload.put("type", "PLACED");
-        payload.put("orderId", event.orderId());
-        payload.put("customerId", event.customerId());
-        payload.put("email", event.email());
-        payload.put("amount", event.amount());
-        payload.put("originCity", event.originCity());
-        payload.put("originLat", event.originLat());
-        payload.put("originLng", event.originLng());
-        payload.put("destinationCity", event.destinationCity());
-        payload.put("destinationLat", event.destinationLat());
-        payload.put("destinationLng", event.destinationLng());
-        payload.put("scenario", event.scenario());
         payload.put("timestamp", Instant.now().toString());
         broadcast("order", payload);
     }

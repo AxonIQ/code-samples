@@ -8,7 +8,7 @@
     <artifactId>order-fulfillment-workflow</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Order Fulfillment Workflow</name>
-    <description>Sample showing how to model an Order Fulfillment process with the Axon Workflow Engine.</description>
+    <description>Sample showing how to model an Order Fulfillment process with the Axoniq Workflow Engine.</description>
 
     <properties>
         <java.version>21</java.version>
@@ -18,7 +18,7 @@
 
         <axon.version>5.1.0</axon.version>
         <axoniq-framework.version>5.1.0</axoniq-framework.version>
-        <axon-workflow.version>1.0.0-SNAPSHOT</axon-workflow.version>
+        <axon-workflow.version>0.1.0</axon-workflow.version>
         <spring-boot.version>4.0.6</spring-boot.version>
         <testcontainers.version>2.0.5</testcontainers.version>
     </properties>
@@ -57,7 +57,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Axon Workflow Engine: auto-configures @Workflow beans through Spring Boot. -->
+        <!-- Axoniq Workflow Engine: auto-configures @Workflow beans through Spring Boot. -->
         <dependency>
             <groupId>io.axoniq.framework.workflow</groupId>
             <artifactId>axon-workflow-spring-boot</artifactId>
@@ -170,18 +170,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>central-portal-snapshots</id>
-            <name>Central Portal Snapshots</name>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 </project>
