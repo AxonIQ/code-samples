@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workflow Versioning Demo</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0d1117;
+            --panel: #161b22;
+            --panel-2: #1f2630;
+            --border: #30363d;
+            --fg: #e6edf3;
+            --muted: #8b949e;
+            --accent: #2d6cdf;
+            --ok: #3fb950;
+            --warn: #f0c674;
+            --bad: #f85149;
+            --info: #58a6ff;
+            --version: #d2a8ff;
+        }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; }
+        body {
+            background: var(--bg); color: var(--fg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            grid-template-rows: 64px 1fr;
+        }
+        header {
+            grid-column: 1 / -1;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 1.25rem;
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 { font-size: 1rem; margin: 0; font-weight: 600; letter-spacing: 0.02em; }
+
+        aside {
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 1.25rem;
+        }
+        main {
+            overflow-y: auto;
+            padding: 1.25rem 1.5rem;
+        }
+        h2 {
+            font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em;
+            color: var(--muted); margin: 1.5rem 0 0.6rem;
+        }
+        h2:first-child { margin-top: 0; }
+
+        .form { display: grid; gap: 0.6rem; }
+        .form label { font-size: 0.78rem; color: var(--muted); display: grid; gap: 0.25rem; }
+        .form input {
+            background: var(--panel-2); color: var(--fg);
+            border: 1px solid var(--border); border-radius: 6px;
+            padding: 0.55rem 0.7rem; font-size: 0.9rem;
+            font-family: inherit;
+        }
+        .form input:focus { outline: none; border-color: var(--accent); }
+
+        button {
+            cursor: pointer; padding: 0.6rem 0.8rem; font-size: 0.87rem;
+            background: var(--panel-2); color: var(--fg); border: 1px solid var(--border);
+            border-radius: 6px; font-weight: 500;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        button:hover { border-color: var(--accent); background: #1f2a3a; }
+        button.primary { background: var(--accent); border-color: var(--accent); color: white; }
+        button.primary:hover { background: #1e58c2; }
+        button.subtle { background: transparent; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .row { display: flex; gap: 0.5rem; }
+        .row > * { flex: 1; }
+
+        .hint {
+            font-size: 0.75rem; color: var(--muted);
+            background: var(--panel-2); border: 1px solid var(--border);
+            border-radius: 6px; padding: 0.6rem 0.7rem; line-height: 1.5;
+        }
+        .hint code {
+            background: rgba(255,255,255,0.05); padding: 0 0.25rem;
+            border-radius: 3px; font-size: 0.85em;
+        }
+
+        .order-list { display: grid; gap: 0.6rem; }
+        .order-card {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: 8px; padding: 0.85rem 1rem;
+            display: grid; gap: 0.55rem;
+        }
+        .order-card .top {
+            display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+        }
+        .order-card .id {
+            font-weight: 600; font-size: 0.95rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .order-card .actions { display: flex; gap: 0.4rem; }
+        .order-card .actions button { padding: 0.35rem 0.6rem; font-size: 0.78rem; }
+        .order-card .meta {
+            font-size: 0.78rem; color: var(--muted);
+            display: flex; gap: 0.8rem; flex-wrap: wrap;
+        }
+        .order-card .meta span code { color: var(--fg); }
+
+        .status-pill {
+            display: inline-block; padding: 0.1rem 0.55rem; border-radius: 999px;
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;
+            border: 1px solid currentColor;
+        }
+        .status-pill.STARTED    { color: var(--warn); }
+        .status-pill.COMPLETED  { color: var(--ok); }
+        .status-pill.FAILED     { color: var(--bad); }
+        .status-pill.UNKNOWN    { color: var(--muted); }
+        .status-pill.NOT_FOUND  { color: var(--muted); }
+        .status-pill.PAUSED     { color: var(--bad); }
+
+        .steps { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+        .step {
+            font-size: 0.72rem; padding: 0.15rem 0.5rem;
+            border-radius: 4px; background: var(--panel-2);
+            border: 1px solid var(--border);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .step.validateAddress { color: var(--version); border-color: var(--version); }
+
+        .version-row {
+            font-size: 0.78rem; color: var(--muted);
+            display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;
+        }
+        .version-row .marker.yes { color: var(--version); }
+        .version-row .marker.no  { color: var(--muted); }
+
+        .empty {
+            text-align: center; color: var(--muted); padding: 2rem 1rem;
+            border: 1px dashed var(--border); border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .toast {
+            position: fixed; bottom: 1.5rem; right: 1.5rem;
+            background: var(--panel-2); border: 1px solid var(--border);
+            color: var(--fg); padding: 0.7rem 1rem; border-radius: 6px;
+            font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transform: translateY(120%); transition: transform 0.2s;
+            max-width: 420px;
+        }
+        .toast.show { transform: translateY(0); }
+        .toast.ok  { border-color: var(--ok); }
+        .toast.err { border-color: var(--bad); }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Workflow Versioning Demo</h1>
+</header>
+
+<aside>
+    <h2>Place order</h2>
+    <div class="form">
+        <label>Order ID
+            <input id="orderId" type="text" placeholder="order-1" value="order-1">
+        </label>
+        <label>Customer
+            <input id="customerId" type="text" placeholder="alice" value="alice">
+        </label>
+        <label>Amount
+            <input id="amount" type="number" placeholder="100" value="100">
+        </label>
+        <div class="row">
+            <button id="btnPlace" class="primary">Place order</button>
+            <button id="btnRandom" class="subtle" title="Fill with random values">Random</button>
+        </div>
+    </div>
+
+    <h2>Send payment</h2>
+    <div class="form">
+        <label>Order ID
+            <input id="payOrderId" type="text" placeholder="order-1">
+        </label>
+        <label>Amount
+            <input id="payAmount" type="number" placeholder="100" value="100">
+        </label>
+        <button id="btnPay" class="primary">Send payment</button>
+    </div>
+
+    <h2>Lookup</h2>
+    <div class="form">
+        <label>Order ID
+            <input id="lookupOrderId" type="text" placeholder="order-1">
+        </label>
+        <button id="btnLookup">Add to tracked list</button>
+    </div>
+
+    <h2>Tracked orders</h2>
+    <div class="row">
+        <button id="btnRefresh">Refresh all</button>
+        <button id="btnClear" class="subtle">Clear list</button>
+    </div>
+    <div class="hint" style="margin-top:0.8rem">
+        Tracked order IDs are saved in your browser. Refresh polls
+        <code>GET /orders/{id}</code>; auto-refreshes every 2s.
+    </div>
+</aside>
+
+<main>
+    <h2>Orders</h2>
+    <div id="orderList" class="order-list"></div>
+    <div id="emptyState" class="empty">
+        No tracked orders yet — place one or add an existing ID via Lookup.
+    </div>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const STORAGE_KEY = 'workflow-versioning-demo.orderIds';
+const REFRESH_MS  = 2000;
+
+function loadIds() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
+}
+function saveIds(ids) { localStorage.setItem(STORAGE_KEY, JSON.stringify(ids)); }
+function addId(id) {
+    const ids = loadIds();
+    if (!id || ids.includes(id)) return;
+    ids.unshift(id);
+    saveIds(ids);
+}
+function removeId(id) { saveIds(loadIds().filter(x => x !== id)); }
+
+function toast(msg, kind = 'ok') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast show ' + kind;
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => { el.className = 'toast ' + kind; }, 2400);
+}
+
+async function fetchOrder(orderId) {
+    const r = await fetch('/orders/' + encodeURIComponent(orderId));
+    if (r.status === 404) return { orderId, workflowStatus: 'NOT_FOUND', stepsInHistory: [] };
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+}
+
+function renderCard(data) {
+    const oid = data.orderId;
+    const status = data.workflowStatus || 'UNKNOWN';
+    const steps = data.stepsInHistory || [];
+    const v = data.addressValidationVersion;
+    const hasMarker = data.hasAddressValidationMarker;
+    const p = data.payload || {};
+
+    const stepChips = steps.map(s => {
+        const cls = s === 'validateAddress' ? 'step validateAddress' : 'step';
+        return `<span class="${cls}">${s}</span>`;
+    }).join('') || '<span style="color:var(--muted);font-size:0.78rem;">no steps yet</span>';
+
+    const versionLine = (v !== undefined && v !== null) ? `
+        <div class="version-row">
+            <span>address-validation version: <code>${v}</code></span>
+            <span class="marker ${hasMarker ? 'yes' : 'no'}">
+                marker: ${hasMarker ? 'recorded (v=2)' : 'none (legacy)'}
+            </span>
+        </div>` : '';
+
+    const meta = (status === 'NOT_FOUND')
+        ? `<div class="meta"><em>workflow not found in history</em></div>`
+        : `<div class="meta">
+              ${p.customerId ? `<span>customer <code>${p.customerId}</code></span>` : ''}
+              ${p.amount     ? `<span>amount <code>$${p.amount}</code></span>`     : ''}
+           </div>`;
+
+    return `
+        <div class="order-card" data-id="${oid}">
+            <div class="top">
+                <span class="id">${oid}</span>
+                <span style="display:flex;align-items:center;gap:0.5rem;">
+                    <span class="status-pill ${status}">${status.replace('_',' ')}</span>
+                    <div class="actions">
+                        <button data-pay="${oid}">Pay</button>
+                        <button data-refresh="${oid}" class="subtle">Refresh</button>
+                        <button data-remove="${oid}" class="subtle">×</button>
+                    </div>
+                </span>
+            </div>
+            ${meta}
+            <div class="steps">${stepChips}</div>
+            ${versionLine}
+        </div>`;
+}
+
+async function renderAll() {
+    const ids = loadIds();
+    const empty = document.getElementById('emptyState');
+    const list = document.getElementById('orderList');
+    empty.style.display = ids.length ? 'none' : 'block';
+    if (!ids.length) { list.innerHTML = ''; return; }
+
+    const results = await Promise.all(ids.map(async id => {
+        try { return await fetchOrder(id); }
+        catch (e) { return { orderId: id, workflowStatus: 'UNKNOWN', stepsInHistory: [] }; }
+    }));
+    list.innerHTML = results.map(renderCard).join('');
+}
+
+async function placeOrder() {
+    const orderId   = document.getElementById('orderId').value.trim();
+    const customerId = document.getElementById('customerId').value.trim();
+    const amount    = parseInt(document.getElementById('amount').value, 10);
+    if (!orderId || !customerId || !Number.isFinite(amount)) {
+        toast('Fill in orderId, customer, and amount', 'err');
+        return;
+    }
+    try {
+        const r = await fetch('/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId, customerId, amount })
+        });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        addId(orderId);
+        document.getElementById('payOrderId').value = orderId;
+        document.getElementById('payAmount').value = amount;
+        toast('Placed ' + orderId);
+        renderAll();
+    } catch (e) { toast('Place failed: ' + e.message, 'err'); }
+}
+
+async function payOrder(orderIdParam, amountParam) {
+    const orderId = orderIdParam ?? document.getElementById('payOrderId').value.trim();
+    const amount  = amountParam  ?? parseInt(document.getElementById('payAmount').value, 10);
+    if (!orderId || !Number.isFinite(amount)) {
+        toast('Fill in orderId and amount', 'err');
+        return;
+    }
+    try {
+        const r = await fetch('/orders/' + encodeURIComponent(orderId) + '/payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount })
+        });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        toast('Sent payment for ' + orderId);
+        renderAll();
+    } catch (e) { toast('Pay failed: ' + e.message, 'err'); }
+}
+
+document.getElementById('btnPlace').onclick = placeOrder;
+document.getElementById('btnPay').onclick   = () => payOrder();
+
+document.getElementById('btnRandom').onclick = () => {
+    const suffix = Math.random().toString(36).slice(2, 7);
+    const names = ['alice','bob','charlie','diana','erin','frank'];
+    document.getElementById('orderId').value    = 'order-' + suffix;
+    document.getElementById('customerId').value = names[Math.floor(Math.random() * names.length)];
+    document.getElementById('amount').value     = 50 + Math.floor(Math.random() * 450);
+};
+
+document.getElementById('btnLookup').onclick = () => {
+    const id = document.getElementById('lookupOrderId').value.trim();
+    if (!id) { toast('Enter an order ID', 'err'); return; }
+    addId(id);
+    document.getElementById('lookupOrderId').value = '';
+    toast('Tracking ' + id);
+    renderAll();
+};
+
+document.getElementById('btnRefresh').onclick = renderAll;
+document.getElementById('btnClear').onclick = () => {
+    if (!loadIds().length) return;
+    if (!confirm('Clear all tracked orders from the UI? (Workflows themselves are untouched.)')) return;
+    saveIds([]); renderAll();
+};
+
+document.getElementById('orderList').addEventListener('click', e => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    const pay     = t.getAttribute('data-pay');
+    const refresh = t.getAttribute('data-refresh');
+    const remove  = t.getAttribute('data-remove');
+    if (pay) {
+        document.getElementById('payOrderId').value = pay;
+        const amount = parseInt(document.getElementById('payAmount').value, 10) || 100;
+        payOrder(pay, amount);
+    } else if (refresh) {
+        fetchOrder(refresh).then(d => {
+            const card = document.querySelector(`.order-card[data-id="${CSS.escape(refresh)}"]`);
+            if (card) card.outerHTML = renderCard(d);
+        });
+    } else if (remove) {
+        removeId(remove); renderAll();
+    }
+});
+
+renderAll();
+setInterval(renderAll, REFRESH_MS);
+</script>
+</body>
+</html>

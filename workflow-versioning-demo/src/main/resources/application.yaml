@@ -1,0 +1,15 @@
+server:
+  port: 9099
+
+spring:
+  application:
+    name: workflow-versioning-demo
+
+axon:
+  axon-server:
+    enabled: true
+
+logging:
+  level:
+    io.axoniq.workflow.runtime.execution.SimpleWorkflowExecution: INFO
+    io.axoniq.demo.versioning: INFO

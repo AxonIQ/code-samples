@@ -30,6 +30,7 @@
         <module>subscription-query-streaming</module>
         <module>upcaster</module>
         <module>workflow-saga</module>
+        <module>workflow-versioning-demo</module>
     </modules>
 
     <properties>
