@@ -1,0 +1,20 @@
+services:
+  axon-server:
+    image: docker.axoniq.io/axoniq/axonserver:2026.0.0
+    container_name: trip-planner-axon-server
+    ports:
+      - "8024:8024"   # web console
+      - "8124:8124"   # gRPC
+    environment:
+      axoniq.axonserver.standalone-dcb: true
+      axoniq_axonserver_hostname: axon-server
+      axoniq_axonserver_devmode_enabled: true
+    volumes:
+      - data:/axonserver/data
+      - events:/axonserver/events
+
+volumes:
+  data:
+    driver: local
+  events:
+    driver: local

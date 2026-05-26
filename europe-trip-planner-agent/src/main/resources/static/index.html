@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Europe Trip Planner Agent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/styles.css"/>
+</head>
+<body>
+<header>
+    <div class="brand">
+        <span class="logo">🌍</span>
+        <span class="title">Europe Trip Planner</span>
+    </div>
+    <div class="subtitle">Durable, replayable agentic conversation · Gemini · ADK · Axon&nbsp;Server</div>
+</header>
+
+<main>
+    <section id="resume-card" class="card hidden">
+        <h2>Your chats</h2>
+        <p>Rebuilt from the event store on every page load — survives JVM restarts.</p>
+        <ul id="resume-list" class="resume-list"></ul>
+        <button id="show-start-btn" class="ghost">Start a new chat</button>
+    </section>
+
+    <section id="start-card" class="card">
+        <h2>Plan a trip</h2>
+        <p>Describe what you’re looking for — the agent will ask follow-up questions.</p>
+        <textarea id="brief" rows="3"
+                  placeholder="e.g. A relaxed 10-day European city trip, focus on food and museums."></textarea>
+        <button id="start-btn">Start planning</button>
+    </section>
+
+    <section id="chat-card" class="card hidden">
+        <div class="row">
+            <h2>Chat <span id="chat-id" class="tag"></span></h2>
+            <button id="reset-btn" class="ghost">New trip</button>
+        </div>
+
+        <div id="messages" class="messages"></div>
+
+        <div id="composer" class="composer hidden">
+            <input id="answer" type="text" placeholder="Type your answer…" autocomplete="off"/>
+            <button id="send-btn">Send</button>
+        </div>
+
+        <div id="itinerary" class="itinerary hidden">
+            <h3>Your itinerary 🎒</h3>
+            <pre id="itinerary-text"></pre>
+        </div>
+
+        <div id="status" class="status"></div>
+    </section>
+</main>
+
+<footer>
+    <a href="http://localhost:8024" target="_blank">Axon Server console →</a>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

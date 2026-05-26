@@ -1,0 +1,18 @@
+server:
+  port: 9091
+
+spring:
+  application:
+    name: europe-trip-planner-agent
+
+axon:
+  axon-server:
+    enabled: true
+
+# Real Gemini wiring — supply your key via the GOOGLE_API_KEY env var.
+# Models: pick any current Gemini available to your key, e.g. gemini-2.5-flash,
+# gemini-2.5-pro, gemini-flash-latest, or gemini-pro-latest.
+trip-planner:
+  gemini:
+    model: gemini-2.5-flash
+    api-key: ${GOOGLE_API_KEY:}
