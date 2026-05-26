@@ -2,8 +2,8 @@ package io.axoniq.demo.tripplanner.projection;
 
 import io.axoniq.demo.tripplanner.api.StartTripPlanning;
 import io.axoniq.demo.tripplanner.api.TripPlanReady;
-import io.axoniq.workflow.dsl.agent.AskQuestion;
-import io.axoniq.workflow.dsl.agent.HumanAnswered;
+import io.axoniq.workflow.dsl.agent.tools.builtin.AskQuestion;
+import io.axoniq.workflow.dsl.agent.tools.builtin.HumanAnswered;
 import org.axonframework.messaging.eventhandling.annotation.EventHandler;
 import org.springframework.stereotype.Component;
 

@@ -3,7 +3,7 @@ package io.axoniq.demo.tripplanner.controller;
 import io.axoniq.demo.tripplanner.api.StartTripPlanning;
 import io.axoniq.demo.tripplanner.projection.ChatStateProjection;
 import io.axoniq.demo.tripplanner.projection.ChatStateProjection.ChatRecord;
-import io.axoniq.workflow.dsl.agent.HumanAnswered;
+import io.axoniq.workflow.dsl.agent.tools.builtin.HumanAnswered;
 import org.axonframework.messaging.core.MessageType;
 import org.axonframework.messaging.core.MessageTypeResolver;
 import org.axonframework.messaging.eventhandling.EventSink;

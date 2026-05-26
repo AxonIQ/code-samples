@@ -79,7 +79,7 @@ public class EuropeTripPlannerWorkflow {
                                         .maxIterations(8)
                                         .build();
 
-        var agentRun = ctx.runAgent("EuropeTripPlanner", definition, brief);
+        var agentRun = ctx.runAgent("ResearchAgent1", definition, brief);
         agentRun.await();
 
         var itinerary = agentRun.resultAs(Map.class)
