@@ -2,10 +2,10 @@ package io.axoniq.dev.samples.querymodel;
 
 import io.axoniq.dev.samples.api.ModelQuery;
 import io.axoniq.dev.samples.api.StreamUpdatedEvent;
-import org.axonframework.config.ProcessingGroup;
-import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.queryhandling.QueryHandler;
-import org.axonframework.queryhandling.QueryUpdateEmitter;
+import org.axonframework.messaging.core.annotation.Namespace;
+import org.axonframework.messaging.eventhandling.annotation.EventHandler;
+import org.axonframework.messaging.queryhandling.QueryUpdateEmitter;
+import org.axonframework.messaging.queryhandling.annotation.QueryHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,19 +18,17 @@ import java.util.List;
  * @author Steven van Beelen
  */
 @Component
-@ProcessingGroup("model-projector")
+@Namespace("model-projector")
 public class ModelProjector {
 
-    private final QueryUpdateEmitter updateEmitter;
     private final List<String> updates;
 
-    public ModelProjector(QueryUpdateEmitter updateEmitter) {
-        this.updateEmitter = updateEmitter;
+    public ModelProjector() {
         this.updates = new ArrayList<>();
     }
 
     @EventHandler
-    public void on(StreamUpdatedEvent event) {
+    public void on(StreamUpdatedEvent event, QueryUpdateEmitter updateEmitter) {
         updates.add(event.update());
         updateEmitter.emit(ModelQuery.class, query -> true, event.update());
     }

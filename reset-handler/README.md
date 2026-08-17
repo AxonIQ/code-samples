@@ -18,8 +18,17 @@ Processor Name to be able to reset it and start it back again.
 ### Using Axon Framework
 
 Axon Framework provides another easy way to do it using the `StreamingEventProcessor` methods,
-namely `shutDown`, `resetTokens` and `start`. When doing it through Axon Framework, the application instance doing the
-operation should be the one having the claim of the token.
+namely `shutdown`, `resetTokens` and `start`. Since Axon Framework 5, `TrackingEventProcessor` has been removed in
+favor of `PooledStreamingEventProcessor`, which is the only implementation of `StreamingEventProcessor` you'll
+encounter, and these methods are now asynchronous, returning a `CompletableFuture` instead of blocking. When doing
+it through Axon Framework, the application instance doing the operation should be the one having the claim of the
+token.
+
+> Note: as of Axon Framework 5, tokens carry a `mask` used to support (un)claiming individual segments. This sample
+> has no meaningful data to preserve across a reset, so it always performs a full reset to the start of the event
+> stream (`resetTokens()`) rather than migrating an existing token's mask. If you're adapting this sample to a real
+> application with an existing token store, consult the Axon Framework 5 migration guide for the token store schema
+> changes before resetting tokens that must retain their claim/mask state.
 
 > We recommend checking
 > the [FrameworkEventProcessorRestController.java](https://github.com/AxonIQ/code-samples/blob/master/reset-handler/src/main/java/io/axoniq/framework/FrameworkEventProcessorRestController.java)
@@ -44,5 +53,5 @@ the [EventProcessorService.java](https://github.com/AxonIQ/code-samples/blob/mas
 class and the added javadoc should be enough to explain what it does.
 
 For the Axon Framework version, we recommend checking the
-official [StreamingEventProcessor.java](https://github.com/AxonFramework/AxonFramework/blob/master/messaging/src/main/java/org/axonframework/eventhandling/StreamingEventProcessor.java)
+official [StreamingEventProcessor.java](https://github.com/AxonFramework/AxonFramework/blob/main/messaging/src/main/java/org/axonframework/messaging/eventhandling/processing/streaming/StreamingEventProcessor.java)
 documentation.

@@ -4,39 +4,37 @@ import io.axoniq.distributedexceptions.api.IssueCardCommand;
 import io.axoniq.distributedexceptions.api.CardIssuedEvent;
 import io.axoniq.distributedexceptions.api.RedeemCardCommand;
 import io.axoniq.distributedexceptions.api.CardRedeemedEvent;
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.spring.stereotype.Aggregate;
+import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
+import org.axonframework.eventsourcing.annotation.reflection.EntityCreator;
+import org.axonframework.extension.spring.stereotype.EventSourced;
+import org.axonframework.messaging.commandhandling.annotation.CommandHandler;
+import org.axonframework.messaging.eventhandling.gateway.EventAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 
 import java.lang.invoke.MethodHandles;
 
-import static org.axonframework.modelling.command.AggregateLifecycle.apply;
-
-@Aggregate
+@EventSourced(tagKey = "GiftCard")
 @Profile("command")
 class GiftCard {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @AggregateIdentifier
     private String giftCardId;
     private int remainingValue;
 
     @CommandHandler
-    public GiftCard(IssueCardCommand command) {
+    public static void handle(IssueCardCommand command, EventAppender eventAppender) {
         logger.debug("handling {}", command);
         if (command.amount() <= 0) {
             throw new NegativeOrZeroAmount(command.amount(), "amount <= 0");
         }
-        apply(new CardIssuedEvent(command.id(), command.amount()));
+        eventAppender.append(new CardIssuedEvent(command.id(), command.amount()));
     }
 
     @CommandHandler
-    public void handle(RedeemCardCommand command) {
+    public void handle(RedeemCardCommand command, EventAppender eventAppender) {
         logger.debug("handling {}", command);
         if (command.amount() <= 0) {
             throw new NegativeOrZeroAmount(command.amount(), "amount <= 0");
@@ -44,7 +42,7 @@ class GiftCard {
         if (command.amount() > remainingValue) {
             throw new InsufficientFunds("amount > remaining value");
         }
-        apply(new CardRedeemedEvent(giftCardId, command.amount()));
+        eventAppender.append(new CardRedeemedEvent(giftCardId, command.amount()));
     }
 
     @EventSourcingHandler
@@ -62,6 +60,7 @@ class GiftCard {
         logger.debug("new remaining value: {}", remainingValue);
     }
 
+    @EntityCreator
     public GiftCard() {
         // Required by Axon
         logger.debug("Empty constructor invoked");

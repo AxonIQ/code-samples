@@ -13,8 +13,14 @@ statement containing all flight events to achieve the same.
 
 As a bonus, this sample shows how we can achieve the same result with the `PropertySequencingPolicy`.
 
-For more information on sequencing policies (like other implementations)
-check [this](https://docs.axoniq.io/reference-guide/axon-framework/events/event-processors/streaming#sequential-processing)
+The `policy` property (`custom` or `property`) picks which of the two is active. Since Axon Framework 5 declares the
+`SequencingPolicy` directly on the event handling component through the `@SequencingPolicy` annotation - rather than
+through a Spring property pointing at a named bean - this sample models the two variants as separate
+`@ConditionalOnProperty`-guarded components: `FlightTimeProjector` (custom policy) and `PropertyFlightTimeProjector`
+(`PropertySequencingPolicy`). Only one of the two is registered at a time, based on the `policy` property.
+
+For more information on sequencing policies (like other implementations) check
+[this](https://docs.axoniq.io/reference-guide/axon-framework/events/event-processors/streaming#sequencing_policies)
 page.
 
 ## Running the application

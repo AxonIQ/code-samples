@@ -2,31 +2,37 @@ package io.axoniq.distributedexceptions.command;
 
 import io.axoniq.distributedexceptions.api.GiftCardBusinessError;
 import io.axoniq.distributedexceptions.api.GiftCardBusinessErrorCode;
-import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.commandhandling.CommandMessage;
-import org.axonframework.messaging.InterceptorChain;
-import org.axonframework.messaging.MessageHandlerInterceptor;
-import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.axonframework.messaging.commandhandling.CommandExecutionException;
+import org.axonframework.messaging.commandhandling.CommandMessage;
+import org.axonframework.messaging.core.MessageHandlerInterceptor;
+import org.axonframework.messaging.core.MessageHandlerInterceptorChain;
+import org.axonframework.messaging.core.MessageStream;
+import org.axonframework.messaging.core.unitofwork.ProcessingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import javax.annotation.Nonnull;
 
-public class ExceptionWrappingHandlerInterceptor implements MessageHandlerInterceptor<CommandMessage<?>> {
+@Component
+@Profile("command")
+public class ExceptionWrappingHandlerInterceptor implements MessageHandlerInterceptor<CommandMessage> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends CommandMessage<?>> unitOfWork,
-                         @Nonnull InterceptorChain interceptorChain) {
-        try {
-            return interceptorChain.proceed();
-        } catch (Throwable e) {
-            throw new CommandExecutionException(
-                    "An exception has occurred during command execution", e, exceptionDetails(e)
-            );
-        }
+    public MessageStream<?> interceptOnHandle(CommandMessage message,
+                                              ProcessingContext context,
+                                              MessageHandlerInterceptorChain<CommandMessage> chain) {
+        return chain.proceed(message, context)
+                    .onErrorContinue(throwable -> MessageStream.failed(
+                            new CommandExecutionException(
+                                    "An exception has occurred during command execution",
+                                    throwable,
+                                    exceptionDetails(throwable)
+                            )
+                    ));
     }
 
     // Domain specific details can be returned in a couple of forms.

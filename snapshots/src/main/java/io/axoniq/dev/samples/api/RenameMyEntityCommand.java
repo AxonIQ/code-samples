@@ -1,9 +1,9 @@
 package io.axoniq.dev.samples.api;
 
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import org.axonframework.modelling.annotation.TargetEntityId;
 
 public record RenameMyEntityCommand(
-        @TargetAggregateIdentifier String entityId,
+        @TargetEntityId String entityId,
         String name
 ) {
 

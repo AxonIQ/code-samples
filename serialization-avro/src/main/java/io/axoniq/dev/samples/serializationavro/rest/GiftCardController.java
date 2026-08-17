@@ -2,8 +2,7 @@ package io.axoniq.dev.samples.serializationavro.rest;
 
 import io.axoniq.dev.samples.serializationavro.api.IssueCardCommand;
 import io.axoniq.dev.samples.serializationavro.api.RedeemCardCommand;
-import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class GiftCardController {
     @PostMapping
     public CompletableFuture<ResponseEntity<String>> issueNewGiftCard(@RequestBody IssueCardDto request) {
         IssueCardCommand command = new IssueCardCommand(UUID.randomUUID().toString(), request.amount());
-        return commandGateway.send(command)
+        return commandGateway.send(command, Object.class)
                              .thenApply(it -> ResponseEntity.ok(String.valueOf(it)))
                              .exceptionally(e -> {
                                  logException(e);
@@ -45,7 +44,7 @@ public class GiftCardController {
 
     @PutMapping("/{id}")
     public CompletableFuture<ResponseEntity<String>> redeem(@PathVariable String id, @RequestBody RedeemCardDto dto) {
-        return commandGateway.send(new RedeemCardCommand(id, dto.amount()))
+        return commandGateway.send(new RedeemCardCommand(id, dto.amount()), Object.class)
                              .thenApply(it -> ResponseEntity.ok(""))
                              .exceptionally(e -> {
                                  logException(e);

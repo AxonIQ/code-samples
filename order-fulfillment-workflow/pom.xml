@@ -16,10 +16,10 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <axon.version>5.1.0</axon.version>
-        <axoniq-framework.version>5.1.0</axoniq-framework.version>
+        <axon.version>5.3.1</axon.version>
+        <axoniq-framework.version>5.3.1</axoniq-framework.version>
         <axon-workflow.version>0.1.0</axon-workflow.version>
-        <spring-boot.version>4.0.6</spring-boot.version>
+        <spring-boot.version>4.1.0</spring-boot.version>
         <testcontainers.version>2.0.5</testcontainers.version>
     </properties>
 

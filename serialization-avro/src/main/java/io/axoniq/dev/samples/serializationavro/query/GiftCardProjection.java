@@ -6,8 +6,8 @@ import io.axoniq.dev.samples.serializationavro.api.CardList;
 import io.axoniq.dev.samples.serializationavro.api.CardRedeemedEvent;
 import io.axoniq.dev.samples.serializationavro.api.GetAllCardsQuery;
 import io.axoniq.dev.samples.serializationavro.api.GetCardByIdQuery;
-import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.queryhandling.QueryHandler;
+import org.axonframework.messaging.eventhandling.annotation.EventHandler;
+import org.axonframework.messaging.queryhandling.annotation.QueryHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

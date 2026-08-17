@@ -15,11 +15,12 @@ Here is an example schema for the `CardIssuedEvent` event:
     "name": "CardIssuedEvent",
     "doc": "A new gift card is issued.",
     "revision": "1",
-    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
+    "javaAnnotation": "org.axonframework.messaging.eventhandling.annotation.Event(version = \"1\")",
     "fields": [
         {
             "name": "id",
-            "type": "string"
+            "type": "string",
+            "javaAnnotation": "org.axonframework.eventsourcing.annotation.EventTag(key = \"GiftCard\")"
         },
         {
             "name": "amount",
@@ -33,12 +34,12 @@ Using the `avro-maven-plugin`, the Java classes are generated into `target/gener
 during the `generate-sources` build phase. 
 
 The remaining part of the application is a standard implementation of a gift card application, that uses the 
-`AvroSerializer` by applying configuration of the serializer using application properties.
+`AvroConverter` by applying configuration of the converter using application properties.
 
 ```yaml
 
 axon:
-  serializer:
+  converter:
     events: avro
     messages: avro
     general: jackson

@@ -19,9 +19,10 @@ First of these is the `EventPublisher` in the `commandmodel` package. The `Event
 a `StreamUpdatedEvent` to spoof an active applications. It fills the `StreamUpdatedEvent` with `UUIDs`.
 
 Secondly, the `ModelProjector` in the `querymodel` package is in charge of handling the `StreamUpdatedEvent`. It adds th
-e contents to a `List` of strings, and emits an update through the `QueryUpdateEmitter`. Next to that, a `@QueryHandler`
-annotated method is present for the `ModelQuery`. This query handler returns the entire list of updates. The combination
-of this query handler, and the update emission on the event handler provide an entry point for a subscription query.
+e contents to a `List` of strings, and emits an update through the `QueryUpdateEmitter`, which is injected as a
+parameter of the `@EventHandler` method. Next to that, a `@QueryHandler` annotated method is present for the
+`ModelQuery`. This query handler returns the entire list of updates. The combination of this query handler, and the
+update emission on the event handler provide an entry point for a subscription query.
 
 Thirdly, the `QueryController` in the `ui` package provides an endpoint on `/app/updates`. This endpoint returns
 a `Flux` of `ServerSentEvents`. The`ServerSentEvents` are filled with the result of a subscription query on

@@ -1,6 +1,6 @@
 package io.axoniq.server;
 
-import org.axonframework.eventhandling.tokenstore.TokenStore;
+import org.axonframework.messaging.eventhandling.processing.streaming.token.store.TokenStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
@@ -31,7 +31,10 @@ public class EventProcessorService {
         this.webClient = WebClient.create("http://localhost:8024");
         this.contextSupplier = () -> context;
         this.componentSupplier = () -> component;
-        this.tokenStoreIdSupplier = () -> tokenStore.retrieveStorageIdentifier().orElseThrow();
+        // AF5's TokenStore#retrieveStorageIdentifier now takes a (nullable) ProcessingContext and returns a
+        // CompletableFuture<String> instead of an Optional<String>. There is no processing context available
+        // here, so we pass null and block for the result, mirroring the previous synchronous lookup.
+        this.tokenStoreIdSupplier = () -> tokenStore.retrieveStorageIdentifier(null).join();
     }
 
     /**

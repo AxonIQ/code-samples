@@ -6,12 +6,13 @@ projection right away, instead of listening for updates on a different endpoint.
 There are two issues that needs to be address in this case:
 
 1. We need to subscribe for updates before we send a command, that’s the only way to be sure we will not miss any
-   updates. Sending commands first and then subscribing for updates will result in race conditions! The simple trick is
-   to subscribe for the initial result first (even if we don’t need it). Let’s call it virtual initial result. This will
-   open the Subscription query, which will buffer all updates that arrive at this point on. Since we now have a buffer
-   for updates, we can send a command and after the command has sent we can subscribe to updates flux. If an update
-   arrives after sending a command and before we are subscribed for updates, we will read it automatically from the
-   buffer, therefore we are sure we will not miss any updates.
+   updates. Sending commands first and then subscribing for updates will result in race conditions! Axon Framework's
+   `QueryGateway#subscriptionQuery(...)` returns a single reactive-streams `Publisher` that combines the (here virtual,
+   empty) initial result and every subsequent update: the query is only sent, and the update buffer only opened, once
+   that `Publisher` is subscribed to. The simple trick is therefore to subscribe to it first, and only dispatch the
+   command once that subscription is established (e.g. from a `doOnSubscribe` callback). If an update arrives right
+   after sending the command and before we start consuming from the `Publisher`, we will still read it from the
+   buffer that was already open, therefore we are sure we will not miss any updates.
 
 2. We need to read our own writes, multiple updates/events could be dispatch at the same time, we can’t guarantee order
    and which one will arrive first. Without some kind of correlation, we will easily get into trouble and get someone

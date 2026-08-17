@@ -5,7 +5,7 @@ import io.axoniq.dev.samples.sequencingpolicy.coreapi.FlightCanceledEvent;
 import io.axoniq.dev.samples.sequencingpolicy.coreapi.FlightDelayedEvent;
 import io.axoniq.dev.samples.sequencingpolicy.coreapi.FlightId;
 import io.axoniq.dev.samples.sequencingpolicy.coreapi.FlightScheduledEvent;
-import org.axonframework.eventhandling.gateway.EventGateway;
+import org.axonframework.messaging.eventhandling.gateway.EventGateway;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +45,7 @@ public class TestController {
                      String origin = fetchDestination();
                      String destination = fetchDestination();
                      eventGateway.publish(
+                             null,
                              new FlightScheduledEvent(flightId, origin, destination, scheduledArrival),
                              new FlightDelayedEvent(flightId, Duration.ofHours(1)),
                              new ArrivalTimeChangedEvent(

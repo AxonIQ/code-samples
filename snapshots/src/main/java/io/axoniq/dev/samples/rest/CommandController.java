@@ -2,7 +2,7 @@ package io.axoniq.dev.samples.rest;
 
 import io.axoniq.dev.samples.api.CreateMyEntityCommand;
 import io.axoniq.dev.samples.api.RenameMyEntityCommand;
-import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.commandhandling.gateway.CommandGateway;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,13 +25,13 @@ class CommandController {
     @PostMapping("/{id}")
     public CompletableFuture<Void> createMyEntity(@PathVariable("id") String entityId,
                                                   @RequestParam("name") String name) {
-        return commandGateway.send(new CreateMyEntityCommand(entityId, name));
+        return commandGateway.send(new CreateMyEntityCommand(entityId, name), Void.class);
     }
 
     @PatchMapping("/{id}")
     public CompletableFuture<Void> renameMyEntity(@PathVariable("id") String entityId,
                                                   @RequestParam("name") String name) {
-        return commandGateway.send(new RenameMyEntityCommand(entityId, name));
+        return commandGateway.send(new RenameMyEntityCommand(entityId, name), Void.class);
     }
 }
 

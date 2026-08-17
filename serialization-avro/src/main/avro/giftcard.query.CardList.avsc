@@ -4,7 +4,6 @@
     "name": "CardList",
     "doc": "Represents a list of gift cards.",
     "revision": "1",
-    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
     "fields": [
         {
             "name": "elements",
