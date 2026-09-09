@@ -1,9 +1,9 @@
 package io.axoniq.dev.samples.ui;
 
 import io.axoniq.dev.samples.api.ModelQuery;
-import org.axonframework.messaging.responsetypes.ResponseTypes;
-import org.axonframework.queryhandling.QueryGateway;
-import org.axonframework.queryhandling.SubscriptionQueryResult;
+import org.axonframework.messaging.queryhandling.QueryResponseMessage;
+import org.axonframework.messaging.queryhandling.SubscriptionQueryUpdateMessage;
+import org.axonframework.messaging.queryhandling.gateway.QueryGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -39,21 +39,23 @@ public class QueryController {
     @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
     @GetMapping(path = "/updates", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<String>> updates() {
-        //noinspection resource
-        SubscriptionQueryResult<List<String>, String> result =
-                queryGateway.subscriptionQuery(new ModelQuery(),
-                                               ResponseTypes.multipleInstancesOf(String.class),
-                                               ResponseTypes.instanceOf(String.class));
-
-        Flux<ServerSentEvent<String>> sseStream = result.initialResult()
-                                                        .flatMapMany(Flux::fromIterable)
-                                                        .concatWith(result.updates())
-                                                        .doOnError(throwable -> logger.warn("something failed"))
-                                                        .map(update -> ServerSentEvent.<String>builder()
-                                                                                      .event("update")
-                                                                                      .data(update)
-                                                                                      .build())
-                                                        .doFinally(signal -> result.close());
+        // Axon Framework 5's QueryGateway#subscriptionQuery combines the initial result and the updates into a
+        // single Publisher of one responseType, and there is no more SubscriptionQueryResult to close explicitly:
+        // the underlying subscription is closed automatically once the returned Flux is cancelled/disposed.
+        // The ModelQuery's initial result is a List<String>, while every emitted update is a single String. To
+        // keep that shape, we fall back to the mapper-based subscriptionQuery overload, which lets us
+        // distinguish the initial result from an update via the message type, and flatten the initial
+        // List<String> into individual elements ourselves (mirroring the old initialResult().flatMapMany(...)).
+        Flux<ServerSentEvent<String>> sseStream =
+                Flux.from(queryGateway.subscriptionQuery(new ModelQuery(), Object.class, QueryController::mapResponse))
+                    .flatMap(response -> response instanceof List<?> initialResult
+                            ? Flux.fromIterable(initialResult).cast(String.class)
+                            : Flux.just((String) response))
+                    .doOnError(throwable -> logger.warn("something failed"))
+                    .map(update -> ServerSentEvent.<String>builder()
+                                                  .event("update")
+                                                  .data(update)
+                                                  .build());
 
         // For Server Sent Events, the server doesn't get a close signal when the client closes the connection.
         // Hence, we are left with a hanging stream in that case.
@@ -64,5 +66,11 @@ public class QueryController {
                                                                                      .event("ping")
                                                                                      .build());
         return Flux.merge(sseStream, heartbeatStream);
+    }
+
+    private static Object mapResponse(QueryResponseMessage response) {
+        return response instanceof SubscriptionQueryUpdateMessage
+                ? response.payloadAs(String.class)
+                : response.payloadAs(List.class);
     }
 }

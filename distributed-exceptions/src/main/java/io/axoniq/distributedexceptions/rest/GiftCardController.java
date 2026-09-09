@@ -3,8 +3,8 @@ package io.axoniq.distributedexceptions.rest;
 import io.axoniq.distributedexceptions.api.GiftCardBusinessError;
 import io.axoniq.distributedexceptions.api.IssueCardCommand;
 import io.axoniq.distributedexceptions.api.RedeemCardCommand;
-import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.commandhandling.CommandExecutionException;
+import org.axonframework.messaging.commandhandling.gateway.CommandGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -37,7 +37,8 @@ public class GiftCardController {
     public CompletableFuture<ResponseEntity<String>> issueNewGiftCard(@RequestBody IssueCardDto request) {
         IssueCardCommand command = new IssueCardCommand(UUID.randomUUID().toString(), request.amount());
         return commandGateway.send(command)
-                             .thenApply(it -> ResponseEntity.ok(String.valueOf(it)))
+                             .getResultMessage()
+                             .thenApply(it -> ResponseEntity.ok(String.valueOf(it.payload())))
                              .exceptionally(e -> {
                                  logException(e);
                                  String errorResponse = getErrorResponseMessage(e.getCause());
@@ -49,6 +50,7 @@ public class GiftCardController {
     @PutMapping("/{id}")
     public CompletableFuture<ResponseEntity<String>> redeem(@PathVariable String id, @RequestBody RedeemCardDto dto) {
         return commandGateway.send(new RedeemCardCommand(id, dto.amount()))
+                             .getResultMessage()
                              .thenApply(it -> ResponseEntity.ok(""))
                              .exceptionally(e -> {
                                  logException(e);
@@ -68,9 +70,8 @@ public class GiftCardController {
 
     private String getErrorResponseMessage(Throwable throwable) {
         if (throwable instanceof CommandExecutionException cee) {
-            return cee.getDetails()
-                      .map((Object it) -> {
-                          GiftCardBusinessError giftCardBusinessError = (GiftCardBusinessError) it;
+            return cee.getDetails(GiftCardBusinessError.class)
+                      .map(giftCardBusinessError -> {
                           logger.debug("Received BusinessError with data: " + giftCardBusinessError);
                           logger.error("Unable to create GiftCard due to validation constrains. Reason: "
                                                + giftCardBusinessError);

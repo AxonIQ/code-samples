@@ -16,10 +16,10 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <axon.version>5.1.0</axon.version>
-        <axoniq-framework.version>5.1.0</axoniq-framework.version>
-        <axon-workflow.version>0.1.0</axon-workflow.version>
-        <spring-boot.version>4.0.6</spring-boot.version>
+        <axon.version>5.3.1</axon.version>
+        <axoniq-framework.version>5.3.1</axoniq-framework.version>
+        <axon-workflow.version>0.2.0</axon-workflow.version>
+        <spring-boot.version>4.1.0</spring-boot.version>
         <testcontainers.version>2.0.5</testcontainers.version>
     </properties>
 
@@ -59,8 +59,8 @@
     <dependencies>
         <!-- Axoniq Workflow Engine: auto-configures @Workflow beans through Spring Boot. -->
         <dependency>
-            <groupId>io.axoniq.framework.workflow</groupId>
-            <artifactId>axon-workflow-spring-boot</artifactId>
+            <groupId>io.axoniq.framework</groupId>
+            <artifactId>axoniq-workflow-spring-boot</artifactId>
             <version>${axon-workflow.version}</version>
         </dependency>
 
@@ -86,8 +86,8 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>io.axoniq.framework.workflow</groupId>
-            <artifactId>axon-workflow-test</artifactId>
+            <groupId>io.axoniq.framework</groupId>
+            <artifactId>axoniq-workflow-test</artifactId>
             <version>${axon-workflow.version}</version>
             <scope>test</scope>
         </dependency>

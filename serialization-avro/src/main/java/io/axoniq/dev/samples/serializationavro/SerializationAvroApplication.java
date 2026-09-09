@@ -9,7 +9,7 @@ import io.axoniq.dev.samples.serializationavro.api.GetCardByIdQuery;
 import io.axoniq.dev.samples.serializationavro.api.IssueCardCommand;
 import io.axoniq.dev.samples.serializationavro.api.RedeemCardCommand;
 import org.apache.avro.message.SchemaStore;
-import org.axonframework.spring.serialization.avro.AvroSchemaScan;
+import org.axonframework.extension.spring.conversion.avro.AvroSchemaScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

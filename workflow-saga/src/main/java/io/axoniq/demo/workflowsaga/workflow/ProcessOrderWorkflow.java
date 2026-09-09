@@ -1,5 +1,6 @@
 package io.axoniq.demo.workflowsaga.workflow;
 
+import io.axoniq.demo.workflowsaga.api.OrderConfirmedEvent;
 import io.axoniq.demo.workflowsaga.api.OrderPaidEvent;
 import io.axoniq.demo.workflowsaga.api.OrderPaymentCancelledEvent;
 import io.axoniq.demo.workflowsaga.api.ShipmentStatus;
@@ -16,10 +17,10 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
-import static io.axoniq.workflow.dsl.api.AssociationsUtils.associate;
+import static io.axoniq.workflow.dsl.api.EventAssociationsUtils.equalsTo;
+import static io.axoniq.workflow.dsl.api.EventAssociationsUtils.payloadProperty;
 import static io.axoniq.workflow.dsl.api.Payload.payload;
-import static io.axoniq.workflow.dsl.simple.SimpleWorkflowContext.equalsTo;
-import static io.axoniq.workflow.runtime.association.PayloadPropertyValueRetriever.payloadProperty;
+import static io.axoniq.workflow.runtime.association.Associations.associate;
 import static io.axoniq.workflow.runtime.execution.DefaultEventNameCustomizer.Builder.namespace;
 
 /**
@@ -44,7 +45,7 @@ public class ProcessOrderWorkflow {
 
     @Workflow(
             idProperty = "orderId",
-            startOnEvent = "io.axoniq.demo.workflowsaga.api.OrderConfirmedEvent",
+            startOnEventClass = OrderConfirmedEvent.class,
             workflowName = "ProcessOrderWorkflow"
     )
     public void execute(SimpleWorkflowContext ctx) {
@@ -59,20 +60,20 @@ public class ProcessOrderWorkflow {
                 "paid",
                 OrderPaidEvent.class,
                 associate(payloadProperty("paymentId"), equalsTo(paymentId)),
-                ORDER_DEADLINE
+                step -> step.timeout(ORDER_DEADLINE)
         );
         var paymentCancelled = ctx.waitForEvent(
                 "paymentCancelled",
                 OrderPaymentCancelledEvent.class,
                 associate(payloadProperty("paymentId"), equalsTo(paymentId)),
-                ORDER_DEADLINE
+                step -> step.timeout(ORDER_DEADLINE)
         );
         var delivered = ctx.waitForEvent(
                 "delivered",
                 ShipmentStatusUpdatedEvent.class,
                 associate(payloadProperty("shipmentId"), equalsTo(shipmentId))
                         .and(payloadProperty("shipmentStatus"), "=", ShipmentStatus.DELIVERED.name()),
-                ORDER_DEADLINE
+                step -> step.timeout(ORDER_DEADLINE)
         );
 
         // The Started events of these steps — `RequestPaymentStarted` and `RequestShipmentStarted`
@@ -81,15 +82,13 @@ public class ProcessOrderWorkflow {
                 "requestPayment",
                 Map.of("orderId", orderId, "paymentId", paymentId),
                 (pc, p) -> Map.of(),
-                STEP_TIMEOUT,
-                apiNamespace()
+                def -> def.timeout(STEP_TIMEOUT).eventNameCustomizer(apiNamespace())
         );
         ctx.awaitExecute(
                 "requestShipment",
                 Map.of("orderId", orderId, "shipmentId", shipmentId),
                 (pc, p) -> Map.of(),
-                STEP_TIMEOUT,
-                apiNamespace()
+                def -> def.timeout(STEP_TIMEOUT).eventNameCustomizer(apiNamespace())
         );
 
         var paymentOutcome = ctx.anyMatch(WorkflowStepResult::success, paid, paymentCancelled);
@@ -102,16 +101,14 @@ public class ProcessOrderWorkflow {
                     "cancelShipment",
                     Map.of("orderId", orderId, "shipmentId", shipmentId),
                     (pc, p) -> Map.of(),
-                    STEP_TIMEOUT,
-                    apiNamespace()
+                    def -> def.timeout(STEP_TIMEOUT).eventNameCustomizer(apiNamespace())
             );
             delivered.cancel("payment cancelled");
             ctx.awaitExecute(
                     "completeOrder",
                     Map.of("orderId", orderId, "paid", false, "delivered", false),
                     (pc, p) -> Map.of(),
-                    STEP_TIMEOUT,
-                    apiNamespace()
+                    def -> def.timeout(STEP_TIMEOUT).eventNameCustomizer(apiNamespace())
             );
             return;
         }
@@ -123,8 +120,7 @@ public class ProcessOrderWorkflow {
                 "completeOrder",
                 Map.of("orderId", orderId, "paid", true, "delivered", isDelivered),
                 (pc, p) -> Map.of(),
-                STEP_TIMEOUT,
-                apiNamespace()
+                def -> def.timeout(STEP_TIMEOUT).eventNameCustomizer(apiNamespace())
         );
     }
 }

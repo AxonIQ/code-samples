@@ -1,6 +1,6 @@
 package io.axoniq;
 
-import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.messaging.eventhandling.annotation.EventHandler;
 import org.springframework.stereotype.Component;
 
 @Component

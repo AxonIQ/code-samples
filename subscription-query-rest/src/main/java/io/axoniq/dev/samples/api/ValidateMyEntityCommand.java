@@ -1,9 +1,9 @@
 package io.axoniq.dev.samples.api;
 
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import org.axonframework.modelling.annotation.TargetEntityId;
 
 public record ValidateMyEntityCommand(
-        @TargetAggregateIdentifier String entityId, String email
+        @TargetEntityId String entityId, String email
 ) {
 
 }

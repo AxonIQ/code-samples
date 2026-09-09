@@ -4,11 +4,12 @@
     "name": "CardRedeemedEvent",
     "doc": "Existing gift card is redeemed.",
     "revision": "1",
-    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
+    "javaAnnotation": "org.axonframework.messaging.eventhandling.annotation.Event(version = \"1\")",
     "fields": [
         {
             "name": "id",
-            "type": "string"
+            "type": "string",
+            "javaAnnotation": "org.axonframework.eventsourcing.annotation.EventTag(key = \"GiftCard\")"
         },
         {
             "name": "amount",

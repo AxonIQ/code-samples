@@ -4,8 +4,7 @@ import io.axoniq.dev.samples.serializationavro.api.Card;
 import io.axoniq.dev.samples.serializationavro.api.CardList;
 import io.axoniq.dev.samples.serializationavro.api.GetAllCardsQuery;
 import io.axoniq.dev.samples.serializationavro.api.GetCardByIdQuery;
-import org.axonframework.messaging.responsetypes.ResponseTypes;
-import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.messaging.queryhandling.gateway.QueryGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,7 @@ public class GiftCardInventoryController {
 
     @GetMapping
     public CompletableFuture<ResponseEntity<List<CardDto>>> getAllGiftCards() {
-        return queryGateway.query(new GetAllCardsQuery(), ResponseTypes.instanceOf(CardList.class))
+        return queryGateway.query(new GetAllCardsQuery(), CardList.class)
                              .thenApply(it -> ResponseEntity.ok(
                                      it
                                      .getElements()
@@ -46,7 +45,7 @@ public class GiftCardInventoryController {
 
     @GetMapping("/{id}")
     public CompletableFuture<ResponseEntity<CardDto>> getById(@PathVariable String id) {
-        return queryGateway.query(new GetCardByIdQuery(id), ResponseTypes.instanceOf(Card.class))
+        return queryGateway.query(new GetCardByIdQuery(id), Card.class)
                              .thenApply(it -> ResponseEntity.ok(new CardDto(it.getId(), it.getAmount())))
                              .exceptionally(e -> {
                                  logException(e);

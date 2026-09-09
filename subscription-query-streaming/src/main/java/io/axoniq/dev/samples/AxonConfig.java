@@ -1,10 +1,10 @@
 package io.axoniq.dev.samples;
 
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.eventhandling.gateway.EventGateway;
-import org.axonframework.messaging.Message;
-import org.axonframework.messaging.interceptors.LoggingInterceptor;
-import org.axonframework.queryhandling.QueryGateway;
+import org.axonframework.messaging.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.core.Message;
+import org.axonframework.messaging.core.interception.LoggingInterceptor;
+import org.axonframework.messaging.eventhandling.gateway.EventGateway;
+import org.axonframework.messaging.queryhandling.gateway.QueryGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class AxonConfig {
 
     @Bean
-    public LoggingInterceptor<Message<?>> loggingInterceptor() {
+    public LoggingInterceptor<Message> loggingInterceptor() {
         return new LoggingInterceptor<>();
     }
 

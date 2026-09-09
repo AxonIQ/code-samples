@@ -4,12 +4,12 @@
     "name": "RedeemCardCommand",
     "doc": "Redeems existing gift card.",
     "revision": "1",
-    "javaAnnotation": "org.axonframework.serialization.Revision(\"1\")",
+    "javaAnnotation": "org.axonframework.messaging.commandhandling.annotation.Command(routingKey = \"id\", version = \"1\")",
     "fields": [
         {
             "name": "id",
             "type": "string",
-            "javaAnnotation": "org.axonframework.modelling.command.TargetAggregateIdentifier"
+            "javaAnnotation": "org.axonframework.modelling.annotation.TargetEntityId"
         },
         {
             "name": "amount",

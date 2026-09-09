@@ -6,43 +6,43 @@ import io.axoniq.dev.samples.api.CreateMyEntityCommand;
 import io.axoniq.dev.samples.api.MyEntityCreatedEvent;
 import io.axoniq.dev.samples.api.MyEntityRenamedEvent;
 import io.axoniq.dev.samples.api.RenameMyEntityCommand;
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.spring.stereotype.Aggregate;
+import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
+import org.axonframework.eventsourcing.annotation.Snapshotting;
+import org.axonframework.eventsourcing.annotation.reflection.EntityCreator;
+import org.axonframework.extension.spring.stereotype.EventSourced;
+import org.axonframework.messaging.commandhandling.annotation.CommandHandler;
+import org.axonframework.messaging.eventhandling.gateway.EventAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 
-import static org.axonframework.modelling.command.AggregateLifecycle.apply;
-
-@Aggregate(snapshotTriggerDefinition = "mySnapshotTriggerDefinition")
-class MyEntityAggregate {
+@EventSourced(tagKey = "MyEntity")
+@Snapshotting(afterEvents = 5)
+class MyEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @AggregateIdentifier
     private String entityId;
     private String name;
 
     @CommandHandler
-    public MyEntityAggregate(CreateMyEntityCommand command) {
+    public static void handle(CreateMyEntityCommand command, EventAppender appender) {
         logger.info("[CreateMyEntityCommand] Entity with id [{}] and name [{}] created.",
                     command.entityId(), command.name());
 
-        apply(new MyEntityCreatedEvent(command.entityId(), command.name()));
+        appender.append(new MyEntityCreatedEvent(command.entityId(), command.name()));
     }
 
     @CommandHandler
-    public void on(RenameMyEntityCommand command) {
+    public void on(RenameMyEntityCommand command, EventAppender appender) {
         logger.info("[RenameMyEntityCommand] Entity with id [{}] and name [{}] updated.",
                     command.entityId(), command.name());
 
         if (name.equals(command.name())) {
             throw new IllegalArgumentException("New name can not be the same as current name.");
         }
-        apply(new MyEntityRenamedEvent(command.entityId(), command.name()));
+        appender.append(new MyEntityRenamedEvent(command.entityId(), command.name()));
     }
 
     @EventSourcingHandler
@@ -60,7 +60,8 @@ class MyEntityAggregate {
         logger.info("[MyEntityRenamedEvent] Entity with id [{}] being event sourced.", event.entityId());
     }
 
-    // Since the main Serializer is a JacksonSerializer, the constructed Snapshot will also be serialized through Jackson
+    // The general Converter defaults to a JacksonConverter, so the constructed Snapshot will also be
+    // (de)serialized through Jackson.
     @JsonGetter
     String getEntityId() {
         return entityId;
@@ -81,7 +82,8 @@ class MyEntityAggregate {
         this.name = name;
     }
 
-    public MyEntityAggregate() {
+    @EntityCreator
+    public MyEntity() {
         // Required by Axon Framework
     }
 }

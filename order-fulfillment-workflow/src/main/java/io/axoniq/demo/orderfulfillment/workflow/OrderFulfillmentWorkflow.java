@@ -1,5 +1,6 @@
 package io.axoniq.demo.orderfulfillment.workflow;
 
+import io.axoniq.demo.orderfulfillment.api.OrderPlaced;
 import io.axoniq.demo.orderfulfillment.api.PaymentConfirmed;
 import io.axoniq.demo.orderfulfillment.service.FailureRecorder;
 import io.axoniq.demo.orderfulfillment.service.InventoryService;
@@ -17,9 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static io.axoniq.workflow.dsl.api.AssociationsUtils.associate;
-import static io.axoniq.workflow.dsl.simple.SimpleWorkflowContext.equalsTo;
-import static io.axoniq.workflow.runtime.association.PayloadPropertyValueRetriever.payloadProperty;
+import static io.axoniq.workflow.dsl.api.EventAssociationsUtils.equalsTo;
+import static io.axoniq.workflow.dsl.api.EventAssociationsUtils.payloadProperty;
+import static io.axoniq.workflow.runtime.association.Associations.associate;
 import static io.axoniq.workflow.runtime.execution.DefaultEventNameCustomizer.Builder.baseName;
 import static io.axoniq.workflow.runtime.execution.DefaultEventNameCustomizer.Builder.namespace;
 
@@ -48,7 +49,7 @@ public class OrderFulfillmentWorkflow {
 
     @Workflow(
             idProperty = "orderId",
-            startOnEvent = "io.axoniq.demo.orderfulfillment.api.OrderPlaced",
+            startOnEventClass = OrderPlaced.class,
             workflowName = "OrderFulfillmentWorkflow"
     )
     public void execute(SimpleWorkflowContext ctx) {
@@ -73,22 +74,20 @@ public class OrderFulfillmentWorkflow {
                 "awaitPayment",
                 PaymentConfirmed.class,
                 associate(payloadProperty("orderId"), equalsTo(orderId)),
-                paymentTimeout
+                step -> step.timeout(paymentTimeout)
         );
 
-        var reserved = ctx.awaitExecute(
+        var reserved = (Boolean) ctx.awaitExecute(
                 "reserveStock",
                 Map.of("customerId", customerId, "amount", amount, "scenario", scenario),
-                Boolean.class,
-                inventory::reserveStock
-        );
+                (pc, p) -> Map.of("result", inventory.reserveStock(p))
+        ).get("result");
         if (!reserved) {
             paymentConfirmation.cancel("Stock unavailable");
             ctx.awaitExecute(
                     "recordOutOfStock",
                     Map.of("orderId", orderId, "reason", "Out of stock"),
-                    Boolean.class,
-                    failures::record
+                    (pc, p) -> Map.of("result", failures.record(p))
             );
             ctx.fail(new RuntimeException("Stock unavailable for order " + orderId));
             return;
@@ -101,18 +100,18 @@ public class OrderFulfillmentWorkflow {
                     payment.initiatePayment(p);
                     return Map.of();
                 },
-                Duration.ofSeconds(30),
-                baseName("InitiatingPaymentForCustomer").namespace("io.axoniq.demo.orderfulfillment.api")
+                def -> def.timeout(Duration.ofSeconds(30))
+                        .eventNameCustomizer(baseName("InitiatingPaymentForCustomer")
+                                                     .namespace("io.axoniq.demo.orderfulfillment.api"))
         );
 
         paymentConfirmation.await();
-        var confirmation = paymentConfirmation.<Map<String, Object>>result();
+        var confirmation = paymentConfirmation.result();
         if (confirmation.isEmpty()) {
             ctx.awaitExecute(
                     "recordPaymentTimeout",
                     Map.of("orderId", orderId, "reason", "Payment timed out"),
-                    Boolean.class,
-                    failures::record
+                    (pc, p) -> Map.of("result", failures.record(p))
             );
             ctx.fail(new RuntimeException("Payment timed out for order " + orderId));
             return;
@@ -135,8 +134,8 @@ public class OrderFulfillmentWorkflow {
                 "shipOrder",
                 shipPayload,
                 (pc, p) -> shipping.shipOrder(p),
-                Duration.ofSeconds(30),
-                namespace("io.axoniq.demo.orderfulfillment.api")
+                def -> def.timeout(Duration.ofSeconds(30))
+                        .eventNameCustomizer(namespace("io.axoniq.demo.orderfulfillment.api"))
         );
 
         ctx.awaitExecute("notifyCustomer", Boolean.class, () -> {

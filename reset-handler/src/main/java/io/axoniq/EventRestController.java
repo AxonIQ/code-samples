@@ -1,6 +1,6 @@
 package io.axoniq;
 
-import org.axonframework.eventhandling.gateway.EventGateway;
+import org.axonframework.messaging.eventhandling.gateway.EventGateway;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +15,8 @@ public class EventRestController {
 
     @GetMapping("event")
     public void event() {
-        eventGateway.publish(new Object());
+        // AF5's EventGateway#publish requires an (optional) ProcessingContext as the first argument.
+        // There's none available here, so we pass null.
+        eventGateway.publish(null, new Object());
     }
 }

@@ -12,14 +12,14 @@ import io.axoniq.dev.samples.shipment.api.ShipmentStatusUpdatedEvent;
 import io.axoniq.dev.samples.uuid.PaymentId;
 import io.axoniq.dev.samples.uuid.ShipmentId;
 import io.axoniq.dev.samples.uuid.UUIDProvider;
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.config.ProcessingGroup;
-import org.axonframework.eventhandling.EventHandler;
+import org.axonframework.messaging.commandhandling.gateway.CommandGateway;
+import org.axonframework.messaging.core.annotation.Namespace;
+import org.axonframework.messaging.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@ProcessingGroup("OrderProcessor")
+@Namespace("OrderProcessor")
 class OrderProcessor {
 
     private final CommandGateway commandGateway;

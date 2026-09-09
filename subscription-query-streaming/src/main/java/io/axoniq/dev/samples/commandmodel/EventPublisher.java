@@ -1,7 +1,7 @@
 package io.axoniq.dev.samples.commandmodel;
 
 import io.axoniq.dev.samples.api.StreamUpdatedEvent;
-import org.axonframework.eventhandling.gateway.EventGateway;
+import org.axonframework.messaging.eventhandling.gateway.EventGateway;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +24,8 @@ public class EventPublisher {
 
     @Scheduled(initialDelay = 1_000, fixedDelay = 6_000)
     public void publishEvent() {
-        eventGateway.publish(new StreamUpdatedEvent(UUID.randomUUID().toString()));
+        // AF5's EventGateway no longer exposes a plain publish(Object...) — the varargs overload now
+        // requires a ProcessingContext, which we don't have from a @Scheduled method, hence null.
+        eventGateway.publish(null, new StreamUpdatedEvent(UUID.randomUUID().toString()));
     }
 }

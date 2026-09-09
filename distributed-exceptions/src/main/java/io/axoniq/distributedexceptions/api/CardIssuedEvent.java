@@ -1,7 +1,9 @@
 package io.axoniq.distributedexceptions.api;
 
-import javax.annotation.Nonnull;
+import org.axonframework.eventsourcing.annotation.EventTag;
+import org.axonframework.messaging.eventhandling.annotation.Event;
 
-public record CardIssuedEvent(@Nonnull String id, int amount) {
+@Event
+public record CardIssuedEvent(@EventTag(key = "GiftCard") String id, int amount) {
 
 }

@@ -1,9 +1,9 @@
 package io.axoniq.distributedexceptions.api;
 
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import org.axonframework.messaging.commandhandling.annotation.Command;
+import org.axonframework.modelling.annotation.TargetEntityId;
 
-import javax.annotation.Nonnull;
-
-public record RedeemCardCommand(@TargetAggregateIdentifier @Nonnull String id, int amount) {
+@Command(routingKey = "id")
+public record RedeemCardCommand(@TargetEntityId String id, int amount) {
 
 }

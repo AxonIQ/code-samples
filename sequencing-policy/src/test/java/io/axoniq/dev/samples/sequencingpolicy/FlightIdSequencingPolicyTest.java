@@ -2,10 +2,12 @@ package io.axoniq.dev.samples.sequencingpolicy;
 
 import io.axoniq.dev.samples.sequencingpolicy.coreapi.FlightCanceledEvent;
 import io.axoniq.dev.samples.sequencingpolicy.coreapi.FlightId;
-import org.axonframework.eventhandling.EventMessage;
-import org.axonframework.eventhandling.GenericEventMessage;
+import org.axonframework.messaging.core.MessageType;
+import org.axonframework.messaging.eventhandling.EventMessage;
+import org.axonframework.messaging.eventhandling.GenericEventMessage;
 import org.junit.jupiter.api.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,19 +17,19 @@ class FlightIdSequencingPolicyTest {
     private final FlightIdSequencingPolicy testSubject = new FlightIdSequencingPolicy();
 
     @Test
-    void testReturnsNullForNoneFlightEvent() {
-        EventMessage<Object> testEvent = GenericEventMessage.asEventMessage("some-event");
+    void returnsEmptyOptionalForNoneFlightEvent() {
+        EventMessage testEvent = new GenericEventMessage(new MessageType(String.class), "some-event");
 
-        assertNull(testSubject.getSequenceIdentifierFor(testEvent));
+        assertEquals(Optional.empty(), testSubject.sequenceIdentifierFor(testEvent, null));
     }
 
     @Test
-    void testReturnsFlightIdForFlightEventImplementations() {
+    void returnsFlightIdForFlightEventImplementations() {
         FlightId expectedResult = new FlightId(UUID.randomUUID().toString());
 
         FlightCanceledEvent testEvent = new FlightCanceledEvent(expectedResult);
-        EventMessage<Object> testEventMessage = GenericEventMessage.asEventMessage(testEvent);
+        EventMessage testEventMessage = new GenericEventMessage(new MessageType(testEvent.getClass()), testEvent);
 
-        assertEquals(expectedResult, testSubject.getSequenceIdentifierFor(testEventMessage));
+        assertEquals(Optional.of(expectedResult), testSubject.sequenceIdentifierFor(testEventMessage, null));
     }
 }
