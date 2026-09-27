@@ -24,13 +24,15 @@ Down below is an exhaustive list of all the sample:
 6. [Sequencing Policy](sequencing-policy/README.md) - Sample showing how to set up a custom `SequencingPolicy` to adjust
    the event sequence for a `PooledStreamingEventProcessor`.
 7. [Snapshots](snapshots/README.md) - Sample showing how to configure event-sourced entity snapshotting.
-8. [Stateful Event Handler](stateful-event-handler/README.md) - Sample showing a stateful event handler that can be
+8. [Spring Cloud Command Routing](spring-cloud-command-routing/README.md) - Sample showing how the Spring Cloud
+   connector routes commands between the instances of an application, without Axon Server.
+9. [Stateful Event Handler](stateful-event-handler/README.md) - Sample showing a stateful event handler that can be
    used as a replacement for sagas.
-9. [Subscription Query - REST](subscription-query-rest/README.md) - Sample showing how to use Axon's subscription query
+10. [Subscription Query - REST](subscription-query-rest/README.md) - Sample showing how to use Axon's subscription query
    cleanly in a REST-based controller.
-10. [Subscription Query - Streaming](subscription-query-streaming/README.md) - Sample showing how to use Axon's
+11. [Subscription Query - Streaming](subscription-query-streaming/README.md) - Sample showing how to use Axon's
     subscription query cleanly in a streaming-based controller.
-11. [Workflow Saga](workflow-saga/README.md) - Sample showing a Saga-like process modelled with the AxoniQ Workflow
+12. [Workflow Saga](workflow-saga/README.md) - Sample showing a Saga-like process modelled with the AxoniQ Workflow
     Engine.
 
 ## Topics now covered by the Axon Framework project itself

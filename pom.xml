@@ -21,6 +21,7 @@
         <module>serialization-avro</module>
         <module>sequencing-policy</module>
         <module>snapshots</module>
+        <module>spring-cloud-command-routing</module>
         <module>stateful-event-handler</module>
         <module>subscription-query-rest</module>
         <module>subscription-query-streaming</module>

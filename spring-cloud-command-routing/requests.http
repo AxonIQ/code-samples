@@ -1,0 +1,11 @@
+### Greet alice through the first instance
+
+GET http://localhost:8081/hello/alice
+
+### Greet alice through the second instance: the same instance answers
+
+GET http://localhost:8082/hello/alice
+
+### Greet bob through the first instance: possibly another instance answers
+
+GET http://localhost:8081/hello/bob
