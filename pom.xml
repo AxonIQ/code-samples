@@ -41,7 +41,7 @@
         <!--Spring-->
         <spring-boot.version>4.1.1</spring-boot.version>
         <!-- Database -->
-        <hibernate-core.version>7.4.10.Final</hibernate-core.version>
+        <hibernate-core.version>7.4.11.Final</hibernate-core.version>
         <!--Other-->
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <reactor-core.version>3.8.7</reactor-core.version>
