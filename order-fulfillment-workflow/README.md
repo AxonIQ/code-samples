@@ -144,7 +144,7 @@ WorkflowModule.defaults("OrderFulfillment", SimpleWorkflowContext.class)
         .tokenStore(historyTokens)
         .initialSegmentCount(1)
         .batchSize(1)
-        .withInterceptor(history));
+        .withInterceptor(history::interceptOnHandle));
 ```
 
 `axon.workflow.enabled=false` disables automatic workflow module registration;
@@ -157,6 +157,11 @@ the current event to `save(WorkflowHistory)`, because that repository method onl
 receives the resulting state. It stores the event and a UI document in one H2
 transaction. It uses no business `@EventHandler` methods and does not subclass the
 projector.
+
+The interceptor is registered only on the history processor. It is a method
+reference, not an interceptor bean: Spring would register an interceptor bean
+globally, allowing history's duplicate checks to suppress events needed by the
+workflow engine, projections, and simulators.
 
 The event journal has two purposes: it supplies the inspection timeline, and it
 restores the framework's actual state for further projection after a restart. The

@@ -47,6 +47,8 @@ public class WorkflowHistoryConfig {
                         .tokenStore(historyTokens)
                         .initialSegmentCount(1)
                         .batchSize(1)
-                        .withInterceptor(history));
+                        // A method reference keeps this interceptor local to the history processor.
+                        // An interceptor bean would be auto-registered on every event processor.
+                        .withInterceptor(history::interceptOnHandle));
     }
 }

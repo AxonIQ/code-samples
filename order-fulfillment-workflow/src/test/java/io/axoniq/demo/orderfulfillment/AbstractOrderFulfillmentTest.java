@@ -5,9 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 
-import java.util.concurrent.TimeUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -34,6 +35,30 @@ abstract class AbstractOrderFulfillmentTest {
             assertThat(status.trackingNumber()).startsWith("TRK-");
         });
         assertWorkflowHistory(orderId, "COMPLETED", "shipOrder");
+    }
+
+    @Test
+    void concurrentOrdersCompleteWithTheirOwnShipmentAndHistory() {
+        var orderIds = IntStream.range(0, 8)
+                .mapToObj(i -> restTemplate.postForObject(
+                        "/orders?customerId=concurrent-" + i + "&email=customer@example.com&amount=99.95",
+                        null, String.class))
+                .toList();
+        assertThat(orderIds).doesNotContainNull().doesNotHaveDuplicates();
+
+        await().atMost(45, TimeUnit.SECONDS).untilAsserted(() -> {
+            var shipments = orderIds.stream().map(orderId -> {
+                var status = restTemplate.getForObject("/orders/" + orderId, OrderStatus.class);
+                assertThat(status).as("Order %s projection", orderId).isNotNull();
+                assertThat(status.status()).as("Order %s", orderId).isEqualTo(OrderStatus.Status.DELIVERED);
+                assertThat(status.trackingNumber()).as("Order %s tracking number", orderId).startsWith("TRK-");
+                assertThat(restTemplate.getForObject("/api/workflows/" + orderId, Map.class))
+                        .containsEntry("status", "COMPLETED")
+                        .containsEntry("workflowId", orderId);
+                return status.trackingNumber();
+            }).toList();
+            assertThat(shipments).doesNotHaveDuplicates();
+        });
     }
 
     @Test

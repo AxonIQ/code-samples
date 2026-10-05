@@ -12,7 +12,6 @@ import io.axoniq.framework.workflow.history.inmemory.WorkflowHistoryProjector;
 import io.axoniq.framework.workflow.query.api.WorkflowStateQuery;
 import io.axoniq.framework.workflow.query.utils.WorkflowStateQueryMatcher;
 import io.axoniq.framework.workflow.runtime.util.MetadataUtils;
-import org.axonframework.messaging.core.MessageHandlerInterceptor;
 import org.axonframework.messaging.core.MessageHandlerInterceptorChain;
 import org.axonframework.messaging.core.MessageStream;
 import org.axonframework.messaging.core.Metadata;
@@ -50,8 +49,7 @@ import java.util.function.Consumer;
  * Stored events also reconstruct the framework's workflow state so history
  * projection can continue after an application restart.
  */
-public class JdbcWorkflowHistoryRepository
-        implements MutableWorkflowHistoryRepository, MessageHandlerInterceptor<EventMessage> {
+public class JdbcWorkflowHistoryRepository implements MutableWorkflowHistoryRepository {
 
     private final JdbcTemplate jdbc;
     private final TransactionTemplate transactions;
@@ -98,7 +96,10 @@ public class JdbcWorkflowHistoryRepository
         this.unitOfWorkFactory = unitOfWorkFactory;
     }
 
-    @Override
+    /**
+     * Wraps history projection in a transaction and ignores events already stored in the journal.
+     * Register this method only on the history processor; other processors must still receive those events.
+     */
     public MessageStream<?> interceptOnHandle(EventMessage event, ProcessingContext context,
                                               MessageHandlerInterceptorChain<EventMessage> chain) {
         if (!MetadataUtils.hasWorkflowId().test(event.metadata())) {

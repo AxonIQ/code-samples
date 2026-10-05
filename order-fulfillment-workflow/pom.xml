@@ -24,13 +24,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.axonframework</groupId>
                 <artifactId>axon-framework-bom</artifactId>
                 <version>${axon.version}</version>
@@ -41,6 +34,14 @@
                 <groupId>io.axoniq.framework</groupId>
                 <artifactId>axoniq-framework-bom</artifactId>
                 <version>${axoniq-framework.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Keep Axoniq's connector-compatible Protobuf version ahead of Spring Boot's default. -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
