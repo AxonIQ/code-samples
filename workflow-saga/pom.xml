@@ -20,11 +20,20 @@
         <axoniq-framework.version>5.3.2</axoniq-framework.version>
         <axon-workflow.version>0.2.0</axon-workflow.version>
         <spring-boot.version>4.1.1</spring-boot.version>
+        <protobuf.version>4.36.2</protobuf.version>
         <testcontainers.version>2.0.5</testcontainers.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- The connector's generated messages require a newer runtime than Spring Boot's default. -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-bom</artifactId>
+                <version>${protobuf.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
