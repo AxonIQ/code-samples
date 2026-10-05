@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Auto-confirms payments after a randomized delay so the demo runs end-to-end without manual
- * clicks. Skips orders flagged with the {@code payment-timeout} scenario, letting the workflow's
- * waitForEvent expire on purpose.
+ * clicks. Skips payment-timeout and manual-payment scenarios so the wait can expire
+ * or be completed explicitly from the execution console.
  */
 @Component
 public class AutoPaymentRobot {
@@ -45,10 +45,8 @@ public class AutoPaymentRobot {
     @EventHandler
     public void on(InitiatingPaymentForCustomerStarted event) {
         var orderId = event.orderId();
-        var status = projection.findById(orderId).orElse(null);
-        var scenario = status == null ? null : status.scenario();
-        if ("payment-timeout".equals(scenario)) {
-            logger.info("Skipping auto-payment for {} — scenario forces timeout.", orderId);
+        if ("payment-timeout".equals(event.scenario()) || "manual-payment".equals(event.scenario())) {
+            logger.info("Skipping auto-payment for {} — scenario {}.", orderId, event.scenario());
             return;
         }
         var delayMs = ThreadLocalRandom.current().nextInt(800, 3500);
