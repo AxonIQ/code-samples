@@ -6,5 +6,5 @@ package io.axoniq.demo.orderfulfillment.api;
  * already registered its {@code awaitPayment} wait (the wait is registered at the very top
  * of the workflow, before any {@code awaitExecute} step runs).
  */
-public record InitiatingPaymentForCustomerStarted(String orderId) {
+public record InitiatingPaymentForCustomerStarted(String orderId, String scenario) {
 }

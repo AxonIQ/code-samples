@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#f7f8fa" />
+        <title>Axon · Workflow console</title>
+        <link rel="stylesheet" href="/vendor/bpmn-js/diagram-js.css" />
+        <link rel="stylesheet" href="/vendor/bpmn-js/bpmn-js.css" />
+        <link rel="stylesheet" href="/workflows.css" />
+    </head>
+    <body>
+        <svg class="svg-library" aria-hidden="true">
+            <defs>
+                <symbol id="i-workflow" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="6" height="6" rx="1.5" />
+                    <rect x="15" y="15" width="6" height="6" rx="1.5" />
+                    <path d="M6 9v9h9M9 6h9v9" />
+                </symbol>
+                <symbol id="i-map" viewBox="0 0 24 24">
+                    <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6ZM9 3v15M15 6v15" />
+                </symbol>
+                <symbol id="i-clock" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                </symbol>
+                <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6" /></symbol>
+                <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16" /></symbol>
+                <symbol id="i-search" viewBox="0 0 24 24">
+                    <circle cx="10" cy="10" r="6" />
+                    <path d="m15 15 5 5" />
+                </symbol>
+                <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8V4Z" /></symbol>
+                <symbol id="i-db" viewBox="0 0 24 24">
+                    <ellipse cx="12" cy="5" rx="8" ry="3" />
+                    <path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0" />
+                </symbol>
+                <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6" /></symbol>
+            </defs>
+        </svg>
+        <nav class="rail" aria-label="Main navigation">
+            <a class="brand" href="/" title="Axon demo home" aria-label="Axon demo home">a<span>•</span></a>
+            <a class="rail-link active" href="/workflows.html" title="Workflow console" aria-label="Workflow console"
+                ><svg><use href="#i-workflow" /></svg
+            ></a>
+            <a class="rail-link" href="/" title="Live delivery map" aria-label="Live delivery map"
+                ><svg><use href="#i-map" /></svg
+            ></a>
+            <div class="rail-bottom"><span class="env-dot"></span><span>LOCAL</span></div>
+        </nav>
+        <aside class="runs-panel">
+            <div class="workspace">
+                <span class="workspace-logo">A</span>
+                <div><strong>Order fulfillment</strong><small>Demo workspace</small></div>
+                <span class="workspace-chevron">⌄</span>
+            </div>
+            <div class="runs-heading">
+                <h1>Executions</h1>
+                <span id="total" class="counter">0</span>
+            </div>
+            <div class="search-box">
+                <svg><use href="#i-search" /></svg
+                ><input
+                    id="search"
+                    type="search"
+                    aria-label="Search execution ID"
+                    placeholder="Search execution ID"
+                    autocomplete="off"
+                />
+            </div>
+            <div class="filter-row">
+                <span>Status</span
+                ><select id="status" aria-label="Filter by status">
+                    <option value="">All executions</option>
+                    <option value="STARTED">Running</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="FAILED">Failed</option>
+                    <option value="CANCELLED">Cancelled</option>
+                    <option value="TIMED_OUT">Timed out</option>
+                </select>
+            </div>
+            <div id="list" class="run-list" aria-label="Workflow executions"></div>
+            <div class="pagination">
+                <span id="page">Loading…</span><button id="previous" aria-label="Previous executions">‹</button
+                ><button id="next" aria-label="Next executions">›</button>
+            </div>
+            <div class="storage-note">
+                <svg><use href="#i-db" /></svg>
+                <div><strong>Durable history</strong><small>Embedded H2 · survives restarts</small></div>
+                <span class="status-dot green"></span>
+            </div>
+        </aside>
+        <main>
+            <header class="topbar">
+                <div class="breadcrumbs">Workflows <span>/</span> <strong>Order fulfillment</strong></div>
+                <div class="top-actions">
+                    <a href="/">Delivery map ↗</a><span class="environment">Development</span>
+                </div>
+            </header>
+            <div class="page-heading">
+                <div>
+                    <div class="eyebrow">WORKFLOW OBSERVABILITY</div>
+                    <h2>Every step. The whole story.</h2>
+                </div>
+                <div class="run-controls">
+                    <select id="scenario" aria-label="New workflow scenario">
+                        <option value="manual-payment">Interactive payment</option>
+                        <option value="happy">Automatic payment</option>
+                        <option value="payment-timeout">Payment timeout</option>
+                        <option value="out-of-stock">Out of stock</option></select
+                    ><button id="run" class="primary">
+                        <svg><use href="#i-play" /></svg>Run workflow
+                    </button>
+                </div>
+            </div>
+            <div id="error" class="error" role="alert" hidden></div>
+            <div id="empty" class="empty" hidden>
+                <svg><use href="#i-workflow" /></svg>
+                <h3>A story starts with an execution.</h3>
+                <p>Run a workflow to see its steps unfold in real time.</p>
+            </div>
+            <div id="loading" class="empty" role="status">
+                <div class="loader"></div>
+                <h3>Reading execution history…</h3>
+                <p>Loading the persisted workflow journal.</p>
+            </div>
+            <section id="execution" class="execution" hidden>
+                <div class="execution-heading">
+                    <div>
+                        <div class="execution-name">
+                            <h3 id="definition">OrderFulfillmentWorkflow</h3>
+                            <span id="execution-status" class="badge"></span>
+                        </div>
+                        <div class="execution-id">
+                            <span id="workflow-id"></span
+                            ><button id="copy-id" class="text-button" title="Copy execution ID">Copy ID</button
+                            ><span class="version" id="version"></span>
+                        </div>
+                    </div>
+                    <button id="live" class="live-button" aria-pressed="true">
+                        <span class="status-dot"></span><span id="live-label">Connecting</span>
+                    </button>
+                </div>
+                <div class="metrics">
+                    <div><span>Execution time</span><strong id="duration">—</strong><small id="started"></small></div>
+                    <div>
+                        <span>Steps completed</span><strong id="step-count">—</strong><small id="step-hint"></small>
+                    </div>
+                    <div>
+                        <span>Time awaiting events</span><strong id="wait-time">—</strong
+                        ><small>Overlapping waits counted once</small>
+                    </div>
+                    <div>
+                        <span>Recorded events</span><strong id="event-count">—</strong
+                        ><small id="last-event">From persisted history</small>
+                    </div>
+                </div>
+                <div id="payment-callout" class="payment-callout" hidden>
+                    <div class="waiting-icon">
+                        <svg><use href="#i-clock" /></svg>
+                    </div>
+                    <div>
+                        <strong>Waiting for your signal</strong>
+                        <p>Confirm payment to watch this execution continue. <span id="payment-countdown"></span></p>
+                    </div>
+                    <button id="confirm-payment" class="primary">Confirm payment <span>↗</span></button>
+                </div>
+                <div class="console-layout">
+                    <section class="trace-panel">
+                        <div class="trace-toolbar">
+                            <div class="tabs" role="tablist" aria-label="Execution view">
+                                <button
+                                    id="waterfall-tab"
+                                    class="tab active"
+                                    role="tab"
+                                    aria-selected="true"
+                                    aria-controls="waterfall-view"
+                                >
+                                    <svg><use href="#i-workflow" /></svg>Waterfall</button
+                                ><button
+                                    id="bpmn-tab"
+                                    class="tab"
+                                    role="tab"
+                                    aria-selected="false"
+                                    aria-controls="bpmn-view"
+                                >
+                                    BPMN</button
+                                ><button
+                                    id="events-tab"
+                                    class="tab"
+                                    role="tab"
+                                    aria-selected="false"
+                                    aria-controls="events-view"
+                                >
+                                    Event journal <span id="journal-count">0</span>
+                                </button>
+                            </div>
+                            <div class="zoom-controls">
+                                <button id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button
+                                ><button id="fit" title="Fit full execution">Fit</button
+                                ><button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
+                            </div>
+                        </div>
+                        <div id="waterfall-view" role="tabpanel" aria-labelledby="waterfall-tab">
+                            <div class="trace-subhead">
+                                <span>Execution timeline</span>
+                                <div class="legend">
+                                    <span><i class="legend-action"></i>Action</span
+                                    ><span><i class="legend-wait"></i>Event wait</span
+                                    ><span><i class="legend-error"></i>Failure</span>
+                                </div>
+                            </div>
+                            <div id="waterfall-scroll" class="waterfall-scroll">
+                                <div id="waterfall" class="waterfall">
+                                    <div id="time-axis" class="axis"></div>
+                                    <div id="waterfall-rows"></div>
+                                </div>
+                            </div>
+                            <div class="trace-caption">
+                                <span id="trace-caption">Select a span to inspect its inputs and results.</span
+                                ><span class="mono" id="trace-range"></span>
+                            </div>
+                            <div class="insight">
+                                <span class="insight-icon">↳</span>
+                                <div>
+                                    <strong id="insight-title">Execution insight</strong>
+                                    <p id="insight-text"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="bpmn-view" role="tabpanel" aria-labelledby="bpmn-tab" hidden>
+                            <div class="bpmn-heading">
+                                <div><strong>Order fulfillment</strong><span>Process model · BPMN 2.0</span></div>
+                                <a href="/order-fulfillment.bpmn" download>Download .bpmn ↗</a>
+                            </div>
+                            <div class="bpmn-legend">
+                                <span class="pending">Pending</span><span class="running">Running / waiting</span
+                                ><span class="completed">Completed</span><span class="failed">Failed / timed out</span
+                                ><span class="skipped">Not taken</span>
+                            </div>
+                            <div id="bpmn-canvas" aria-label="Order fulfillment BPMN process diagram">
+                                <p id="bpmn-status" role="status">Loading process model…</p>
+                            </div>
+                            <div class="bpmn-caption">
+                                Drag to pan · use + / − to zoom · select a task to inspect its state<br />Payment
+                                waiting runs alongside stock reservation. Unvisited branches stay pending until the
+                                execution ends.
+                            </div>
+                        </div>
+                        <div id="events-view" role="tabpanel" aria-labelledby="events-tab" hidden>
+                            <div class="journal-heading">
+                                <span>Ordered by recorded sequence</span><span>Click an event to inspect</span>
+                            </div>
+                            <div id="events" class="journal"></div>
+                        </div>
+                        <div id="replay-state" class="replay-state" role="status" hidden></div>
+                        <div class="replay-controls">
+                            <button id="replay" class="replay-button">
+                                <svg><use href="#i-play" /></svg><span>Replay trace</span>
+                            </button>
+                            <button
+                                id="previous-event"
+                                class="event-control"
+                                aria-label="Previous event"
+                                title="Previous event"
+                                disabled
+                            >
+                                ‹
+                            </button>
+                            <input
+                                id="scrubber"
+                                type="range"
+                                min="0"
+                                max="0"
+                                value="0"
+                                step="1"
+                                aria-label="Replay event position"
+                                disabled
+                            />
+                            <button
+                                id="next-event"
+                                class="event-control"
+                                aria-label="Next event"
+                                title="Next event"
+                                disabled
+                            >
+                                ›
+                            </button>
+                            <span id="replay-time" class="mono">—</span>
+                            <button id="exit-replay" class="text-button" hidden>Exit replay</button>
+                        </div>
+                    </section>
+                    <aside class="inspector" aria-label="Step inspector">
+                        <div class="inspector-heading">
+                            <span id="inspector-kind">EXECUTION DETAILS</span><svg><use href="#i-code" /></svg
+                            ><button id="close-inspector" aria-label="Close inspector">×</button>
+                        </div>
+                        <div id="inspector-content"></div>
+                    </aside>
+                </div>
+                <footer class="console-footer">
+                    <span
+                        ><span class="status-dot green"></span
+                        ><span id="sync">Connecting to history stream…</span></span
+                    ><span>Axon Workflows</span>
+                </footer>
+            </section>
+        </main>
+        <script src="/vendor/bpmn-js/bpmn-navigated-viewer.production.min.js"></script>
+        <script type="module" src="/workflows.js"></script>
+    </body>
+</html>

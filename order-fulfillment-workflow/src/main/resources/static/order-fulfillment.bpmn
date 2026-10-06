@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Illustrative BPMN model of OrderFulfillmentWorkflow.java; the Java workflow remains executable source. -->
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="OrderFulfillmentDefinitions" targetNamespace="https://axoniq.io/demo/order-fulfillment">
+  <bpmn:process id="OrderFulfillmentProcess" name="Order fulfillment" isExecutable="false">
+    <bpmn:startEvent id="OrderStarted" name="Order placed">
+      <bpmn:outgoing>f_start</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:parallelGateway id="ParallelStart" name="">
+      <bpmn:incoming>f_start</bpmn:incoming>
+      <bpmn:outgoing>f_wait</bpmn:outgoing>
+      <bpmn:outgoing>f_stock</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:receiveTask id="awaitPayment" name="Await payment">
+      <bpmn:incoming>f_wait</bpmn:incoming>
+      <bpmn:outgoing>f_paid</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:boundaryEvent id="PaymentDeadline" name="Payment deadline" attachedToRef="awaitPayment" cancelActivity="true">
+      <bpmn:outgoing>f_timeout</bpmn:outgoing>
+      <bpmn:timerEventDefinition><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${paymentTimeout}</bpmn:timeDuration></bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="PaymentError" name="Unsuccessful wait" attachedToRef="awaitPayment" cancelActivity="true">
+      <bpmn:outgoing>f_error</bpmn:outgoing>
+      <bpmn:errorEventDefinition/>
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="reserveStock" name="Reserve stock">
+      <bpmn:incoming>f_stock</bpmn:incoming>
+      <bpmn:outgoing>f_stock_result</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="StockAvailable" name="Stock available?">
+      <bpmn:incoming>f_stock_result</bpmn:incoming>
+      <bpmn:outgoing>f_stock_yes</bpmn:outgoing>
+      <bpmn:outgoing>f_stock_no</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="initiatePayment" name="Initiate payment">
+      <bpmn:incoming>f_stock_yes</bpmn:incoming>
+      <bpmn:outgoing>f_initiated</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="PaymentInitiationError" name="Initiation failed" attachedToRef="initiatePayment" cancelActivity="true">
+      <bpmn:outgoing>f_initiation_error</bpmn:outgoing>
+      <bpmn:errorEventDefinition/>
+    </bpmn:boundaryEvent>
+    <bpmn:parallelGateway id="PaymentJoined" name="">
+      <bpmn:incoming>f_initiated</bpmn:incoming>
+      <bpmn:incoming>f_paid</bpmn:incoming>
+      <bpmn:outgoing>f_ship</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:serviceTask id="shipOrder" name="Ship order">
+      <bpmn:incoming>f_ship</bpmn:incoming>
+      <bpmn:outgoing>f_notify</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="notifyCustomer" name="Notify customer">
+      <bpmn:incoming>f_notify</bpmn:incoming>
+      <bpmn:outgoing>f_done</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="OrderCompleted" name="Completed">
+      <bpmn:incoming>f_done</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="recordOutOfStock" name="Record out of stock">
+      <bpmn:incoming>f_stock_no</bpmn:incoming>
+      <bpmn:outgoing>f_stock_failed</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="StockFailed" name="Out of stock">
+      <bpmn:incoming>f_stock_failed</bpmn:incoming>
+      <bpmn:terminateEventDefinition/>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="recordPaymentFailure" name="Record payment failure">
+      <bpmn:incoming>f_error</bpmn:incoming>
+      <bpmn:incoming>f_initiation_error</bpmn:incoming>
+      <bpmn:outgoing>f_error_end</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="PaymentFailed" name="Payment failed">
+      <bpmn:incoming>f_error_end</bpmn:incoming>
+      <bpmn:terminateEventDefinition/>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="recordPaymentTimeout" name="Record payment timeout">
+      <bpmn:incoming>f_timeout</bpmn:incoming>
+      <bpmn:outgoing>f_timeout_end</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="PaymentTimedOut" name="Payment timed out">
+      <bpmn:incoming>f_timeout_end</bpmn:incoming>
+      <bpmn:terminateEventDefinition/>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="f_start" sourceRef="OrderStarted" targetRef="ParallelStart" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_wait" sourceRef="ParallelStart" targetRef="awaitPayment" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_stock" sourceRef="ParallelStart" targetRef="reserveStock" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_stock_result" sourceRef="reserveStock" targetRef="StockAvailable" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_stock_yes" sourceRef="StockAvailable" targetRef="initiatePayment" name="Yes"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">reserved == true</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_initiated" sourceRef="initiatePayment" targetRef="PaymentJoined" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_paid" sourceRef="awaitPayment" targetRef="PaymentJoined" name="Payment confirmed"></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_ship" sourceRef="PaymentJoined" targetRef="shipOrder" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_notify" sourceRef="shipOrder" targetRef="notifyCustomer" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_done" sourceRef="notifyCustomer" targetRef="OrderCompleted" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_stock_no" sourceRef="StockAvailable" targetRef="recordOutOfStock" name="No"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">reserved == false</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_stock_failed" sourceRef="recordOutOfStock" targetRef="StockFailed" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_timeout" sourceRef="PaymentDeadline" targetRef="recordPaymentTimeout" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_timeout_end" sourceRef="recordPaymentTimeout" targetRef="PaymentTimedOut" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_error" sourceRef="PaymentError" targetRef="recordPaymentFailure" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_initiation_error" sourceRef="PaymentInitiationError" targetRef="recordPaymentFailure" name=""></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f_error_end" sourceRef="recordPaymentFailure" targetRef="PaymentFailed" name=""></bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="OrderFulfillmentDiagram">
+    <bpmndi:BPMNPlane id="OrderFulfillmentPlane" bpmnElement="OrderFulfillmentProcess">
+      <bpmndi:BPMNShape id="OrderStarted_di" bpmnElement="OrderStarted"><dc:Bounds x="40" y="247" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="5" y="291" width="106" height="32"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ParallelStart_di" bpmnElement="ParallelStart"><dc:Bounds x="108" y="245" width="40" height="40"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="awaitPayment_di" bpmnElement="awaitPayment"><dc:Bounds x="326" y="50" width="176" height="72"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PaymentDeadline_di" bpmnElement="PaymentDeadline"><dc:Bounds x="450" y="104" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="476" y="135" width="100" height="30"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PaymentError_di" bpmnElement="PaymentError"><dc:Bounds x="342" y="104" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="256" y="128" width="86" height="30"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="reserveStock_di" bpmnElement="reserveStock"><dc:Bounds x="190" y="230" width="135" height="70"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StockAvailable_di" bpmnElement="StockAvailable" isMarkerVisible="true"><dc:Bounds x="372" y="245" width="40" height="40"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="337" y="201" width="110" height="30"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="initiatePayment_di" bpmnElement="initiatePayment"><dc:Bounds x="464" y="230" width="138" height="70"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PaymentInitiationError_di" bpmnElement="PaymentInitiationError"><dc:Bounds x="548" y="282" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="498" y="404" width="103" height="20"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PaymentJoined_di" bpmnElement="PaymentJoined"><dc:Bounds x="656" y="245" width="40" height="40"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shipOrder_di" bpmnElement="shipOrder"><dc:Bounds x="744" y="230" width="126" height="70"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="notifyCustomer_di" bpmnElement="notifyCustomer"><dc:Bounds x="916" y="230" width="140" height="70"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OrderCompleted_di" bpmnElement="OrderCompleted"><dc:Bounds x="1104" y="247" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="1069" y="291" width="106" height="32"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="recordOutOfStock_di" bpmnElement="recordOutOfStock"><dc:Bounds x="464" y="332" width="138" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StockFailed_di" bpmnElement="StockFailed"><dc:Bounds x="656" y="345" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="621" y="389" width="106" height="32"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="recordPaymentFailure_di" bpmnElement="recordPaymentFailure"><dc:Bounds x="190" y="458" width="150" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PaymentFailed_di" bpmnElement="PaymentFailed"><dc:Bounds x="402" y="471" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="367" y="515" width="106" height="32"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="recordPaymentTimeout_di" bpmnElement="recordPaymentTimeout"><dc:Bounds x="744" y="458" width="150" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PaymentTimedOut_di" bpmnElement="PaymentTimedOut"><dc:Bounds x="950" y="471" width="36" height="36"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="915" y="515" width="106" height="32"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="f_start_di" bpmnElement="f_start">
+        <di:waypoint x="76" y="265"/>
+        <di:waypoint x="108" y="265"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_wait_di" bpmnElement="f_wait">
+        <di:waypoint x="128" y="245"/>
+        <di:waypoint x="128" y="86"/>
+        <di:waypoint x="326" y="86"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_stock_di" bpmnElement="f_stock">
+        <di:waypoint x="148" y="265"/>
+        <di:waypoint x="190" y="265"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_stock_result_di" bpmnElement="f_stock_result">
+        <di:waypoint x="325" y="265"/>
+        <di:waypoint x="372" y="265"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_stock_yes_di" bpmnElement="f_stock_yes">
+        <di:waypoint x="412" y="265"/>
+        <di:waypoint x="464" y="265"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="418" y="240" width="30" height="18"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_initiated_di" bpmnElement="f_initiated">
+        <di:waypoint x="602" y="265"/>
+        <di:waypoint x="656" y="265"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_paid_di" bpmnElement="f_paid">
+        <di:waypoint x="502" y="86"/>
+        <di:waypoint x="676" y="86"/>
+        <di:waypoint x="676" y="245"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="521" y="59" width="126" height="22"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_ship_di" bpmnElement="f_ship">
+        <di:waypoint x="696" y="265"/>
+        <di:waypoint x="744" y="265"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_notify_di" bpmnElement="f_notify">
+        <di:waypoint x="870" y="265"/>
+        <di:waypoint x="916" y="265"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_done_di" bpmnElement="f_done">
+        <di:waypoint x="1056" y="265"/>
+        <di:waypoint x="1104" y="265"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_stock_no_di" bpmnElement="f_stock_no">
+        <di:waypoint x="392" y="285"/>
+        <di:waypoint x="392" y="363"/>
+        <di:waypoint x="464" y="363"/>
+        <bpmndi:BPMNLabel><dc:Bounds x="398" y="326" width="25" height="18"/></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_stock_failed_di" bpmnElement="f_stock_failed">
+        <di:waypoint x="602" y="363"/>
+        <di:waypoint x="656" y="363"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_timeout_di" bpmnElement="f_timeout">
+        <di:waypoint x="468" y="140"/>
+        <di:waypoint x="468" y="170"/>
+        <di:waypoint x="622" y="170"/>
+        <di:waypoint x="622" y="489"/>
+        <di:waypoint x="744" y="489"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_timeout_end_di" bpmnElement="f_timeout_end">
+        <di:waypoint x="894" y="489"/>
+        <di:waypoint x="950" y="489"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_error_di" bpmnElement="f_error">
+        <di:waypoint x="360" y="140"/>
+        <di:waypoint x="360" y="170"/>
+        <di:waypoint x="164" y="170"/>
+        <di:waypoint x="164" y="489"/>
+        <di:waypoint x="190" y="489"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_error_end_di" bpmnElement="f_error_end">
+        <di:waypoint x="340" y="489"/>
+        <di:waypoint x="402" y="489"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="f_initiation_error_di" bpmnElement="f_initiation_error">
+        <di:waypoint x="584" y="300"/>
+        <di:waypoint x="612" y="300"/>
+        <di:waypoint x="612" y="434"/>
+        <di:waypoint x="265" y="434"/>
+        <di:waypoint x="265" y="458"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
