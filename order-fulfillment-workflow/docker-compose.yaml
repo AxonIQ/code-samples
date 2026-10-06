@@ -1,7 +1,9 @@
+name: order-fulfillment-workflow-rc1
+
 services:
   axon-server:
     image: docker.axoniq.io/axoniq/axonserver:2026.0.0
-    container_name: order-fulfillment-axon-server
+    container_name: order-fulfillment-rc1-axon-server
     ports:
       - "8024:8024"
       - "8124:8124"
@@ -12,9 +14,12 @@ services:
     volumes:
       - data:/axonserver/data
       - events:/axonserver/events
+      - log:/axonserver/log
 
 volumes:
   data:
     driver: local
   events:
+    driver: local
+  log:
     driver: local
