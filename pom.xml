@@ -37,7 +37,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <!-- Axon -->
-        <axoniq-framework.version>5.3.3</axoniq-framework.version>
+        <axoniq-framework.version>5.4.0</axoniq-framework.version>
         <!--Spring-->
         <spring-boot.version>4.1.1</spring-boot.version>
         <!-- Database -->
