@@ -32,8 +32,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Language -->
         <kotlin.compiler.jvmTarget>21</kotlin.compiler.jvmTarget>
-        <kotlin.version>2.4.20</kotlin.version>
-        <kotlin.maven.version>2.4.20</kotlin.maven.version>
+        <kotlin.version>2.4.21</kotlin.version>
+        <kotlin.maven.version>2.4.21</kotlin.maven.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <!-- Axon -->
@@ -41,7 +41,7 @@
         <!--Spring-->
         <spring-boot.version>4.1.1</spring-boot.version>
         <!-- Database -->
-        <hibernate-core.version>7.4.12.Final</hibernate-core.version>
+        <hibernate-core.version>7.4.13.Final</hibernate-core.version>
         <!--Other-->
         <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
         <reactor-core.version>3.8.7</reactor-core.version>
