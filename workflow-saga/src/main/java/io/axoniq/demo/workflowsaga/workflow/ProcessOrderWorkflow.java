@@ -5,10 +5,10 @@ import io.axoniq.demo.workflowsaga.api.OrderPaidEvent;
 import io.axoniq.demo.workflowsaga.api.OrderPaymentCancelledEvent;
 import io.axoniq.demo.workflowsaga.api.ShipmentStatus;
 import io.axoniq.demo.workflowsaga.api.ShipmentStatusUpdatedEvent;
-import io.axoniq.workflow.dsl.simple.SimpleWorkflowContext;
-import io.axoniq.workflow.runtime.api.annotation.Workflow;
-import io.axoniq.workflow.runtime.api.execution.context.EventNameCustomizer;
-import io.axoniq.workflow.runtime.api.execution.state.WorkflowStepResult;
+import io.axoniq.framework.workflow.dsl.simple.SimpleWorkflowContext;
+import io.axoniq.framework.workflow.annotation.Workflow;
+import io.axoniq.framework.workflow.dsl.api.EventNameCustomizer;
+import io.axoniq.framework.workflow.dsl.api.WorkflowStepResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,11 +17,11 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
-import static io.axoniq.workflow.dsl.api.EventAssociationsUtils.equalsTo;
-import static io.axoniq.workflow.dsl.api.EventAssociationsUtils.payloadProperty;
-import static io.axoniq.workflow.dsl.api.Payload.payload;
-import static io.axoniq.workflow.runtime.association.Associations.associate;
-import static io.axoniq.workflow.runtime.execution.DefaultEventNameCustomizer.Builder.namespace;
+import static io.axoniq.framework.workflow.dsl.api.EventAssociationsUtils.equalsTo;
+import static io.axoniq.framework.workflow.dsl.api.EventAssociationsUtils.payloadProperty;
+import static io.axoniq.framework.workflow.dsl.api.Payload.payload;
+import static io.axoniq.framework.workflow.runtime.association.Associations.associate;
+import static io.axoniq.framework.workflow.runtime.execution.DefaultEventNameCustomizer.Builder.namespace;
 
 /**
  * Workflow rewrite of the legacy {@code ProcessOrderSaga}.

@@ -18,7 +18,6 @@
 
         <axon.version>5.4.2</axon.version>
         <axoniq-framework.version>5.4.2</axoniq-framework.version>
-        <axon-workflow.version>0.2.0</axon-workflow.version>
         <spring-boot.version>4.1.2</spring-boot.version>
         <protobuf.version>4.36.2</protobuf.version>
         <testcontainers.version>2.0.5</testcontainers.version>
@@ -68,8 +67,12 @@
     <dependencies>
         <dependency>
             <groupId>io.axoniq.framework</groupId>
-            <artifactId>axoniq-workflow-spring-boot</artifactId>
-            <version>${axon-workflow.version}</version>
+            <artifactId>axoniq-workflow-dsl</artifactId>
+            <version>${axoniq-framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.axoniq.framework</groupId>
+            <artifactId>axoniq-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -93,7 +96,7 @@
         <dependency>
             <groupId>io.axoniq.framework</groupId>
             <artifactId>axoniq-workflow-test</artifactId>
-            <version>${axon-workflow.version}</version>
+            <version>${axoniq-framework.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
